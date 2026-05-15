@@ -44,14 +44,21 @@
       padding: 16px;
     }
 
-    .hero {
-      background: linear-gradient(135deg, var(--cbps-blue-dark), var(--cbps-blue));
-      color: var(--white);
-      border-radius: 0 0 28px 28px;
-      padding: 26px 18px 24px;
-      box-shadow: var(--shadow);
-      margin: 0 -16px 18px;
-    }
+  .hero {
+    background-image:
+      linear-gradient(rgba(5, 18, 36, 0.35), rgba(5, 18, 36, 0.60)),
+      url("assets/banner_the_hub_v1.png");
+    background-size: cover;
+    background-position: center center;
+    color: var(--white);
+    border-radius: 0 0 28px 28px;
+    padding: 26px 18px 24px;
+    box-shadow: var(--shadow);
+    margin: 0 -16px 18px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+  }
 
     .hero-inner {
       width: min(1180px, 100%);
@@ -362,7 +369,31 @@
       font-size: 0.82rem;
       text-align: center;
     }
+    .hero {
+  background-image:
+    linear-gradient(rgba(5, 18, 36, 0.35), rgba(5, 18, 36, 0.60)),
+    url("assets/banner_the_hub_v1.png");
+  background-size: cover;
+  background-position: center center;
+  color: var(--white);
+  border-radius: 0 0 28px 28px;
+  padding: 26px 18px 24px;
+  box-shadow: var(--shadow);
+  margin: 0 -16px 18px;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+}
+    @media (max-width: 700px) {
+  .hero {
+    background-position: 24% center;
+    min-height: 330px;
+  }
 
+  .hero-subtitle {
+    max-width: 320px;
+  }
+}
     @media (min-width: 680px) {
       .page-shell {
         padding: 22px;
