@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CBPS The Hub</title>
+  <style>
+    :root {
+      --cbps-blue: #123f73;
+      --cbps-blue-dark: #0b2a4e;
+      --cbps-blue-soft: #eaf2fb;
+      --cbps-gray: #f4f6f8;
+      --cbps-border: #d8e0ea;
+      --cbps-text: #1f2933;
+      --cbps-muted: #64748b;
+      --cbps-green: #1f7a4d;
+      --cbps-orange: #b86b00;
+      --cbps-red: #b42318;
+      --white: #ffffff;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(180deg, #eef4fb 0%, #ffffff 42%, #f5f7fa 100%);
+      color: var(--cbps-text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--cbps-blue-dark), var(--cbps-blue));
+      color: var(--white);
+      border-radius: 0 0 28px 28px;
+      padding: 26px 18px 24px;
+      box-shadow: var(--shadow);
+      margin: 0 -16px 18px;
+    }
+
+    .hero-inner {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: 0.78rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      opacity: 0.82;
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 9vw, 4.8rem);
+      line-height: 0.95;
+      letter-spacing: -0.06em;
+    }
+
+    .hero-subtitle {
+      margin: 12px 0 0;
+      font-size: 1rem;
+      line-height: 1.45;
+      max-width: 720px;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .top-actions {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .action-button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.24);
+      color: var(--white);
+      border-radius: 999px;
+      padding: 12px 15px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .action-button span:last-child {
+      opacity: 0.72;
+    }
+
+    .section-title {
+      margin: 22px 2px 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 1.18rem;
+      color: var(--cbps-blue-dark);
+    }
+
+    .section-title p {
+      margin: 5px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .snapshot-card {
+      background: var(--white);
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .snapshot-header {
+      padding: 17px 18px;
+      border-bottom: 1px solid var(--cbps-border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fbfdff;
+    }
+
+    .snapshot-header h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: var(--cbps-blue-dark);
+    }
+
+    .last-update {
+      font-size: 0.82rem;
+      color: var(--cbps-muted);
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 14px;
+    }
+
+    .metric {
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: var(--white);
+    }
+
+    .metric-label {
+      margin: 0;
+      color: var(--cbps-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric-value {
+      margin: 8px 0 0;
+      font-size: 2rem;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--cbps-blue-dark);
+    }
+
+    .metric-note {
+      margin: 6px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.85rem;
+      line-height: 1.35;
+    }
+
+    .metric.status-red .metric-value { color: var(--cbps-red); }
+    .metric.status-orange .metric-value { color: var(--cbps-orange); }
+    .metric.status-green .metric-value { color: var(--cbps-green); }
+
+    .snapshot-footer {
+      padding: 0 14px 16px;
+    }
+
+    .primary-link {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      background: var(--cbps-blue);
+      color: var(--white);
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-weight: 800;
+      box-shadow: 0 8px 18px rgba(18, 63, 115, 0.22);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .hub-card,
+    .hub-dropdown {
+      background: var(--white);
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      overflow: hidden;
+    }
+
+    .hub-card {
+      display: block;
+      padding: 18px;
+      min-height: 112px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .hub-card:active {
+      transform: scale(0.99);
+    }
+
+    .hub-card:hover,
+    .hub-dropdown:hover {
+      border-color: #b6c7da;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue);
+      font-size: 1.35rem;
+      margin-bottom: 12px;
+    }
+
+    .hub-card h3,
+    .dropdown-summary h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--cbps-blue-dark);
+    }
+
+    .hub-card p,
+    .dropdown-summary p {
+      margin: 7px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    details {
+      width: 100%;
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dropdown-summary {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .dropdown-summary .card-icon {
+      margin: 0;
+    }
+
+    .chevron {
+      color: var(--cbps-muted);
+      font-weight: 800;
+      transition: transform 0.18s ease;
+    }
+
+    details[open] .chevron {
+      transform: rotate(90deg);
+    }
+
+    .dropdown-links {
+      border-top: 1px solid var(--cbps-border);
+      background: #fbfdff;
+      padding: 8px;
+    }
+
+    .dropdown-links a {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      color: var(--cbps-text);
+      font-size: 0.92rem;
+    }
+
+    .dropdown-links a:hover {
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue-dark);
+    }
+
+    .link-hint {
+      color: var(--cbps-muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .announcement-card {
+      background: linear-gradient(135deg, #ffffff, #f6f9fc);
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+    }
+
+    .announcement-card h3 {
+      margin: 0;
+      color: var(--cbps-blue-dark);
+      font-size: 1.05rem;
+    }
+
+    .announcement-card p {
+      margin: 8px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
+    }
+
+    .footer {
+      margin: 28px 0 8px;
+      padding: 16px 4px;
+      color: var(--cbps-muted);
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    @media (min-width: 680px) {
+      .page-shell {
+        padding: 22px;
+      }
+
+      .hero {
+        margin: 0 -22px 20px;
+        padding: 34px 22px 32px;
+      }
+
+      .top-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 850px;
+      }
+
+      .snapshot-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        border-radius: 0 0 34px 34px;
+      }
+
+      .hub-layout {
+        display: grid;
+        grid-template-columns: 380px 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .snapshot-card {
+        position: sticky;
+        top: 18px;
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .hub-card {
+        min-height: 142px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Coastal Bend Power Services</p>
+      <h1>The Hub</h1>
+      <p class="hero-subtitle">A simple landing page for company links, safety tools, training resources, procedures, and team lead follow-up items.</p>
+
+      <nav class="top-actions" aria-label="Primary quick links">
+        <a class="action-button" href="https://coastalbendpower.github.io/SafetyHQ/">
+          <span>SafetyHQ</span>
+          <span>Open</span>
+        </a>
+        <a class="action-button" href="#" aria-label="Open HSI login">
+          <span>HSI</span>
+          <span>Login</span>
+        </a>
+        <a class="action-button" href="#" aria-label="Open ShareSync login">
+          <span>ShareSync</span>
+          <span>Files</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hub-layout">
+      <aside>
+        <div class="snapshot-card" aria-label="Safety Action Snapshot">
+          <div class="snapshot-header">
+            <h2>Safety Action Snapshot</h2>
+            <div class="last-update">Last Update: <strong id="lastUpdate">05/15/2026 12:00 PM</strong></div>
+          </div>
+
+          <div class="snapshot-grid">
+            <div class="metric status-red">
+              <p class="metric-label">Monthly Checklists Missing</p>
+              <p class="metric-value" id="missingChecklists">0</p>
+              <p class="metric-note">Company vehicle checklist follow-up.</p>
+            </div>
+
+            <div class="metric status-red">
+              <p class="metric-label">Overdue Training</p>
+              <p class="metric-value" id="overdueTraining">0</p>
+              <p class="metric-note">Training currently past due.</p>
+            </div>
+
+            <div class="metric status-orange">
+              <p class="metric-label">Training Due Soon</p>
+              <p class="metric-value" id="trainingDueSoon">0</p>
+              <p class="metric-note">Due soon or inside the active window.</p>
+            </div>
+          </div>
+
+          <div class="snapshot-footer">
+            <a class="primary-link" href="https://coastalbendpower.github.io/SafetyHQ/">Open SafetyHQ →</a>
+          </div>
+        </div>
+      </aside>
+
+      <section>
+        <div class="section-title">
+          <h2>Company Tools</h2>
+          <p>Fast access to the main systems employees and team leads use most.</p>
+        </div>
+
+        <div class="card-grid">
+          <a class="hub-card" href="https://coastalbendpower.github.io/SafetyHQ/">
+            <div class="card-icon">✓</div>
+            <h3>SafetyHQ</h3>
+            <p>Open the full safety dashboard, checklist status, training status, and safety links.</p>
+          </a>
+
+          <a class="hub-card" href="#">
+            <div class="card-icon">▣</div>
+            <h3>HSI</h3>
+            <p>Training, checklists, HR acknowledgments, safety documents, and employee assignments.</p>
+          </a>
+
+          <a class="hub-card" href="#">
+            <div class="card-icon">↗</div>
+            <h3>ShareSync</h3>
+            <p>Open internal file storage and shared company folders.</p>
+          </a>
+
+          <a class="hub-card" href="#">
+            <div class="card-icon">☰</div>
+            <h3>Procedure Center</h3>
+            <p>Access CBPS procedures, procedure audit tracking, and review tools.</p>
+          </a>
+
+          <div class="hub-dropdown">
+            <details>
+              <summary class="dropdown-summary">
+                <div class="card-icon">HR</div>
+                <div>
+                  <h3>HR Docs</h3>
+                  <p>Secured handbook, acknowledgments, and conduct policies.</p>
+                </div>
+                <div class="chevron">›</div>
+              </summary>
+              <div class="dropdown-links">
+                <a href="#"><span>Employee Handbook</span><span class="link-hint">Secured</span></a>
+                <a href="#"><span>Policy Acknowledgments</span><span class="link-hint">HSI</span></a>
+                <a href="#"><span>Workplace Conduct</span><span class="link-hint">Secured</span></a>
+              </div>
+            </details>
+          </div>
+
+          <div class="hub-dropdown">
+            <details>
+              <summary class="dropdown-summary">
+                <div class="card-icon">▶</div>
+                <div>
+                  <h3>Training</h3>
+                  <p>LMS guidance, training resources, and employee help links.</p>
+                </div>
+                <div class="chevron">›</div>
+              </summary>
+              <div class="dropdown-links">
+                <a href="#"><span>Open LMS</span><span class="link-hint">HSI</span></a>
+                <a href="#"><span>How to Complete Training</span><span class="link-hint">Guide</span></a>
+                <a href="#"><span>Training Help</span><span class="link-hint">Contact</span></a>
+              </div>
+            </details>
+          </div>
+
+          <div class="announcement-card">
+            <h3>Announcements</h3>
+            <p>Future space for company updates, safety announcements, or important reminders.</p>
+          </div>
+
+          <div class="hub-dropdown">
+            <details>
+              <summary class="dropdown-summary">
+                <div class="card-icon">TL</div>
+                <div>
+                  <h3>Team Lead Tools</h3>
+                  <p>Follow-up lists, printable reminders, and field leadership tools.</p>
+                </div>
+                <div class="chevron">›</div>
+              </summary>
+              <div class="dropdown-links">
+                <a href="#"><span>Print Follow-Up List</span><span class="link-hint">Future</span></a>
+                <a href="#"><span>Checklist Reminders</span><span class="link-hint">Future</span></a>
+                <a href="#"><span>Training Reminders</span><span class="link-hint">Future</span></a>
+              </div>
+            </details>
+          </div>
+
+          <div class="hub-dropdown">
+            <details>
+              <summary class="dropdown-summary">
+                <div class="card-icon">DOC</div>
+                <div>
+                  <h3>Documents / Resources</h3>
+                  <p>Forms, quick references, and commonly used company links.</p>
+                </div>
+                <div class="chevron">›</div>
+              </summary>
+              <div class="dropdown-links">
+                <a href="#"><span>Common Forms</span><span class="link-hint">Link</span></a>
+                <a href="#"><span>Quick References</span><span class="link-hint">Link</span></a>
+                <a href="#"><span>Useful Links</span><span class="link-hint">Link</span></a>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <footer class="footer">
+      CBPS The Hub · Plan – Communicate – Deliver
+    </footer>
+  </main>
+</body>
+</html>
