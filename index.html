@@ -46,25 +46,27 @@
 
   .hero {
   background-image:
-    linear-gradient(rgba(5, 18, 36, 0.42), rgba(5, 18, 36, 0.68)),
+    linear-gradient(rgba(5, 18, 36, 0.30), rgba(5, 18, 36, 0.58)),
     url("assets/banner_the_hub_v1.png");
-  background-size: cover;
-  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center top;
+  background-color: #06172d;
   color: var(--white);
   border-radius: 0 0 24px 24px;
   padding: 22px 18px;
   box-shadow: var(--shadow);
   margin: 0 -16px 18px;
-  min-height: 280px;
+  min-height: 360px;
   display: flex;
   align-items: center;
 }
 
     .hero-inner {
-      width: min(1180px, 100%);
-      margin: 0 auto;
-      padding: 0 16px;
-    }
+  width: min(1180px, 100%);
+  margin: 0 auto;
+  padding: 0 16px 0 360px;
+}
 
     .eyebrow {
       margin: 0 0 8px;
@@ -386,9 +388,14 @@
 }
     @media (max-width: 700px) {
   .hero {
-    background-position: 28% center;
-    min-height: 250px;
+    background-size: cover;
+    background-position: 24% center;
+    min-height: 270px;
     padding: 20px 16px;
+  }
+
+  .hero-inner {
+    padding: 0 16px;
   }
 
   h1 {
@@ -397,19 +404,47 @@
   }
 
   .hero-subtitle {
-    max-width: 300px;
+    max-width: 320px;
     font-size: 0.92rem;
   }
 
   .top-actions {
     margin-top: 14px;
+    max-width: 100%;
   }
+}
 }
     @media (min-width: 980px) {
       .hero {
         border-radius: 0 0 34px 34px;
       }
+      @media (max-width: 700px) {
+  .hero {
+    background-size: cover;
+    background-position: 24% center;
+    min-height: 270px;
+    padding: 20px 16px;
+  }
 
+  .hero-inner {
+    padding: 0 16px;
+  }
+
+  h1 {
+    font-size: 3rem;
+    letter-spacing: -0.05em;
+  }
+
+  .hero-subtitle {
+    max-width: 320px;
+    font-size: 0.92rem;
+  }
+
+  .top-actions {
+    margin-top: 14px;
+    max-width: 100%;
+  }
+}
       .hub-layout {
         display: grid;
         grid-template-columns: 380px 1fr;
