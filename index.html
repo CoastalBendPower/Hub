@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CBPS The Hub</title>
-
   <style>
     :root {
       --cbps-blue: #123f73;
@@ -46,41 +45,32 @@
     }
 
     .hero {
-  background-image:
-    linear-gradient(rgba(5, 18, 36, 0.42), rgba(5, 18, 36, 0.70)),
-    url("assets/banner_the_hub_v2.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center 42%;
-  background-color: #06172d;
-  color: var(--white);
-  border-radius: 0 0 24px 24px;
-  padding: 22px 18px;
-  box-shadow: var(--shadow);
-  margin: 0 -16px 18px;
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-}
+      background: linear-gradient(135deg, var(--cbps-blue-dark), var(--cbps-blue));
+      color: var(--white);
+      border-radius: 0 0 28px 28px;
+      padding: 26px 18px 24px;
+      box-shadow: var(--shadow);
+      margin: 0 -16px 18px;
+    }
 
     .hero-inner {
-  width: min(1180px, 100%);
-  margin: 0 auto;
-  padding: 0 16px 0 430px;
-}
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 0 16px;
+    }
 
     .eyebrow {
       margin: 0 0 8px;
       font-size: 0.78rem;
       letter-spacing: 0.11em;
       text-transform: uppercase;
-      opacity: 0.86;
+      opacity: 0.82;
       font-weight: 700;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2.7rem, 7vw, 4.8rem);
+      font-size: clamp(2rem, 9vw, 4.8rem);
       line-height: 0.95;
       letter-spacing: -0.06em;
     }
@@ -89,8 +79,8 @@
       margin: 12px 0 0;
       font-size: 1rem;
       line-height: 1.45;
-      max-width: 760px;
-      color: rgba(255,255,255,0.90);
+      max-width: 720px;
+      color: rgba(255,255,255,0.88);
     }
 
     .top-actions {
@@ -98,7 +88,6 @@
       grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 18px;
-      max-width: 760px;
     }
 
     .action-button {
@@ -116,7 +105,7 @@
     }
 
     .action-button span:last-child {
-      opacity: 0.78;
+      opacity: 0.72;
     }
 
     .section-title {
@@ -202,17 +191,9 @@
       line-height: 1.35;
     }
 
-    .metric.status-red .metric-value {
-      color: var(--cbps-red);
-    }
-
-    .metric.status-orange .metric-value {
-      color: var(--cbps-orange);
-    }
-
-    .metric.status-green .metric-value {
-      color: var(--cbps-green);
-    }
+    .metric.status-red .metric-value { color: var(--cbps-red); }
+    .metric.status-orange .metric-value { color: var(--cbps-orange); }
+    .metric.status-green .metric-value { color: var(--cbps-green); }
 
     .snapshot-footer {
       padding: 0 14px 16px;
@@ -239,8 +220,7 @@
     }
 
     .hub-card,
-    .hub-dropdown,
-    .announcement-card {
+    .hub-dropdown {
       background: var(--white);
       border: 1px solid var(--cbps-border);
       border-radius: var(--radius-lg);
@@ -260,8 +240,7 @@
     }
 
     .hub-card:hover,
-    .hub-dropdown:hover,
-    .announcement-card:hover {
+    .hub-dropdown:hover {
       border-color: #b6c7da;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
     }
@@ -274,22 +253,19 @@
       place-items: center;
       background: var(--cbps-blue-soft);
       color: var(--cbps-blue);
-      font-size: 1.15rem;
-      font-weight: 800;
+      font-size: 1.35rem;
       margin-bottom: 12px;
     }
 
     .hub-card h3,
-    .dropdown-summary h3,
-    .announcement-card h3 {
+    .dropdown-summary h3 {
       margin: 0;
       font-size: 1.05rem;
       color: var(--cbps-blue-dark);
     }
 
     .hub-card p,
-    .dropdown-summary p,
-    .announcement-card p {
+    .dropdown-summary p {
       margin: 7px 0 0;
       color: var(--cbps-muted);
       font-size: 0.9rem;
@@ -359,8 +335,24 @@
     }
 
     .announcement-card {
-      padding: 18px;
       background: linear-gradient(135deg, #ffffff, #f6f9fc);
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+    }
+
+    .announcement-card h3 {
+      margin: 0;
+      color: var(--cbps-blue-dark);
+      font-size: 1.05rem;
+    }
+
+    .announcement-card p {
+      margin: 8px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.92rem;
+      line-height: 1.4;
     }
 
     .footer {
@@ -371,38 +363,6 @@
       text-align: center;
     }
 
-    @media (max-width: 700px) {
-  .hero {
-    background-size: cover;
-    background-position: 30% center;
-    min-height: 250px;
-    padding: 18px 16px;
-  }
-
-  .hero-inner {
-    padding: 0 16px;
-  }
-
-  .eyebrow {
-    font-size: 0.68rem;
-  }
-
-  h1 {
-    font-size: 2.8rem;
-    letter-spacing: -0.05em;
-  }
-
-  .hero-subtitle {
-    max-width: 320px;
-    font-size: 0.9rem;
-  }
-
-  .top-actions {
-    margin-top: 14px;
-    max-width: 100%;
-  }
-}
-
     @media (min-width: 680px) {
       .page-shell {
         padding: 22px;
@@ -411,11 +371,11 @@
       .hero {
         margin: 0 -22px 20px;
         padding: 34px 22px 32px;
-        min-height: 340px;
-}
+      }
 
       .top-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 850px;
       }
 
       .snapshot-grid {
@@ -427,14 +387,10 @@
       }
     }
 
-    .hero {
+    @media (min-width: 980px) {
+      .hero {
         border-radius: 0 0 34px 34px;
-        min-height: 300px;
-    }
-
-    .hero-inner {
-        padding-left: 430px;
-    }
+      }
 
       .hub-layout {
         display: grid;
@@ -458,28 +414,23 @@
     }
   </style>
 </head>
-
 <body>
   <header class="hero">
     <div class="hero-inner">
       <p class="eyebrow">Coastal Bend Power Services</p>
       <h1>The Hub</h1>
-      <p class="hero-subtitle">
-        A simple landing page for company links, safety tools, training resources, procedures, and team lead follow-up items.
-      </p>
+      <p class="hero-subtitle">A simple landing page for company links, safety tools, training resources, procedures, and team lead follow-up items.</p>
 
       <nav class="top-actions" aria-label="Primary quick links">
         <a class="action-button" href="https://coastalbendpower.github.io/SafetyHQ/">
           <span>SafetyHQ</span>
           <span>Open</span>
         </a>
-
-        <a class="action-button" href="#">
+        <a class="action-button" href="#" aria-label="Open HSI login">
           <span>HSI</span>
           <span>Login</span>
         </a>
-
-        <a class="action-button" href="#">
+        <a class="action-button" href="#" aria-label="Open ShareSync login">
           <span>ShareSync</span>
           <span>Files</span>
         </a>
@@ -493,9 +444,7 @@
         <div class="snapshot-card" aria-label="Safety Action Snapshot">
           <div class="snapshot-header">
             <h2>Safety Action Snapshot</h2>
-            <div class="last-update">
-              Last Update: <strong id="lastUpdate">05/15/2026 12:00 PM</strong>
-            </div>
+            <div class="last-update">Last Update: <strong id="lastUpdate">05/15/2026 12:00 PM</strong></div>
           </div>
 
           <div class="snapshot-grid">
@@ -519,9 +468,7 @@
           </div>
 
           <div class="snapshot-footer">
-            <a class="primary-link" href="https://coastalbendpower.github.io/SafetyHQ/">
-              Open SafetyHQ →
-            </a>
+            <a class="primary-link" href="https://coastalbendpower.github.io/SafetyHQ/">Open SafetyHQ →</a>
           </div>
         </div>
       </aside>
@@ -540,7 +487,7 @@
           </a>
 
           <a class="hub-card" href="#">
-            <div class="card-icon">HSI</div>
+            <div class="card-icon">▣</div>
             <h3>HSI</h3>
             <p>Training, checklists, HR acknowledgments, safety documents, and employee assignments.</p>
           </a>
@@ -567,20 +514,10 @@
                 </div>
                 <div class="chevron">›</div>
               </summary>
-
               <div class="dropdown-links">
-                <a href="#">
-                  <span>Employee Handbook</span>
-                  <span class="link-hint">Secured</span>
-                </a>
-                <a href="#">
-                  <span>Policy Acknowledgments</span>
-                  <span class="link-hint">HSI</span>
-                </a>
-                <a href="#">
-                  <span>Workplace Conduct</span>
-                  <span class="link-hint">Secured</span>
-                </a>
+                <a href="#"><span>Employee Handbook</span><span class="link-hint">Secured</span></a>
+                <a href="#"><span>Policy Acknowledgments</span><span class="link-hint">HSI</span></a>
+                <a href="#"><span>Workplace Conduct</span><span class="link-hint">Secured</span></a>
               </div>
             </details>
           </div>
@@ -595,20 +532,10 @@
                 </div>
                 <div class="chevron">›</div>
               </summary>
-
               <div class="dropdown-links">
-                <a href="#">
-                  <span>Open LMS</span>
-                  <span class="link-hint">HSI</span>
-                </a>
-                <a href="#">
-                  <span>How to Complete Training</span>
-                  <span class="link-hint">Guide</span>
-                </a>
-                <a href="#">
-                  <span>Training Help</span>
-                  <span class="link-hint">Contact</span>
-                </a>
+                <a href="#"><span>Open LMS</span><span class="link-hint">HSI</span></a>
+                <a href="#"><span>How to Complete Training</span><span class="link-hint">Guide</span></a>
+                <a href="#"><span>Training Help</span><span class="link-hint">Contact</span></a>
               </div>
             </details>
           </div>
@@ -628,20 +555,10 @@
                 </div>
                 <div class="chevron">›</div>
               </summary>
-
               <div class="dropdown-links">
-                <a href="#">
-                  <span>Print Follow-Up List</span>
-                  <span class="link-hint">Future</span>
-                </a>
-                <a href="#">
-                  <span>Checklist Reminders</span>
-                  <span class="link-hint">Future</span>
-                </a>
-                <a href="#">
-                  <span>Training Reminders</span>
-                  <span class="link-hint">Future</span>
-                </a>
+                <a href="#"><span>Print Follow-Up List</span><span class="link-hint">Future</span></a>
+                <a href="#"><span>Checklist Reminders</span><span class="link-hint">Future</span></a>
+                <a href="#"><span>Training Reminders</span><span class="link-hint">Future</span></a>
               </div>
             </details>
           </div>
@@ -656,20 +573,10 @@
                 </div>
                 <div class="chevron">›</div>
               </summary>
-
               <div class="dropdown-links">
-                <a href="#">
-                  <span>Common Forms</span>
-                  <span class="link-hint">Link</span>
-                </a>
-                <a href="#">
-                  <span>Quick References</span>
-                  <span class="link-hint">Link</span>
-                </a>
-                <a href="#">
-                  <span>Useful Links</span>
-                  <span class="link-hint">Link</span>
-                </a>
+                <a href="#"><span>Common Forms</span><span class="link-hint">Link</span></a>
+                <a href="#"><span>Quick References</span><span class="link-hint">Link</span></a>
+                <a href="#"><span>Useful Links</span><span class="link-hint">Link</span></a>
               </div>
             </details>
           </div>
