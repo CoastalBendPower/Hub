@@ -46,8 +46,12 @@
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
+      background-image:
+        linear-gradient(rgba(5, 18, 36, 0.42), rgba(5, 18, 36, 0.70)),
+        url("assets/banner_the_hub_v2.png");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center 42%;
       background-color: #06172d;
       color: var(--white);
       border-radius: 0 0 24px 24px;
@@ -59,35 +63,7 @@
       align-items: center;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(5, 18, 36, 0.46), rgba(5, 18, 36, 0.74)),
-        url("assets/banner_the_hub_v2.png");
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center 45%;
-      z-index: 0;
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url("assets/banner_the_hub_v2.png");
-      background-repeat: no-repeat;
-      background-size: auto 100%;
-      background-position: left center;
-      opacity: 0.82;
-      z-index: 1;
-      pointer-events: none;
-    }
-
     .hero-inner {
-      position: relative;
-      z-index: 2;
       width: min(1180px, 100%);
       margin: 0 auto;
       padding: 0 16px;
@@ -405,16 +381,9 @@
 
     @media (max-width: 700px) {
       .hero {
+        background-position: 30% center;
         min-height: 250px;
         padding: 18px 16px;
-      }
-
-      .hero::before {
-        background-position: 30% center;
-      }
-
-      .hero::after {
-        display: none;
       }
 
       .eyebrow {
@@ -459,25 +428,24 @@
       }
 
       .hero-inner {
-        width: min(1500px, 100%);
-        padding-left: 290px;
+        padding-left: 430px;
         display: grid;
-        grid-template-columns: minmax(360px, 1fr) 220px;
-        gap: 32px;
+        grid-template-columns: minmax(360px, 1fr) 260px;
+        gap: 28px;
         align-items: center;
       }
 
       .top-actions {
-        width: 220px;
-        max-width: 220px;
+        width: 260px;
+        max-width: 260px;
         margin-top: 0;
         justify-self: end;
       }
 
       .action-button {
-        border-radius: 8px;
-        padding: 8px 10px;
-        font-size: 0.78rem;
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 0.82rem;
       }
 
       .hub-layout {
