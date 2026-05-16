@@ -280,6 +280,29 @@
       text-align: center;
     }
 
+    .metric-subtext {
+      min-height: 15px;
+      margin: 5px 0 0;
+      font-size: 0.7rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cbps-muted);
+    }
+
+    .metric.status-red .metric-subtext {
+      color: var(--cbps-red);
+    }
+
+    .metric.status-orange .metric-subtext {
+      color: var(--cbps-orange);
+    }
+
+    .metric.status-green .metric-subtext {
+      color: var(--cbps-green);
+    }
+
     .metric.status-red .metric-value {
       color: var(--cbps-red);
     }
@@ -989,35 +1012,38 @@
           <div class="snapshot-header">
             <h2>Safety Snapshot</h2>
             <div class="last-update">
-              Last Update: <strong id="lastUpdate">05/15/2026 12:00 PM</strong>
+              Last Update: <strong id="lastUpdate">Loading Last Data Update...</strong>
             </div>
           </div>
 
           <div class="snapshot-grid">
             <div class="metric status-green">
-              <p class="metric-label">Monthly Checklists Missing</p>
-              <p class="metric-value" id="missingChecklists">0</p>
+              <p class="metric-label">Missing Safety Eq Checklists</p>
+              <p class="metric-value" id="missingChecklists">-</p>
+              <p class="metric-subtext" id="missingChecklistsSubtext"></p>
             </div>
 
             <div class="metric status-green">
               <p class="metric-label">Overdue Training</p>
-              <p class="metric-value" id="overdueTraining">0</p>
+              <p class="metric-value" id="overdueTraining">-</p>
+              <p class="metric-subtext" id="overdueTrainingSubtext"></p>
             </div>
 
             <div class="metric status-orange">
               <p class="metric-label">Training Due Soon</p>
-              <p class="metric-value" id="trainingDueSoon">0</p>
+              <p class="metric-value" id="trainingDueSoon">-</p>
+              <p class="metric-subtext" id="trainingDueSoonSubtext"></p>
             </div>
           </div>
 
           <div class="followup-panel">
             <div class="followup-box status-green" id="checklistFollowupBox">
               <div class="followup-box-header">
-                <h3>Overdue Monthly Safety Eq Checklists</h3>
+                <h3>Missing / Overdue Safety Eq Checklists</h3>
                 <span class="status-pill status-green" id="checklistFollowupPill">None</span>
               </div>
               <div class="followup-list" id="checklistFollowupList">
-                <div class="followup-empty">No overdue monthly equipment checklists listed in the current update.</div>
+                <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
               </div>
             </div>
 
@@ -1133,7 +1159,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const DEFAULT_SAFETYHQ_URL = "https://coastalbendpower.github.io/SafetyHQ/";
 
-    function setText(id, value, fallback = "0") {
+    function setText(id, value, fallback = "-") {
       const element = document.getElementById(id);
       if (!element) return;
       element.textContent = value ?? fallback;
@@ -1151,6 +1177,13 @@
       } else {
         metric.classList.add("status-red");
       }
+    }
+
+    function setMetricSubtext(id, value, label) {
+      const element = document.getElementById(id);
+      if (!element) return;
+      const numberValue = Number(value) || 0;
+      element.textContent = numberValue > 0 ? label : "";
     }
 
     function cleanStatusClasses(element) {
@@ -1212,13 +1245,17 @@
         const snapshot = data.powerHubSnapshot || {};
 
         setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
-        setText("missingChecklists", snapshot.missingChecklists, "0");
-        setText("overdueTraining", snapshot.overdueTraining, "0");
-        setText("trainingDueSoon", snapshot.trainingDueSoon, "0");
+        setText("missingChecklists", snapshot.missingChecklists, "-");
+        setText("overdueTraining", snapshot.overdueTraining, "-");
+        setText("trainingDueSoon", snapshot.trainingDueSoon, "-");
 
         setMetricStatus("missingChecklists", snapshot.missingChecklists, 1);
         setMetricStatus("overdueTraining", snapshot.overdueTraining, 1);
         setMetricStatus("trainingDueSoon", snapshot.trainingDueSoon, 1);
+
+        setMetricSubtext("missingChecklistsSubtext", snapshot.missingChecklists, "Overdue");
+        setMetricSubtext("overdueTrainingSubtext", snapshot.overdueTraining, "Overdue");
+        setMetricSubtext("trainingDueSoonSubtext", snapshot.trainingDueSoon, "Due Soon");
 
         const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
         const safetySnapshotLink = document.getElementById("safetySnapshotLink");
@@ -1229,7 +1266,7 @@
           "checklistFollowupPill",
           "checklistFollowupList",
           snapshot.overdueMonthlyChecklists,
-          "No overdue monthly equipment checklists listed in the current update.",
+          "No missing or overdue Safety Eq Checklists listed in the current update.",
           "Checklist"
         );
 
