@@ -985,7 +985,7 @@
 
     <section class="hub-layout">
       <aside>
-        <a class="snapshot-section" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard" title="Open SafetyHQ for full checklist and training details">
+        <a class="snapshot-section" id="safetySnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard" title="Open SafetyHQ for full checklist and training details">
           <div class="snapshot-header">
             <h2>Safety Snapshot</h2>
             <div class="last-update">
@@ -1011,22 +1011,22 @@
           </div>
 
           <div class="followup-panel">
-            <div class="followup-box status-green">
+            <div class="followup-box status-green" id="checklistFollowupBox">
               <div class="followup-box-header">
                 <h3>Overdue Monthly Safety Eq Checklists</h3>
-                <span class="status-pill status-green">None</span>
+                <span class="status-pill status-green" id="checklistFollowupPill">None</span>
               </div>
-              <div class="followup-list">
+              <div class="followup-list" id="checklistFollowupList">
                 <div class="followup-empty">No overdue monthly equipment checklists listed in the current update.</div>
               </div>
             </div>
 
-            <div class="followup-box status-green">
+            <div class="followup-box status-green" id="trainingFollowupBox">
               <div class="followup-box-header">
                 <h3>Overdue Training</h3>
-                <span class="status-pill status-green">None</span>
+                <span class="status-pill status-green" id="trainingFollowupPill">None</span>
               </div>
-              <div class="followup-list">
+              <div class="followup-list" id="trainingFollowupList">
                 <div class="followup-empty">No overdue training listed in the current update.</div>
               </div>
             </div>
@@ -1129,5 +1129,125 @@
       </p>
     </footer>
   </main>
+  <script>
+    const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
+    const DEFAULT_SAFETYHQ_URL = "https://coastalbendpower.github.io/SafetyHQ/";
+
+    function setText(id, value, fallback = "0") {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.textContent = value ?? fallback;
+    }
+
+    function setMetricStatus(id, value, warningValue = 1) {
+      const metric = document.getElementById(id)?.closest(".metric");
+      if (!metric) return;
+      const numberValue = Number(value) || 0;
+      metric.classList.remove("status-green", "status-orange", "status-red");
+      if (numberValue <= 0) {
+        metric.classList.add("status-green");
+      } else if (id === "trainingDueSoon" || numberValue < warningValue) {
+        metric.classList.add("status-orange");
+      } else {
+        metric.classList.add("status-red");
+      }
+    }
+
+    function cleanStatusClasses(element) {
+      if (!element) return;
+      element.classList.remove("status-green", "status-orange", "status-red");
+    }
+
+    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType) {
+      const box = document.getElementById(boxId);
+      const pill = document.getElementById(pillId);
+      const list = document.getElementById(listId);
+      if (!box || !pill || !list) return;
+
+      const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
+      const hasItems = safeItems.length > 0;
+
+      cleanStatusClasses(box);
+      cleanStatusClasses(pill);
+      box.classList.add(hasItems ? "status-red" : "status-green");
+      pill.classList.add(hasItems ? "status-red" : "status-green");
+      pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+
+      if (!hasItems) {
+        list.innerHTML = `<div class="followup-empty">${emptyText}</div>`;
+        return;
+      }
+
+      list.innerHTML = safeItems.slice(0, 5).map((item) => {
+        const employee = item.employee || item.name || "Employee";
+        const vehicle = item.eq || item.equipment || item.vehicle || item.asset || "";
+        const requirement = item.requirementName || item.training || item.checklistName || itemType;
+        const dueDate = item.dueDate ? `Due: ${item.dueDate}` : "Due date not listed";
+        const days = item.daysOverdue != null ? ` • ${item.daysOverdue}d overdue` : "";
+        const detailParts = itemType === "Checklist" && vehicle
+          ? [`${vehicle}`, dueDate + days]
+          : [requirement, dueDate + days];
+        return `
+          <div class="followup-item">
+            <div>
+              <p class="followup-name">${employee}</p>
+              <p class="followup-detail">${detailParts.filter(Boolean).join(" • ")}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadSafetySnapshot() {
+      const isGitHubPages = window.location.hostname === "coastalbendpower.github.io";
+      if (!isGitHubPages) {
+        setText("lastUpdate", "Preview mode - SafetyHQ feed loads on GitHub Pages", "Preview mode - SafetyHQ feed loads on GitHub Pages");
+        return;
+      }
+
+      try {
+        const response = await fetch(SAFETYHQ_FEED_URL, { cache: "no-store" });
+        if (!response.ok) throw new Error(`SafetyHQ feed returned ${response.status}`);
+        const data = await response.json();
+        const snapshot = data.powerHubSnapshot || {};
+
+        setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
+        setText("missingChecklists", snapshot.missingChecklists, "0");
+        setText("overdueTraining", snapshot.overdueTraining, "0");
+        setText("trainingDueSoon", snapshot.trainingDueSoon, "0");
+
+        setMetricStatus("missingChecklists", snapshot.missingChecklists, 1);
+        setMetricStatus("overdueTraining", snapshot.overdueTraining, 1);
+        setMetricStatus("trainingDueSoon", snapshot.trainingDueSoon, 1);
+
+        const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
+        const safetySnapshotLink = document.getElementById("safetySnapshotLink");
+        if (safetySnapshotLink) safetySnapshotLink.href = safetyHqUrl;
+
+        renderFollowup(
+          "checklistFollowupBox",
+          "checklistFollowupPill",
+          "checklistFollowupList",
+          snapshot.overdueMonthlyChecklists,
+          "No overdue monthly equipment checklists listed in the current update.",
+          "Checklist"
+        );
+
+        renderFollowup(
+          "trainingFollowupBox",
+          "trainingFollowupPill",
+          "trainingFollowupList",
+          snapshot.overdueTrainingItems,
+          "No overdue training listed in the current update.",
+          "Training"
+        );
+      } catch (error) {
+        console.error("PowerHub Safety Snapshot failed to load:", error);
+        setText("lastUpdate", "Unable to load latest SafetyHQ update", "Unable to load latest SafetyHQ update");
+      }
+    }
+
+    loadSafetySnapshot();
+  </script>
 </body>
 </html>
