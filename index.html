@@ -121,7 +121,7 @@
       font-size: clamp(3.35rem, 6.2vw, 5.9rem);
       font-weight: 900;
       line-height: 0.95;
-      letter-spacing: -0.055em;
+      letter-spacing: -0.035em;
     }
 
     .title-power {
@@ -137,6 +137,9 @@
         0 0 10px rgba(0, 157, 255, 0.42),
         0 0 22px rgba(0, 111, 214, 0.32);
       position: relative;
+      display: inline-block;
+      padding-right: 0.08em;
+      padding-bottom: 0.03em;
     }
 
     .site-title::after {
@@ -225,10 +228,29 @@
 
     .inline-stat {
       display: inline-flex;
-      align-items: baseline;
+      align-items: center;
       gap: 5px;
       color: var(--cbps-muted);
       white-space: nowrap;
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid transparent;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.status-red {
+      background: #fee4e2;
+      border-color: rgba(180, 35, 24, 0.22);
+      box-shadow: 0 5px 12px rgba(180, 35, 24, 0.10);
+    }
+
+    .inline-stat.status-orange {
+      background: #fff1d6;
+      border-color: rgba(184, 107, 0, 0.22);
+      box-shadow: 0 5px 12px rgba(184, 107, 0, 0.08);
     }
 
     .inline-stat-value {
@@ -1018,21 +1040,25 @@
       .snapshot-section,
       .training-section,
       .tools-section {
-        position: sticky;
-        top: 18px;
+        position: relative;
+        top: auto;
       }
 
       .card-grid {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 8px;
+      }
+
+      .tool-button-card {
+        padding: 4px 2px;
       }
 
       .tool-button-slot {
-        min-height: 56px;
+        min-height: 46px;
       }
 
       .tool-button-image {
-        max-width: 220px;
+        max-width: 190px;
       }
 
       .hub-card {
@@ -1092,7 +1118,7 @@
             <div class="snapshot-title-row">
               <h2>Safety Snapshot</h2>
               <div class="inline-stat-group" aria-label="Safety Snapshot counts">
-                <span class="inline-stat status-green" id="missingChecklistsStat">
+                <span class="inline-stat status-green is-hidden" id="missingChecklistsStat">
                   <span class="inline-stat-value" id="missingChecklists">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
@@ -1107,7 +1133,6 @@
             <div class="followup-box status-green" id="checklistFollowupBox">
               <div class="followup-box-header">
                 <h3>Missing / Overdue Safety Eq Checklists</h3>
-                <span class="status-pill status-green" id="checklistFollowupPill">None</span>
               </div>
               <div class="followup-list" id="checklistFollowupList">
                 <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
@@ -1123,11 +1148,11 @@
             <div class="snapshot-title-row">
               <h2>Training Requirements</h2>
               <div class="inline-stat-group" aria-label="Training Requirement counts">
-                <span class="inline-stat status-green" id="overdueTrainingStat">
+                <span class="inline-stat status-green is-hidden" id="overdueTrainingStat">
                   <span class="inline-stat-value" id="overdueTraining">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
-                <span class="inline-stat status-orange" id="trainingDueSoonStat">
+                <span class="inline-stat status-orange is-hidden" id="trainingDueSoonStat">
                   <span class="inline-stat-value" id="trainingDueSoon">-</span>
                   <span class="inline-stat-label">Due Soon</span>
                 </span>
@@ -1140,7 +1165,6 @@
             <div class="followup-box status-green" id="trainingFollowupBox">
               <div class="followup-box-header">
                 <h3>Overdue Training</h3>
-                <span class="status-pill status-green" id="trainingFollowupPill">None</span>
               </div>
               <div class="followup-list" id="trainingFollowupList">
                 <div class="followup-empty">No overdue training listed in the current update.</div>
@@ -1150,7 +1174,6 @@
             <div class="followup-box status-green" id="trainingDueSoonFollowupBox">
               <div class="followup-box-header">
                 <h3>Training Due Soon</h3>
-                <span class="status-pill status-green" id="trainingDueSoonFollowupPill">None</span>
               </div>
               <div class="followup-list" id="trainingDueSoonFollowupList">
                 <div class="followup-empty">No training due within 7 days listed in the current update.</div>
@@ -1215,7 +1238,7 @@
             </details>
           </div>
 
-          <a class="hub-card tool-button-card" href="#" title="Open HR Docs">
+          <a class="hub-card tool-button-card" href="#" aria-disabled="true" title="Coming soon">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_HR Docs.png" alt="HR Docs">
             </div>
@@ -1227,13 +1250,13 @@
             </div>
           </a>
 
-          <a class="hub-card tool-button-card" href="#" title="Open Procedure Center">
+          <a class="hub-card tool-button-card" href="#" aria-disabled="true" title="Coming soon">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_ProceduresDashboard.png" alt="Procedure Center">
             </div>
           </a>
 
-          <a class="hub-card tool-button-card" href="#" title="Open Other Docs">
+          <a class="hub-card tool-button-card" href="#" aria-disabled="true" title="Coming soon">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_Other Docs.png" alt="Other Docs">
             </div>
@@ -1265,18 +1288,21 @@
       element.textContent = value ?? fallback;
     }
 
-    function setMetricStatus(id, value, warningValue = 1) {
+    function setInlineStat(id, value, statusType = "red") {
       const stat = document.getElementById(`${id}Stat`);
-      if (!stat) return;
+      const valueElement = document.getElementById(id);
+      if (!stat || !valueElement) return;
+
       const numberValue = Number(value) || 0;
-      stat.classList.remove("status-green", "status-orange", "status-red");
+      valueElement.textContent = numberValue;
+      stat.classList.remove("status-green", "status-orange", "status-red", "is-hidden");
+
       if (numberValue <= 0) {
-        stat.classList.add("status-green");
-      } else if (id === "trainingDueSoon" || numberValue < warningValue) {
-        stat.classList.add("status-orange");
-      } else {
-        stat.classList.add("status-red");
+        stat.classList.add("is-hidden");
+        return;
       }
+
+      stat.classList.add(statusType === "orange" ? "status-orange" : "status-red");
     }
 
     function cleanStatusClasses(element) {
@@ -1284,21 +1310,30 @@
       element.classList.remove("status-green", "status-orange", "status-red");
     }
 
+    function toggleBox(boxId, shouldShow) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      box.hidden = !shouldShow;
+    }
+
     function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red") {
       const box = document.getElementById(boxId);
       const pill = document.getElementById(pillId);
       const list = document.getElementById(listId);
-      if (!box || !pill || !list) return;
+      if (!box || !list) return;
 
       const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
       const hasItems = safeItems.length > 0;
       const activeStatus = statusType === "orange" ? "status-orange" : "status-red";
 
       cleanStatusClasses(box);
-      cleanStatusClasses(pill);
       box.classList.add(hasItems ? activeStatus : "status-green");
-      pill.classList.add(hasItems ? activeStatus : "status-green");
-      pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+
+      if (pill) {
+        cleanStatusClasses(pill);
+        pill.classList.add(hasItems ? activeStatus : "status-green");
+        pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+      }
 
       if (!hasItems) {
         list.innerHTML = `<div class="followup-empty">${emptyText}</div>`;
@@ -1330,9 +1365,29 @@
       }).join("");
     }
 
-    function getDueSoonTrainingItems(snapshot) {
-      const sourceItems = snapshot.trainingDueSoonItems || snapshot.upcomingTrainingItems || snapshot.inTrainingWindowItems || [];
-      if (!Array.isArray(sourceItems)) return [];
+    function renderTrainingDueSoonFallback(count) {
+      const box = document.getElementById("trainingDueSoonFollowupBox");
+      const list = document.getElementById("trainingDueSoonFollowupList");
+      if (!box || !list) return;
+
+      cleanStatusClasses(box);
+      box.classList.add("status-orange");
+      list.innerHTML = `<div class="followup-empty">${count} training item(s) due soon. Open SafetyHQ for full details.</div>`;
+    }
+
+    function getDueSoonTrainingItems(snapshot, data = {}) {
+      const dueSoonSources = [
+        snapshot.trainingDueSoonItems,
+        snapshot.dueSoonTrainingItems,
+        snapshot.upcomingTrainingItems,
+        snapshot.inTrainingWindowItems,
+        data.trainingDueSoonItems,
+        data.dueSoonTrainingItems,
+        data.upcomingTrainingItems,
+        data.inTrainingWindowItems
+      ];
+      const sourceItems = dueSoonSources.find((items) => Array.isArray(items) && items.length > 0) || [];
+
       return sourceItems.filter((item) => {
         const daysUntilDue = Number(item.daysUntilDue);
         return Number.isFinite(daysUntilDue) ? daysUntilDue <= 7 : true;
@@ -1352,17 +1407,20 @@
         const data = await response.json();
         const snapshot = data.powerHubSnapshot || {};
 
-        const dueSoonItems = getDueSoonTrainingItems(snapshot);
-        const dueSoonCount = snapshot.trainingDueSoon ?? dueSoonItems.length;
+        const overdueTrainingItems = Array.isArray(snapshot.overdueTrainingItems)
+          ? snapshot.overdueTrainingItems.filter(Boolean)
+          : [];
+        const dueSoonItems = getDueSoonTrainingItems(snapshot, data);
+        const overdueTrainingCount = Number(snapshot.overdueTraining) || 0;
+        const dueSoonCount = Number(snapshot.trainingDueSoon ?? dueSoonItems.length) || 0;
+        const hasOverdueTraining = overdueTrainingCount > 0 || overdueTrainingItems.length > 0;
 
         setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
-        setText("missingChecklists", snapshot.missingChecklists, "-");
-        setText("overdueTraining", snapshot.overdueTraining, "-");
-        setText("trainingDueSoon", dueSoonCount, "-");
 
-        setMetricStatus("missingChecklists", snapshot.missingChecklists, 1);
-        setMetricStatus("overdueTraining", snapshot.overdueTraining, 1);
-        setMetricStatus("trainingDueSoon", dueSoonCount, 1);
+        setInlineStat("missingChecklists", snapshot.missingChecklists, "red");
+        setInlineStat("overdueTraining", overdueTrainingCount, "red");
+        setInlineStat("trainingDueSoon", dueSoonCount, "orange");
+        toggleBox("trainingFollowupBox", hasOverdueTraining);
 
         const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
         const safetySnapshotLink = document.getElementById("safetySnapshotLink");
@@ -1380,25 +1438,41 @@
           "red"
         );
 
-        renderFollowup(
-          "trainingFollowupBox",
-          "trainingFollowupPill",
-          "trainingFollowupList",
-          snapshot.overdueTrainingItems,
-          "No overdue training listed in the current update.",
-          "Training",
-          "red"
-        );
+        if (hasOverdueTraining) {
+          renderFollowup(
+            "trainingFollowupBox",
+            "trainingFollowupPill",
+            "trainingFollowupList",
+            overdueTrainingItems,
+            "No overdue training listed in the current update.",
+            "Training",
+            "red"
+          );
+        }
 
-        renderFollowup(
-          "trainingDueSoonFollowupBox",
-          "trainingDueSoonFollowupPill",
-          "trainingDueSoonFollowupList",
-          dueSoonItems,
-          "No training due within 7 days listed in the current update.",
-          "Training",
-          "orange"
-        );
+        if (dueSoonItems.length > 0) {
+          renderFollowup(
+            "trainingDueSoonFollowupBox",
+            "trainingDueSoonFollowupPill",
+            "trainingDueSoonFollowupList",
+            dueSoonItems,
+            "No training due within 7 days listed in the current update.",
+            "Training",
+            "orange"
+          );
+        } else if (dueSoonCount > 0) {
+          renderTrainingDueSoonFallback(dueSoonCount);
+        } else {
+          renderFollowup(
+            "trainingDueSoonFollowupBox",
+            "trainingDueSoonFollowupPill",
+            "trainingDueSoonFollowupList",
+            [],
+            "No training due within 7 days listed in the current update.",
+            "Training",
+            "orange"
+          );
+        }
       } catch (error) {
         console.error("PowerHub Safety Snapshot failed to load:", error);
         setText("lastUpdate", "Unable to load latest SafetyHQ update", "Unable to load latest SafetyHQ update");
