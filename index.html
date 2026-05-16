@@ -583,6 +583,15 @@
       background: linear-gradient(135deg, #ffffff, #f6f9fc);
     }
 
+    .announcement-card.wide-announcement {
+      min-height: auto;
+      padding: 14px 18px;
+    }
+
+    .announcement-card.wide-announcement p {
+      margin-top: 5px;
+    }
+
     .footer {
       margin: 30px 0 8px;
       padding: 18px 4px 20px;
@@ -700,6 +709,10 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
+      .wide-announcement {
+        grid-column: 1 / -1;
+      }
+
       .hub-card {
         min-height: 142px;
       }
@@ -785,6 +798,11 @@
         </div>
 
         <div class="card-grid">
+          <div class="announcement-card wide-announcement">
+            <h3>Announcements</h3>
+            <p>Future space for company updates, safety announcements, or important reminders.</p>
+          </div>
+
           <a class="hub-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
             <div class="card-icon">✓</div>
             <h3>SafetyHQ</h3>
@@ -835,67 +853,6 @@
                 <a href="#">
                   <span>Workplace Conduct</span>
                   <span class="link-hint">Secured</span>
-                </a>
-              </div>
-            </details>
-          </div>
-
-          <div class="hub-dropdown">
-            <details>
-              <summary class="dropdown-summary">
-                <div class="card-icon">▶</div>
-                <div>
-                  <h3>Training</h3>
-                  <p>LMS guidance, training resources, and employee help links.</p>
-                </div>
-                <div class="chevron">›</div>
-              </summary>
-
-              <div class="dropdown-links">
-                <a href="#">
-                  <span>Open LMS</span>
-                  <span class="link-hint">HSI</span>
-                </a>
-                <a href="#">
-                  <span>How to Complete Training</span>
-                  <span class="link-hint">Guide</span>
-                </a>
-                <a href="#">
-                  <span>Training Help</span>
-                  <span class="link-hint">Contact</span>
-                </a>
-              </div>
-            </details>
-          </div>
-
-          <div class="announcement-card">
-            <h3>Announcements</h3>
-            <p>Future space for company updates, safety announcements, or important reminders.</p>
-          </div>
-
-          <div class="hub-dropdown">
-            <details>
-              <summary class="dropdown-summary">
-                <div class="card-icon">TL</div>
-                <div>
-                  <h3>Team Lead Tools</h3>
-                  <p>Follow-up lists, printable reminders, and field leadership tools.</p>
-                </div>
-                <div class="chevron">›</div>
-              </summary>
-
-              <div class="dropdown-links">
-                <a href="#">
-                  <span>Print Follow-Up List</span>
-                  <span class="link-hint">Future</span>
-                </a>
-                <a href="#">
-                  <span>Checklist Reminders</span>
-                  <span class="link-hint">Future</span>
-                </a>
-                <a href="#">
-                  <span>Training Reminders</span>
-                  <span class="link-hint">Future</span>
                 </a>
               </div>
             </details>
