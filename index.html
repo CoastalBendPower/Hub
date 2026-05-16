@@ -244,6 +244,18 @@
       margin-bottom: 12px;
     }
 
+    .training-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .training-section {
+      display: block;
+      color: inherit;
+    }
+
     .metric {
       min-height: 108px;
       border: 1px solid var(--cbps-border);
@@ -331,12 +343,16 @@
     }
 
     .snapshot-section:hover .metric,
-    .snapshot-section:hover .followup-box {
+    .snapshot-section:hover .followup-box,
+    .training-section:hover .metric,
+    .training-section:hover .followup-box {
       box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
     }
 
     .snapshot-section:hover .metric:hover,
-    .snapshot-section:hover .followup-box:hover {
+    .snapshot-section:hover .followup-box:hover,
+    .training-section:hover .metric:hover,
+    .training-section:hover .followup-box:hover {
       transform: translateY(-2px);
       box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
       border-color: #b6c7da;
@@ -898,7 +914,11 @@
       }
 
       .snapshot-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: 1fr;
+      }
+
+      .training-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .card-grid {
@@ -921,15 +941,18 @@
 
       .hub-layout {
         display: grid;
-        grid-template-columns: minmax(0, 65%) minmax(0, 35%);
-        gap: 24px;
+        grid-template-columns: minmax(0, 40%) minmax(0, 40%) minmax(0, 20%);
+        gap: 22px;
         align-items: start;
       }
 
+      .training-section,
       .tools-section {
+        position: relative;
         padding-left: 22px;
       }
 
+      .training-section::before,
       .tools-section::before {
         content: "";
         position: absolute;
@@ -942,18 +965,24 @@
         box-shadow: 0 0 12px rgba(0, 157, 255, 0.24);
       }
 
-      .snapshot-section {
+      .snapshot-section,
+      .training-section,
+      .tools-section {
         position: sticky;
         top: 18px;
       }
 
       .card-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 20px 34px;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .tool-button-slot {
+        min-height: 56px;
       }
 
       .tool-button-image {
-        max-width: 340px;
+        max-width: 220px;
       }
 
       .hub-card {
@@ -1018,11 +1047,34 @@
 
           <div class="snapshot-grid">
             <div class="metric status-green">
-              <p class="metric-label">Missing Safety Eq Checklists</p>
+              <p class="metric-label">Overdue Safety Eq Checklists</p>
               <p class="metric-value" id="missingChecklists">-</p>
               <p class="metric-subtext" id="missingChecklistsSubtext"></p>
             </div>
+          </div>
 
+          <div class="followup-panel">
+            <div class="followup-box status-green" id="checklistFollowupBox">
+              <div class="followup-box-header">
+                <h3>Missing / Overdue Safety Eq Checklists</h3>
+                <span class="status-pill status-green" id="checklistFollowupPill">None</span>
+              </div>
+              <div class="followup-list" id="checklistFollowupList">
+                <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </aside>
+
+      <section class="training-section" aria-label="Training Requirements">
+        <a class="snapshot-section" id="trainingSnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ training details" title="Open SafetyHQ for full training details">
+          <div class="snapshot-header">
+            <h2>Training Requirements</h2>
+            <div class="last-update">Current training status from SafetyHQ.</div>
+          </div>
+
+          <div class="training-grid">
             <div class="metric status-green">
               <p class="metric-label">Overdue Training</p>
               <p class="metric-value" id="overdueTraining">-</p>
@@ -1037,16 +1089,6 @@
           </div>
 
           <div class="followup-panel">
-            <div class="followup-box status-green" id="checklistFollowupBox">
-              <div class="followup-box-header">
-                <h3>Missing / Overdue Safety Eq Checklists</h3>
-                <span class="status-pill status-green" id="checklistFollowupPill">None</span>
-              </div>
-              <div class="followup-list" id="checklistFollowupList">
-                <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
-              </div>
-            </div>
-
             <div class="followup-box status-green" id="trainingFollowupBox">
               <div class="followup-box-header">
                 <h3>Overdue Training</h3>
@@ -1056,9 +1098,19 @@
                 <div class="followup-empty">No overdue training listed in the current update.</div>
               </div>
             </div>
+
+            <div class="followup-box status-green" id="trainingDueSoonFollowupBox">
+              <div class="followup-box-header">
+                <h3>Training Due Soon</h3>
+                <span class="status-pill status-green" id="trainingDueSoonFollowupPill">None</span>
+              </div>
+              <div class="followup-list" id="trainingDueSoonFollowupList">
+                <div class="followup-empty">No training due within 7 days listed in the current update.</div>
+              </div>
+            </div>
           </div>
         </a>
-      </aside>
+      </section>
 
       <section class="tools-section">
         <div class="section-title">
@@ -1191,7 +1243,7 @@
       element.classList.remove("status-green", "status-orange", "status-red");
     }
 
-    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType) {
+    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red") {
       const box = document.getElementById(boxId);
       const pill = document.getElementById(pillId);
       const list = document.getElementById(listId);
@@ -1199,11 +1251,12 @@
 
       const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
       const hasItems = safeItems.length > 0;
+      const activeStatus = statusType === "orange" ? "status-orange" : "status-red";
 
       cleanStatusClasses(box);
       cleanStatusClasses(pill);
-      box.classList.add(hasItems ? "status-red" : "status-green");
-      pill.classList.add(hasItems ? "status-red" : "status-green");
+      box.classList.add(hasItems ? activeStatus : "status-green");
+      pill.classList.add(hasItems ? activeStatus : "status-green");
       pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
 
       if (!hasItems) {
@@ -1216,7 +1269,11 @@
         const vehicle = item.eq || item.equipment || item.vehicle || item.asset || "";
         const requirement = item.requirementName || item.training || item.checklistName || itemType;
         const dueDate = item.dueDate ? `Due: ${item.dueDate}` : "Due date not listed";
-        const days = item.daysOverdue != null ? ` • ${item.daysOverdue}d overdue` : "";
+        const days = item.daysOverdue != null
+          ? ` • ${item.daysOverdue}d overdue`
+          : item.daysUntilDue != null
+            ? ` • due in ${item.daysUntilDue}d`
+            : "";
         const detailParts = itemType === "Checklist" && vehicle
           ? [`${vehicle}`, dueDate + days]
           : [requirement, dueDate + days];
@@ -1229,6 +1286,15 @@
           </div>
         `;
       }).join("");
+    }
+
+    function getDueSoonTrainingItems(snapshot) {
+      const sourceItems = snapshot.trainingDueSoonItems || snapshot.upcomingTrainingItems || snapshot.inTrainingWindowItems || [];
+      if (!Array.isArray(sourceItems)) return [];
+      return sourceItems.filter((item) => {
+        const daysUntilDue = Number(item.daysUntilDue);
+        return Number.isFinite(daysUntilDue) ? daysUntilDue <= 7 : true;
+      });
     }
 
     async function loadSafetySnapshot() {
@@ -1260,6 +1326,8 @@
         const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
         const safetySnapshotLink = document.getElementById("safetySnapshotLink");
         if (safetySnapshotLink) safetySnapshotLink.href = safetyHqUrl;
+        const trainingSnapshotLink = document.getElementById("trainingSnapshotLink");
+        if (trainingSnapshotLink) trainingSnapshotLink.href = safetyHqUrl;
 
         renderFollowup(
           "checklistFollowupBox",
@@ -1276,7 +1344,18 @@
           "trainingFollowupList",
           snapshot.overdueTrainingItems,
           "No overdue training listed in the current update.",
-          "Training"
+          "Training",
+          "red"
+        );
+
+        renderFollowup(
+          "trainingDueSoonFollowupBox",
+          "trainingDueSoonFollowupPill",
+          "trainingDueSoonFollowupList",
+          getDueSoonTrainingItems(snapshot),
+          "No training due within 7 days listed in the current update.",
+          "Training",
+          "orange"
         );
       } catch (error) {
         console.error("PowerHub Safety Snapshot failed to load:", error);
