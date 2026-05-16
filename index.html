@@ -507,6 +507,99 @@
       display: none;
     }
 
+    .quicklink-card {
+      position: relative;
+      z-index: 4;
+    }
+
+    .quicklink-details summary {
+      display: block;
+      cursor: pointer;
+    }
+
+    .quicklink-bubble {
+      display: none;
+      position: absolute;
+      top: calc(100% - 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      width: min(320px, 92vw);
+      padding: 10px;
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
+    }
+
+    .quicklink-bubble::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 1px solid var(--cbps-border);
+      border-top: 1px solid var(--cbps-border);
+    }
+
+    .quicklink-details[open] .quicklink-bubble {
+      display: grid;
+      gap: 7px;
+    }
+
+    .quicklink-bubble a {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 12px;
+      border-radius: 12px;
+      color: var(--cbps-text);
+      font-size: 0.9rem;
+      font-weight: 750;
+      background: #fbfdff;
+      border: 1px solid rgba(216, 224, 234, 0.78);
+    }
+
+    .quicklink-bubble a:hover {
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue-dark);
+      border-color: #b6c7da;
+    }
+
+    .quicklink-hint {
+      color: var(--cbps-muted);
+      font-size: 0.74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .quicklink-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .quicklink-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      flex: 0 0 22px;
+    }
+
     .hub-card:active {
       transform: scale(0.99);
     }
@@ -930,11 +1023,59 @@
             </div>
           </a>
 
-          <a class="hub-card tool-button-card" href="#" title="Open HSI Quick Links">
-            <div class="tool-button-slot">
-              <img class="tool-button-image" src="assets/button_HSI Quick Links.png" alt="HSI Quick Links">
-            </div>
-          </a>
+          <div class="hub-card tool-button-card quicklink-card" title="Open HSI Quick Links">
+            <details class="quicklink-details">
+              <summary aria-label="Open HSI Quick Links">
+                <div class="tool-button-slot">
+                  <img class="tool-button-image" src="assets/button_HSI Quick Links.png" alt="HSI Quick Links">
+                </div>
+              </summary>
+              <div class="quicklink-bubble">
+                <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">↗</span>
+                    <span>HSI Login</span>
+                  </span>
+                  <span class="quicklink-hint">Login</span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/legacy/module_records/new?module_name_id=10" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">✓</span>
+                    <span>Create Checklist</span>
+                  </span>
+                  <span class="quicklink-hint">Checklist</span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/legacy/module_records/new?module_name_id=12" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">!</span>
+                    <span>Report an Incident</span>
+                  </span>
+                  <span class="quicklink-hint">Incident</span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/module-record/index/14?offset=0&amp;limit=20&amp;column=id&amp;direction=desc&amp;filters%5Bscope%5D=all&amp;filters%5Bcreated_at%5D=all" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">★</span>
+                    <span>Log a Good Catch</span>
+                  </span>
+                  <span class="quicklink-hint">Good Catch</span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/lms/dashboard/assignments" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">▣</span>
+                    <span>LMS / Training</span>
+                  </span>
+                  <span class="quicklink-hint">Training</span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/module-record/index/43?offset=0&amp;limit=20&amp;column=doc_title&amp;direction=desc&amp;filters%5Bscope%5D=all&amp;filters%5Bcreated_at%5D=all&amp;filters%5Bstate%5D=159" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">≡</span>
+                    <span>HSI Doc Center</span>
+                  </span>
+                  <span class="quicklink-hint">Docs</span>
+                </a>
+              </div>
+            </details>
+          </div>
 
           <a class="hub-card tool-button-card" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;error_message=Internal+error&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" title="Open ShareSync Login">
             <div class="tool-button-slot">
