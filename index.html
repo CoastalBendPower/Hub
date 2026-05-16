@@ -862,6 +862,7 @@
 
       .card-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 26px;
       }
     }
 
@@ -879,8 +880,8 @@
 
       .hub-layout {
         display: grid;
-        grid-template-columns: 380px 1fr;
-        gap: 28px;
+        grid-template-columns: minmax(0, 65%) minmax(0, 35%);
+        gap: 24px;
         align-items: start;
       }
 
@@ -906,7 +907,12 @@
       }
 
       .card-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px 34px;
+      }
+
+      .tool-button-image {
+        max-width: 340px;
       }
 
       .hub-card {
@@ -1017,12 +1023,6 @@
         </div>
 
         <div class="card-grid">
-          <a class="hub-card tool-button-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
-            <div class="tool-button-slot">
-              <img class="tool-button-image" src="assets/button_SafetyHQ.png" alt="SafetyHQ">
-            </div>
-          </a>
-
           <div class="hub-card tool-button-card quicklink-card" title="Open HSI Quick Links">
             <details class="quicklink-details">
               <summary aria-label="Open HSI Quick Links">
@@ -1077,9 +1077,15 @@
             </details>
           </div>
 
-          <a class="hub-card tool-button-card" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;error_message=Internal+error&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" title="Open ShareSync Login">
+          <a class="hub-card tool-button-card" href="#" title="Open HR Docs">
             <div class="tool-button-slot">
-              <img class="tool-button-image" src="assets/button_ShareSync Login.png" alt="ShareSync Login">
+              <img class="tool-button-image" src="assets/button_HR Docs.png" alt="HR Docs">
+            </div>
+          </a>
+
+          <a class="hub-card tool-button-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_SafetyHQ.png" alt="SafetyHQ">
             </div>
           </a>
 
@@ -1089,15 +1095,15 @@
             </div>
           </a>
 
-          <a class="hub-card tool-button-card" href="#" title="Open HR Docs">
+          <a class="hub-card tool-button-card" href="#" title="Open Other Company Docs">
             <div class="tool-button-slot">
-              <img class="tool-button-image" src="assets/button_HR Docs.png" alt="HR Docs">
+              <img class="tool-button-image" src="assets/button_Documents Resources.png" alt="Other Company Docs">
             </div>
           </a>
 
-          <a class="hub-card tool-button-card" href="#" title="Open Documents and Resources">
+          <a class="hub-card tool-button-card" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;error_message=Internal+error&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" title="Open ShareSync Login">
             <div class="tool-button-slot">
-              <img class="tool-button-image" src="assets/button_Documents Resources.png" alt="Documents / Resources">
+              <img class="tool-button-image" src="assets/button_ShareSync Login.png" alt="ShareSync Login">
             </div>
           </a>
         </div>
