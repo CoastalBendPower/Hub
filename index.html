@@ -457,8 +457,22 @@
     }
 
     .tool-button-card {
-      padding: 14px 14px 16px;
-      min-height: 142px;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 8px 8px 10px;
+      min-height: auto;
+      overflow: visible;
+    }
+
+    .tool-button-card::before {
+      display: none;
+    }
+
+    .tool-button-card:hover {
+      border-color: transparent;
+      box-shadow: none;
+      transform: none;
     }
 
     .tool-button-slot {
@@ -467,7 +481,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 0;
     }
 
     .tool-button-image {
@@ -478,10 +492,7 @@
     }
 
     .tool-card-note {
-      margin: 0;
-      color: var(--cbps-muted);
-      font-size: 0.8rem;
-      line-height: 1.3;
+      display: none;
     }
 
     .hub-card:active {
@@ -798,7 +809,7 @@
       }
 
       .tool-button-card {
-        min-height: 150px;
+        min-height: auto;
       }
     }
   </style>
@@ -905,85 +916,37 @@
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_SafetyHQ.png" alt="SafetyHQ">
             </div>
-            <p class="tool-card-note">Safety dashboard, checklist status, and training status.</p>
           </a>
 
           <a class="hub-card tool-button-card" href="#" title="Open HSI Quick Links">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_HSI Quick Links.png" alt="HSI Quick Links">
             </div>
-            <p class="tool-card-note">Training, checklists, HR docs, and safety documents.</p>
           </a>
 
           <a class="hub-card tool-button-card" href="#" title="Open ShareSync Login">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_ShareSync Login.png" alt="ShareSync Login">
             </div>
-            <p class="tool-card-note">Internal files and shared company folders.</p>
           </a>
 
           <a class="hub-card tool-button-card" href="#" title="Open Procedure Center">
             <div class="tool-button-slot">
               <img class="tool-button-image" src="assets/button_ProceduresDashboard.png" alt="Procedure Center">
             </div>
-            <p class="tool-card-note">Procedures, audits, and review tools.</p>
           </a>
 
-          <div class="hub-dropdown">
-            <details>
-              <summary class="dropdown-summary">
-                <div class="card-icon">HR</div>
-                <div>
-                  <h3>HR Docs</h3>
-                  <p>Secured handbook, acknowledgments, and conduct policies.</p>
-                </div>
-                <div class="chevron">›</div>
-              </summary>
+          <a class="hub-card tool-button-card" href="#" title="Open HR Docs">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_HR Docs.png" alt="HR Docs">
+            </div>
+          </a>
 
-              <div class="dropdown-links">
-                <a href="#">
-                  <span>Employee Handbook</span>
-                  <span class="link-hint">Secured</span>
-                </a>
-                <a href="#">
-                  <span>Policy Acknowledgments</span>
-                  <span class="link-hint">HSI</span>
-                </a>
-                <a href="#">
-                  <span>Workplace Conduct</span>
-                  <span class="link-hint">Secured</span>
-                </a>
-              </div>
-            </details>
-          </div>
-
-          <div class="hub-dropdown">
-            <details>
-              <summary class="dropdown-summary">
-                <div class="card-icon">DOC</div>
-                <div>
-                  <h3>Documents / Resources</h3>
-                  <p>Forms, quick references, and commonly used company links.</p>
-                </div>
-                <div class="chevron">›</div>
-              </summary>
-
-              <div class="dropdown-links">
-                <a href="#">
-                  <span>Common Forms</span>
-                  <span class="link-hint">Link</span>
-                </a>
-                <a href="#">
-                  <span>Quick References</span>
-                  <span class="link-hint">Link</span>
-                </a>
-                <a href="#">
-                  <span>Useful Links</span>
-                  <span class="link-hint">Link</span>
-                </a>
-              </div>
-            </details>
-          </div>
+          <a class="hub-card tool-button-card" href="#" title="Open Documents and Resources">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_Documents Resources.png" alt="Documents / Resources">
+            </div>
+          </a>
         </div>
       </section>
     </section>
