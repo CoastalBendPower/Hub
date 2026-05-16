@@ -587,18 +587,96 @@
       white-space: nowrap;
     }
 
-    .announcement-card {
-      padding: 18px;
+    .announcement-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 4px 0 18px;
+    }
+
+    .announcement-title {
+      margin: 0;
+    }
+
+    .announcement-title h2 {
+      margin: 0;
+      font-size: 1.18rem;
+      color: var(--cbps-blue-dark);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .announcement-ticker {
+      position: relative;
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
       background: linear-gradient(135deg, #ffffff, #f6f9fc);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      overflow: hidden;
     }
 
-    .announcement-card.wide-announcement {
-      min-height: auto;
-      padding: 14px 18px;
+    .announcement-ticker::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 18px;
+      right: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.78), rgba(125, 220, 255, 0));
+      opacity: 0.85;
     }
 
-    .announcement-card.wide-announcement p {
-      margin-top: 5px;
+    .announcement-window {
+      overflow: hidden;
+      padding: 15px 18px;
+    }
+
+    .announcement-track {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      min-width: max-content;
+      animation: announcement-scroll 34s linear infinite;
+    }
+
+    .announcement-item {
+      color: var(--cbps-blue-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .announcement-divider {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      margin: 0 22px;
+      background: rgba(11, 42, 78, 0.32);
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+
+    .announcement-ticker:hover .announcement-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes announcement-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .announcement-track {
+        animation: none;
+        white-space: normal;
+        flex-wrap: wrap;
+      }
+
+      .announcement-divider {
+        display: none;
+      }
     }
 
     .footer {
@@ -632,9 +710,15 @@
         padding: 18px 16px;
       }
 
+
       .hero-bg {
         object-fit: cover;
         object-position: 30% center;
+      }
+
+      .announcement-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
       }
 
       .eyebrow {
@@ -718,10 +802,6 @@
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
 
-      .wide-announcement {
-        grid-column: 1 / -1;
-      }
-
       .hub-card {
         min-height: 142px;
       }
@@ -749,6 +829,29 @@
   </header>
 
   <main class="page-shell">
+    <section class="announcement-row" aria-label="Announcements">
+      <div class="announcement-title">
+        <h2>Announcements</h2>
+      </div>
+      <div class="announcement-ticker">
+        <div class="announcement-window">
+          <div class="announcement-track">
+            <span class="announcement-item">Future space for company updates, safety announcements, and important reminders.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item">Check SafetyHQ regularly for current checklist and training status.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item">Plan. Communicate. Deliver.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Future space for company updates, safety announcements, and important reminders.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Check SafetyHQ regularly for current checklist and training status.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Plan. Communicate. Deliver.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="hub-layout">
       <aside>
         <a class="snapshot-section" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard" title="Open SafetyHQ for full checklist and training details">
@@ -807,15 +910,11 @@
         </div>
 
         <div class="card-grid">
-          <div class="announcement-card wide-announcement">
-            <h3>Announcements</h3>
-            <p>Future space for company updates, safety announcements, or important reminders.</p>
-          </div>
-
-          <a class="hub-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
-            <div class="card-icon">✓</div>
-            <h3>SafetyHQ</h3>
-            <p>Open the full safety dashboard, checklist status, training status, and safety links.</p>
+          <a class="hub-card tool-button-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_SafetyHQ.png" alt="SafetyHQ">
+            </div>
+            <p class="tool-card-note">Open the full safety dashboard, checklist status, training status, and safety links.</p>
           </a>
 
           <a class="hub-card tool-button-card" href="#" title="Open HSI Quick Links">
