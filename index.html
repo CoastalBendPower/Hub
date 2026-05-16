@@ -121,7 +121,7 @@
       font-size: clamp(3.35rem, 6.2vw, 5.9rem);
       font-weight: 900;
       line-height: 0.95;
-      letter-spacing: -0.055em;
+      letter-spacing: -0.04em;
     }
 
     .title-power {
@@ -137,6 +137,8 @@
         0 0 10px rgba(0, 157, 255, 0.42),
         0 0 22px rgba(0, 111, 214, 0.32);
       position: relative;
+      display: inline-block;
+      padding-right: 0.08em;
     }
 
     .site-title::after {
@@ -225,10 +227,29 @@
 
     .inline-stat {
       display: inline-flex;
-      align-items: baseline;
+      align-items: center;
       gap: 5px;
       color: var(--cbps-muted);
       white-space: nowrap;
+      border-radius: 999px;
+      padding: 5px 9px;
+      border: 1px solid transparent;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.status-red {
+      background: #fee4e2;
+      border-color: rgba(180, 35, 24, 0.22);
+      box-shadow: 0 5px 12px rgba(180, 35, 24, 0.10);
+    }
+
+    .inline-stat.status-orange {
+      background: #fff1d6;
+      border-color: rgba(184, 107, 0, 0.22);
+      box-shadow: 0 5px 12px rgba(184, 107, 0, 0.08);
     }
 
     .inline-stat-value {
@@ -1092,7 +1113,7 @@
             <div class="snapshot-title-row">
               <h2>Safety Snapshot</h2>
               <div class="inline-stat-group" aria-label="Safety Snapshot counts">
-                <span class="inline-stat status-green" id="missingChecklistsStat">
+                <span class="inline-stat status-green is-hidden" id="missingChecklistsStat">
                   <span class="inline-stat-value" id="missingChecklists">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
@@ -1107,7 +1128,6 @@
             <div class="followup-box status-green" id="checklistFollowupBox">
               <div class="followup-box-header">
                 <h3>Missing / Overdue Safety Eq Checklists</h3>
-                <span class="status-pill status-green" id="checklistFollowupPill">None</span>
               </div>
               <div class="followup-list" id="checklistFollowupList">
                 <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
@@ -1123,11 +1143,11 @@
             <div class="snapshot-title-row">
               <h2>Training Requirements</h2>
               <div class="inline-stat-group" aria-label="Training Requirement counts">
-                <span class="inline-stat status-green" id="overdueTrainingStat">
+                <span class="inline-stat status-green is-hidden" id="overdueTrainingStat">
                   <span class="inline-stat-value" id="overdueTraining">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
-                <span class="inline-stat status-orange" id="trainingDueSoonStat">
+                <span class="inline-stat status-orange is-hidden" id="trainingDueSoonStat">
                   <span class="inline-stat-value" id="trainingDueSoon">-</span>
                   <span class="inline-stat-label">Due Soon</span>
                 </span>
@@ -1140,7 +1160,6 @@
             <div class="followup-box status-green" id="trainingFollowupBox">
               <div class="followup-box-header">
                 <h3>Overdue Training</h3>
-                <span class="status-pill status-green" id="trainingFollowupPill">None</span>
               </div>
               <div class="followup-list" id="trainingFollowupList">
                 <div class="followup-empty">No overdue training listed in the current update.</div>
@@ -1150,7 +1169,6 @@
             <div class="followup-box status-green" id="trainingDueSoonFollowupBox">
               <div class="followup-box-header">
                 <h3>Training Due Soon</h3>
-                <span class="status-pill status-green" id="trainingDueSoonFollowupPill">None</span>
               </div>
               <div class="followup-list" id="trainingDueSoonFollowupList">
                 <div class="followup-empty">No training due within 7 days listed in the current update.</div>
@@ -1265,18 +1283,21 @@
       element.textContent = value ?? fallback;
     }
 
-    function setMetricStatus(id, value, warningValue = 1) {
+    function setInlineStat(id, value, statusType = "red") {
       const stat = document.getElementById(`${id}Stat`);
-      if (!stat) return;
+      const valueElement = document.getElementById(id);
+      if (!stat || !valueElement) return;
+
       const numberValue = Number(value) || 0;
-      stat.classList.remove("status-green", "status-orange", "status-red");
+      valueElement.textContent = numberValue;
+      stat.classList.remove("status-green", "status-orange", "status-red", "is-hidden");
+
       if (numberValue <= 0) {
-        stat.classList.add("status-green");
-      } else if (id === "trainingDueSoon" || numberValue < warningValue) {
-        stat.classList.add("status-orange");
-      } else {
-        stat.classList.add("status-red");
+        stat.classList.add("is-hidden");
+        return;
       }
+
+      stat.classList.add(statusType === "orange" ? "status-orange" : "status-red");
     }
 
     function cleanStatusClasses(element) {
@@ -1288,17 +1309,20 @@
       const box = document.getElementById(boxId);
       const pill = document.getElementById(pillId);
       const list = document.getElementById(listId);
-      if (!box || !pill || !list) return;
+      if (!box || !list) return;
 
       const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
       const hasItems = safeItems.length > 0;
       const activeStatus = statusType === "orange" ? "status-orange" : "status-red";
 
       cleanStatusClasses(box);
-      cleanStatusClasses(pill);
       box.classList.add(hasItems ? activeStatus : "status-green");
-      pill.classList.add(hasItems ? activeStatus : "status-green");
-      pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+
+      if (pill) {
+        cleanStatusClasses(pill);
+        pill.classList.add(hasItems ? activeStatus : "status-green");
+        pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+      }
 
       if (!hasItems) {
         list.innerHTML = `<div class="followup-empty">${emptyText}</div>`;
@@ -1331,8 +1355,14 @@
     }
 
     function getDueSoonTrainingItems(snapshot) {
-      const sourceItems = snapshot.trainingDueSoonItems || snapshot.upcomingTrainingItems || snapshot.inTrainingWindowItems || [];
-      if (!Array.isArray(sourceItems)) return [];
+      const dueSoonSources = [
+        snapshot.dueSoonTrainingItems,
+        snapshot.trainingDueSoonItems,
+        snapshot.upcomingTrainingItems,
+        snapshot.inTrainingWindowItems
+      ];
+      const sourceItems = dueSoonSources.find((items) => Array.isArray(items) && items.length > 0) || [];
+
       return sourceItems.filter((item) => {
         const daysUntilDue = Number(item.daysUntilDue);
         return Number.isFinite(daysUntilDue) ? daysUntilDue <= 7 : true;
@@ -1356,13 +1386,10 @@
         const dueSoonCount = snapshot.trainingDueSoon ?? dueSoonItems.length;
 
         setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
-        setText("missingChecklists", snapshot.missingChecklists, "-");
-        setText("overdueTraining", snapshot.overdueTraining, "-");
-        setText("trainingDueSoon", dueSoonCount, "-");
 
-        setMetricStatus("missingChecklists", snapshot.missingChecklists, 1);
-        setMetricStatus("overdueTraining", snapshot.overdueTraining, 1);
-        setMetricStatus("trainingDueSoon", dueSoonCount, 1);
+        setInlineStat("missingChecklists", snapshot.missingChecklists, "red");
+        setInlineStat("overdueTraining", snapshot.overdueTraining, "red");
+        setInlineStat("trainingDueSoon", dueSoonCount, "orange");
 
         const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
         const safetySnapshotLink = document.getElementById("safetySnapshotLink");
