@@ -1134,9 +1134,7 @@
               <div class="followup-box-header">
                 <h3>Missing / Overdue Safety Eq Checklists</h3>
               </div>
-              <div class="followup-list" id="checklistFollowupList">
-                <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
-              </div>
+              <div class="followup-list" id="checklistFollowupList"></div>
             </div>
           </div>
         </a>
@@ -1166,18 +1164,14 @@
               <div class="followup-box-header">
                 <h3>Overdue Training</h3>
               </div>
-              <div class="followup-list" id="trainingFollowupList">
-                <div class="followup-empty">No overdue training listed in the current update.</div>
-              </div>
+              <div class="followup-list" id="trainingFollowupList"></div>
             </div>
 
             <div class="followup-box status-green" id="trainingDueSoonFollowupBox">
               <div class="followup-box-header">
                 <h3>Training Due Soon</h3>
               </div>
-              <div class="followup-list" id="trainingDueSoonFollowupList">
-                <div class="followup-empty">No training due within 7 days listed in the current update.</div>
-              </div>
+              <div class="followup-list" id="trainingDueSoonFollowupList"></div>
             </div>
           </div>
         </a>
@@ -1318,7 +1312,7 @@
 
     function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red") {
       const box = document.getElementById(boxId);
-      const pill = document.getElementById(pillId);
+      const pill = pillId ? document.getElementById(pillId) : null;
       const list = document.getElementById(listId);
       if (!box || !list) return;
 
@@ -1345,10 +1339,11 @@
         const vehicle = item.eq || item.equipment || item.vehicle || item.asset || "";
         const requirement = item.requirementName || item.training || item.checklistName || itemType;
         const dueDate = item.dueDate ? `Due: ${item.dueDate}` : "Due date not listed";
+        const rawDaysUntilDue = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining;
         const days = item.daysOverdue != null
           ? ` • ${item.daysOverdue}d overdue`
-          : item.daysUntilDue != null
-            ? ` • due in ${item.daysUntilDue}d`
+          : rawDaysUntilDue != null
+            ? ` • due in ${rawDaysUntilDue}d`
             : "";
         const detailParts = itemType === "Checklist" && vehicle
           ? [vehicle, dueDate + days]
@@ -1365,14 +1360,15 @@
       }).join("");
     }
 
-    function renderTrainingDueSoonFallback(count) {
-      const box = document.getElementById("trainingDueSoonFollowupBox");
-      const list = document.getElementById("trainingDueSoonFollowupList");
-      if (!box || !list) return;
+    function renderDueSoonFallback(listId, dueSoonCount) {
+      const list = document.getElementById(listId);
+      if (!list) return;
 
-      cleanStatusClasses(box);
-      box.classList.add("status-orange");
-      list.innerHTML = `<div class="followup-empty">${count} training item(s) due soon. Open SafetyHQ for full details.</div>`;
+      if (dueSoonCount > 0) {
+        list.innerHTML = `<div class="followup-empty">${dueSoonCount} training item(s) due soon. Open SafetyHQ for full details.</div>`;
+      } else {
+        list.innerHTML = `<div class="followup-empty">No training due within 7 days listed in the current update.</div>`;
+      }
     }
 
     function getDueSoonTrainingItems(snapshot, data = {}) {
@@ -1386,10 +1382,13 @@
         data.upcomingTrainingItems,
         data.inTrainingWindowItems
       ];
-      const sourceItems = dueSoonSources.find((items) => Array.isArray(items) && items.length > 0) || [];
+      const sourceItems = dueSoonSources.find((items) => Array.isArray(items) && items.length > 0)
+        || dueSoonSources.find((items) => Array.isArray(items))
+        || [];
 
       return sourceItems.filter((item) => {
-        const daysUntilDue = Number(item.daysUntilDue);
+        const rawDays = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining;
+        const daysUntilDue = Number(rawDays);
         return Number.isFinite(daysUntilDue) ? daysUntilDue <= 7 : true;
       });
     }
@@ -1453,25 +1452,20 @@
         if (dueSoonItems.length > 0) {
           renderFollowup(
             "trainingDueSoonFollowupBox",
-            "trainingDueSoonFollowupPill",
+            null,
             "trainingDueSoonFollowupList",
             dueSoonItems,
             "No training due within 7 days listed in the current update.",
             "Training",
             "orange"
           );
-        } else if (dueSoonCount > 0) {
-          renderTrainingDueSoonFallback(dueSoonCount);
         } else {
-          renderFollowup(
-            "trainingDueSoonFollowupBox",
-            "trainingDueSoonFollowupPill",
-            "trainingDueSoonFollowupList",
-            [],
-            "No training due within 7 days listed in the current update.",
-            "Training",
-            "orange"
-          );
+          renderDueSoonFallback("trainingDueSoonFollowupList", dueSoonCount);
+          const dueSoonBox = document.getElementById("trainingDueSoonFollowupBox");
+          if (dueSoonBox) {
+            cleanStatusClasses(dueSoonBox);
+            dueSoonBox.classList.add(dueSoonCount > 0 ? "status-orange" : "status-green");
+          }
         }
       } catch (error) {
         console.error("PowerHub Safety Snapshot failed to load:", error);
