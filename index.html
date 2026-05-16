@@ -447,6 +447,34 @@
       transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
+    .tool-button-card {
+      padding: 14px 14px 16px;
+      min-height: 142px;
+    }
+
+    .tool-button-slot {
+      width: 100%;
+      min-height: 72px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .tool-button-image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      display: block;
+    }
+
+    .tool-card-note {
+      margin: 0;
+      color: var(--cbps-muted);
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+
     .hub-card:active {
       transform: scale(0.99);
     }
@@ -675,6 +703,10 @@
       .hub-card {
         min-height: 142px;
       }
+
+      .tool-button-card {
+        min-height: 150px;
+      }
     }
   </style>
 </head>
@@ -759,22 +791,25 @@
             <p>Open the full safety dashboard, checklist status, training status, and safety links.</p>
           </a>
 
-          <a class="hub-card" href="#" title="Open HSI training, checklists, and acknowledgments">
-            <div class="card-icon">HSI</div>
-            <h3>HSI</h3>
-            <p>Training, checklists, HR acknowledgments, safety documents, and employee assignments.</p>
+          <a class="hub-card tool-button-card" href="#" title="Open HSI Quick Links">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_HSI Quick Links.png" alt="HSI Quick Links">
+            </div>
+            <p class="tool-card-note">Training, checklists, HR acknowledgments, safety documents, and employee assignments.</p>
           </a>
 
-          <a class="hub-card" href="#" title="Open ShareSync company files and folders">
-            <div class="card-icon">↗</div>
-            <h3>ShareSync</h3>
-            <p>Open internal file storage and shared company folders.</p>
+          <a class="hub-card tool-button-card" href="#" title="Open ShareSync Login">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_ShareSync Login.png" alt="ShareSync Login">
+            </div>
+            <p class="tool-card-note">Open internal file storage and shared company folders.</p>
           </a>
 
-          <a class="hub-card" href="#" title="Open Procedure Center">
-            <div class="card-icon">☰</div>
-            <h3>Procedure Center</h3>
-            <p>Access CBPS procedures, procedure audit tracking, and review tools.</p>
+          <a class="hub-card tool-button-card" href="#" title="Open Procedure Center">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_ProceduresDashboard.png" alt="Procedure Center">
+            </div>
+            <p class="tool-card-note">Access CBPS procedures, procedure audit tracking, and review tools.</p>
           </a>
 
           <div class="hub-dropdown">
