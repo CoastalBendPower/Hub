@@ -207,6 +207,60 @@
       gap: 5px;
     }
 
+    .snapshot-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .inline-stat-group {
+      display: inline-flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 1px;
+    }
+
+    .inline-stat {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      color: var(--cbps-muted);
+      white-space: nowrap;
+    }
+
+    .inline-stat-value {
+      font-size: 1.28rem;
+      line-height: 1;
+      font-weight: 950;
+      color: var(--cbps-blue-dark);
+    }
+
+    .inline-stat-label {
+      font-size: 0.7rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .inline-stat.status-green .inline-stat-value,
+    .inline-stat.status-green .inline-stat-label {
+      color: var(--cbps-green);
+    }
+
+    .inline-stat.status-orange .inline-stat-value,
+    .inline-stat.status-orange .inline-stat-label {
+      color: var(--cbps-orange);
+    }
+
+    .inline-stat.status-red .inline-stat-value,
+    .inline-stat.status-red .inline-stat-label {
+      color: var(--cbps-red);
+    }
+
     .snapshot-header h2 {
       margin: 0;
       font-size: 1.28rem;
@@ -342,16 +396,12 @@
       transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
-    .snapshot-section:hover .metric,
     .snapshot-section:hover .followup-box,
-    .training-section:hover .metric,
     .training-section:hover .followup-box {
       box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
     }
 
-    .snapshot-section:hover .metric:hover,
     .snapshot-section:hover .followup-box:hover,
-    .training-section:hover .metric:hover,
     .training-section:hover .followup-box:hover {
       transform: translateY(-2px);
       box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
@@ -1039,17 +1089,17 @@
       <aside>
         <a class="snapshot-section" id="safetySnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard" title="Open SafetyHQ for full checklist and training details">
           <div class="snapshot-header">
-            <h2>Safety Snapshot</h2>
+            <div class="snapshot-title-row">
+              <h2>Safety Snapshot</h2>
+              <div class="inline-stat-group" aria-label="Safety Snapshot counts">
+                <span class="inline-stat status-green" id="missingChecklistsStat">
+                  <span class="inline-stat-value" id="missingChecklists">-</span>
+                  <span class="inline-stat-label">Overdue</span>
+                </span>
+              </div>
+            </div>
             <div class="last-update">
               Last Update: <strong id="lastUpdate">Loading Last Data Update...</strong>
-            </div>
-          </div>
-
-          <div class="snapshot-grid">
-            <div class="metric status-green">
-              <p class="metric-label">Overdue Safety Eq Checklists</p>
-              <p class="metric-value" id="missingChecklists">-</p>
-              <p class="metric-subtext" id="missingChecklistsSubtext"></p>
             </div>
           </div>
 
@@ -1070,22 +1120,20 @@
       <section class="training-section" aria-label="Training Requirements">
         <a class="snapshot-section" id="trainingSnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ training details" title="Open SafetyHQ for full training details">
           <div class="snapshot-header">
-            <h2>Training Requirements</h2>
+            <div class="snapshot-title-row">
+              <h2>Training Requirements</h2>
+              <div class="inline-stat-group" aria-label="Training Requirement counts">
+                <span class="inline-stat status-green" id="overdueTrainingStat">
+                  <span class="inline-stat-value" id="overdueTraining">-</span>
+                  <span class="inline-stat-label">Overdue</span>
+                </span>
+                <span class="inline-stat status-orange" id="trainingDueSoonStat">
+                  <span class="inline-stat-value" id="trainingDueSoon">-</span>
+                  <span class="inline-stat-label">Due Soon</span>
+                </span>
+              </div>
+            </div>
             <div class="last-update">Current training status from SafetyHQ.</div>
-          </div>
-
-          <div class="training-grid">
-            <div class="metric status-green">
-              <p class="metric-label">Overdue Training</p>
-              <p class="metric-value" id="overdueTraining">-</p>
-              <p class="metric-subtext" id="overdueTrainingSubtext"></p>
-            </div>
-
-            <div class="metric status-orange">
-              <p class="metric-label">Training Due Soon</p>
-              <p class="metric-value" id="trainingDueSoon">-</p>
-              <p class="metric-subtext" id="trainingDueSoonSubtext"></p>
-            </div>
           </div>
 
           <div class="followup-panel">
@@ -1218,24 +1266,17 @@
     }
 
     function setMetricStatus(id, value, warningValue = 1) {
-      const metric = document.getElementById(id)?.closest(".metric");
-      if (!metric) return;
+      const stat = document.getElementById(`${id}Stat`);
+      if (!stat) return;
       const numberValue = Number(value) || 0;
-      metric.classList.remove("status-green", "status-orange", "status-red");
+      stat.classList.remove("status-green", "status-orange", "status-red");
       if (numberValue <= 0) {
-        metric.classList.add("status-green");
+        stat.classList.add("status-green");
       } else if (id === "trainingDueSoon" || numberValue < warningValue) {
-        metric.classList.add("status-orange");
+        stat.classList.add("status-orange");
       } else {
-        metric.classList.add("status-red");
+        stat.classList.add("status-red");
       }
-    }
-
-    function setMetricSubtext(id, value, label) {
-      const element = document.getElementById(id);
-      if (!element) return;
-      const numberValue = Number(value) || 0;
-      element.textContent = numberValue > 0 ? label : "";
     }
 
     function cleanStatusClasses(element) {
@@ -1275,8 +1316,9 @@
             ? ` • due in ${item.daysUntilDue}d`
             : "";
         const detailParts = itemType === "Checklist" && vehicle
-          ? [`${vehicle}`, dueDate + days]
+          ? [vehicle, dueDate + days]
           : [requirement, dueDate + days];
+
         return `
           <div class="followup-item">
             <div>
@@ -1310,18 +1352,17 @@
         const data = await response.json();
         const snapshot = data.powerHubSnapshot || {};
 
+        const dueSoonItems = getDueSoonTrainingItems(snapshot);
+        const dueSoonCount = snapshot.trainingDueSoon ?? dueSoonItems.length;
+
         setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
         setText("missingChecklists", snapshot.missingChecklists, "-");
         setText("overdueTraining", snapshot.overdueTraining, "-");
-        setText("trainingDueSoon", snapshot.trainingDueSoon, "-");
+        setText("trainingDueSoon", dueSoonCount, "-");
 
         setMetricStatus("missingChecklists", snapshot.missingChecklists, 1);
         setMetricStatus("overdueTraining", snapshot.overdueTraining, 1);
-        setMetricStatus("trainingDueSoon", snapshot.trainingDueSoon, 1);
-
-        setMetricSubtext("missingChecklistsSubtext", snapshot.missingChecklists, "Overdue");
-        setMetricSubtext("overdueTrainingSubtext", snapshot.overdueTraining, "Overdue");
-        setMetricSubtext("trainingDueSoonSubtext", snapshot.trainingDueSoon, "Due Soon");
+        setMetricStatus("trainingDueSoon", dueSoonCount, 1);
 
         const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
         const safetySnapshotLink = document.getElementById("safetySnapshotLink");
@@ -1335,7 +1376,8 @@
           "checklistFollowupList",
           snapshot.overdueMonthlyChecklists,
           "No missing or overdue Safety Eq Checklists listed in the current update.",
-          "Checklist"
+          "Checklist",
+          "red"
         );
 
         renderFollowup(
@@ -1352,7 +1394,7 @@
           "trainingDueSoonFollowupBox",
           "trainingDueSoonFollowupPill",
           "trainingDueSoonFollowupList",
-          getDueSoonTrainingItems(snapshot),
+          dueSoonItems,
           "No training due within 7 days listed in the current update.",
           "Training",
           "orange"
