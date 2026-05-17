@@ -121,7 +121,7 @@
       font-size: clamp(3.35rem, 6.2vw, 5.9rem);
       font-weight: 900;
       line-height: 0.95;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.055em;
     }
 
     .title-power {
@@ -137,8 +137,6 @@
         0 0 10px rgba(0, 157, 255, 0.42),
         0 0 22px rgba(0, 111, 214, 0.32);
       position: relative;
-      display: inline-block;
-      padding-right: 0.08em;
     }
 
     .site-title::after {
@@ -233,10 +231,6 @@
       white-space: nowrap;
     }
 
-    .inline-stat.is-hidden {
-      display: none;
-    }
-
     .inline-stat-value {
       font-size: 1.28rem;
       line-height: 1;
@@ -250,6 +244,70 @@
       font-weight: 900;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
     }
 
     .inline-stat.status-green .inline-stat-value,
@@ -1098,7 +1156,7 @@
             <div class="snapshot-title-row">
               <h2>Safety Snapshot</h2>
               <div class="inline-stat-group" aria-label="Safety Snapshot counts">
-                <span class="inline-stat status-green is-hidden" id="missingChecklistsStat">
+                <span class="inline-stat status-green" id="missingChecklistsStat">
                   <span class="inline-stat-value" id="missingChecklists">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
@@ -1129,11 +1187,11 @@
             <div class="snapshot-title-row">
               <h2>Training Requirements</h2>
               <div class="inline-stat-group" aria-label="Training Requirement counts">
-                <span class="inline-stat status-green is-hidden" id="overdueTrainingStat">
+                <span class="inline-stat status-green" id="overdueTrainingStat">
                   <span class="inline-stat-value" id="overdueTraining">-</span>
                   <span class="inline-stat-label">Overdue</span>
                 </span>
-                <span class="inline-stat status-orange is-hidden" id="trainingDueSoonStat">
+                <span class="inline-stat status-orange" id="trainingDueSoonStat">
                   <span class="inline-stat-value" id="trainingDueSoon">-</span>
                   <span class="inline-stat-label">Due Soon</span>
                 </span>
@@ -1271,21 +1329,27 @@
       element.textContent = value ?? fallback;
     }
 
-    function setHeaderStat(id, value, statusType = "red") {
+    function getFirstNumber(...values) {
+      for (const value of values) {
+        const numberValue = Number(value);
+        if (Number.isFinite(numberValue)) return numberValue;
+      }
+      return 0;
+    }
+
+    function setInlineStat(id, value, statusType = "red") {
       const stat = document.getElementById(`${id}Stat`);
-      const valueElement = document.getElementById(id);
-      if (!stat || !valueElement) return;
+      if (!stat) return;
 
       const numberValue = Number(value) || 0;
-      valueElement.textContent = numberValue;
-      stat.classList.remove("status-green", "status-orange", "status-red");
+      stat.classList.remove("status-green", "status-orange", "status-red", "is-hidden");
 
-      if (numberValue > 0) {
-        stat.classList.remove("is-hidden");
-        stat.classList.add(statusType === "orange" ? "status-orange" : "status-red");
-      } else {
-        stat.classList.add("is-hidden", "status-green");
+      if (numberValue <= 0) {
+        stat.classList.add("is-hidden");
+        return;
       }
+
+      stat.classList.add(statusType === "orange" ? "status-orange" : "status-red");
     }
 
     function cleanStatusClasses(element) {
@@ -1293,36 +1357,50 @@
       element.classList.remove("status-green", "status-orange", "status-red");
     }
 
-    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red") {
+    function toggleBox(boxId, shouldShow) {
       const box = document.getElementById(boxId);
-      const pill = document.getElementById(pillId);
+      if (!box) return;
+      box.hidden = !shouldShow;
+    }
+
+    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red", limit = Infinity) {
+      const box = document.getElementById(boxId);
+      const pill = pillId ? document.getElementById(pillId) : null;
       const list = document.getElementById(listId);
-      if (!box || !pill || !list) return;
+      if (!box || !list) return;
 
       const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
       const hasItems = safeItems.length > 0;
       const activeStatus = statusType === "orange" ? "status-orange" : "status-red";
 
       cleanStatusClasses(box);
-      cleanStatusClasses(pill);
       box.classList.add(hasItems ? activeStatus : "status-green");
-      pill.classList.add(hasItems ? activeStatus : "status-green");
-      pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+
+      if (pill) {
+        cleanStatusClasses(pill);
+        pill.classList.add(hasItems ? activeStatus : "status-green");
+        pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+      }
 
       if (!hasItems) {
-        list.innerHTML = `<div class="followup-empty">${emptyText}</div>`;
+        list.innerHTML = emptyText ? `<div class="followup-empty">${emptyText}</div>` : "";
         return;
       }
 
-      list.innerHTML = safeItems.slice(0, 5).map((item) => {
-        const employee = item.employee || item.name || "Employee";
+      const displayItems = Number.isFinite(limit) ? safeItems.slice(0, limit) : safeItems;
+
+      list.innerHTML = displayItems.map((item) => {
+        const employee = item.employee || item.name || item.employeeName || "Employee";
         const vehicle = item.eq || item.equipment || item.vehicle || item.asset || "";
-        const requirement = item.requirementName || item.training || item.checklistName || itemType;
-        const dueDate = item.dueDate ? `Due: ${item.dueDate}` : "Due date not listed";
-        const days = item.daysOverdue != null
-          ? ` • ${item.daysOverdue}d overdue`
-          : item.daysUntilDue != null
-            ? ` • due in ${item.daysUntilDue}d`
+        const requirement = item.requirementName || item.training || item.trainingTitle || item.course || item.courseName || item.checklistName || item.title || itemType;
+        const dueValue = item.dueDate || item.due || item.deadline || "";
+        const dueDate = dueValue ? `Due: ${dueValue}` : "Due date not listed";
+        const rawDaysOverdue = item.daysOverdue ?? item.overdueDays;
+        const rawDaysUntil = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining ?? item.daysToDue;
+        const days = rawDaysOverdue != null
+          ? ` • ${rawDaysOverdue}d overdue`
+          : rawDaysUntil != null
+            ? ` • due in ${rawDaysUntil}d`
             : "";
         const detailParts = itemType === "Checklist" && vehicle
           ? [vehicle, dueDate + days]
@@ -1339,25 +1417,79 @@
       }).join("");
     }
 
-    function getDueSoonTrainingItems(snapshot) {
-      const dueSoonSources = [
-        snapshot.dueSoonTrainingItems,
+    function getDueSoonTrainingItems(snapshot = {}, data = {}) {
+      const possibleSources = [
         snapshot.trainingDueSoonItems,
+        snapshot.dueSoonTrainingItems,
         snapshot.upcomingTrainingItems,
-        snapshot.inTrainingWindowItems
+        snapshot.inTrainingWindowItems,
+        snapshot.trainingItemsDueSoon,
+        snapshot.trainingWithin7DaysItems,
+        snapshot.trainingDueWithin7DaysItems,
+        snapshot.trainingRequirementsDueSoon,
+        snapshot.trainingDueSoonList,
+        snapshot.dueSoonTrainingList,
+        data.trainingDueSoonItems,
+        data.dueSoonTrainingItems,
+        data.upcomingTrainingItems,
+        data.inTrainingWindowItems,
+        data.trainingItemsDueSoon,
+        data.trainingWithin7DaysItems,
+        data.trainingDueWithin7DaysItems,
+        data.trainingRequirementsDueSoon,
+        data.trainingDueSoonList,
+        data.dueSoonTrainingList
       ];
-      const sourceItems = dueSoonSources.find((items) => Array.isArray(items) && items.length > 0) || [];
 
-      return sourceItems.filter((item) => {
-        const daysUntilDue = Number(item.daysUntilDue);
-        return Number.isFinite(daysUntilDue) ? daysUntilDue <= 7 : true;
-      });
+      const sourceItems = possibleSources.find(Array.isArray) || [];
+
+      return sourceItems
+        .filter(Boolean)
+        .filter((item) => {
+          const rawDays = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining ?? item.daysToDue;
+          const daysUntilDue = Number(rawDays);
+
+          if (Number.isFinite(daysUntilDue)) {
+            return daysUntilDue >= 0 && daysUntilDue <= 7;
+          }
+
+          return true;
+        });
+    }
+
+    function getOverdueTrainingItems(snapshot = {}, data = {}) {
+      const possibleSources = [
+        snapshot.overdueTrainingItems,
+        snapshot.trainingOverdueItems,
+        snapshot.overdueTrainings,
+        snapshot.trainingItemsOverdue,
+        data.overdueTrainingItems,
+        data.trainingOverdueItems,
+        data.overdueTrainings,
+        data.trainingItemsOverdue
+      ];
+
+      return (possibleSources.find(Array.isArray) || []).filter(Boolean);
+    }
+
+    function renderDueSoonFallback(listId, dueSoonCount) {
+      const list = document.getElementById(listId);
+      if (!list) return;
+
+      if (dueSoonCount > 0) {
+        list.innerHTML = `<div class="followup-empty">${dueSoonCount} training item(s) due soon. Open SafetyHQ for full details.</div>`;
+      } else {
+        list.innerHTML = "";
+      }
     }
 
     async function loadSafetySnapshot() {
       const isGitHubPages = window.location.hostname === "coastalbendpower.github.io";
       if (!isGitHubPages) {
         setText("lastUpdate", "Preview mode - SafetyHQ feed loads on GitHub Pages", "Preview mode - SafetyHQ feed loads on GitHub Pages");
+        setInlineStat("missingChecklists", 0, "red");
+        setInlineStat("overdueTraining", 0, "red");
+        setInlineStat("trainingDueSoon", 0, "orange");
         return;
       }
 
@@ -1367,53 +1499,121 @@
         const data = await response.json();
         const snapshot = data.powerHubSnapshot || {};
 
-        const dueSoonItems = getDueSoonTrainingItems(snapshot);
-        const dueSoonCount = snapshot.trainingDueSoon ?? dueSoonItems.length;
+        console.log("PowerHub SafetyHQ feed response:", data);
+        console.log("PowerHub powerHubSnapshot:", snapshot);
 
-        setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
+        const dueSoonItems = getDueSoonTrainingItems(snapshot, data);
+        const overdueTrainingItems = getOverdueTrainingItems(snapshot, data);
 
-        setHeaderStat("missingChecklists", snapshot.missingChecklists, "red");
-        setHeaderStat("overdueTraining", snapshot.overdueTraining, "red");
-        setHeaderStat("trainingDueSoon", dueSoonCount, "orange");
+        const dueSoonCountFromFeed = getFirstNumber(
+          snapshot.trainingDueSoon,
+          snapshot.dueSoonTraining,
+          snapshot.trainingDueSoonCount,
+          snapshot.dueSoonTrainingCount,
+          snapshot.upcomingTraining,
+          snapshot.upcomingTrainingCount,
+          snapshot.trainingWithin7Days,
+          snapshot.trainingWithin7DaysCount,
+          snapshot.trainingDueWithin7Days,
+          snapshot.trainingDueWithin7DaysCount,
+          data.trainingDueSoon,
+          data.dueSoonTraining,
+          data.trainingDueSoonCount,
+          data.dueSoonTrainingCount,
+          data.upcomingTraining,
+          data.upcomingTrainingCount,
+          data.trainingWithin7Days,
+          data.trainingWithin7DaysCount,
+          data.trainingDueWithin7Days,
+          data.trainingDueWithin7DaysCount
+        );
 
-        const safetyHqUrl = snapshot.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
-        const safetySnapshotLink = document.getElementById("safetySnapshotLink");
-        if (safetySnapshotLink) safetySnapshotLink.href = safetyHqUrl;
-        const trainingSnapshotLink = document.getElementById("trainingSnapshotLink");
-        if (trainingSnapshotLink) trainingSnapshotLink.href = safetyHqUrl;
+        const overdueTrainingCountFromFeed = getFirstNumber(
+          snapshot.overdueTraining,
+          snapshot.overdueTrainingCount,
+          snapshot.trainingOverdue,
+          snapshot.trainingOverdueCount,
+          data.overdueTraining,
+          data.overdueTrainingCount,
+          data.trainingOverdue,
+          data.trainingOverdueCount
+        );
+
+        const dueSoonCount = dueSoonItems.length || dueSoonCountFromFeed || 0;
+        const overdueChecklistCount = getFirstNumber(snapshot.missingChecklists, snapshot.overdueChecklists, data.missingChecklists, data.overdueChecklists);
+        const overdueTrainingCount = overdueTrainingItems.length || overdueTrainingCountFromFeed || 0;
+        const checklistItems = Array.isArray(snapshot.overdueMonthlyChecklists)
+          ? snapshot.overdueMonthlyChecklists.filter(Boolean)
+          : Array.isArray(data.overdueMonthlyChecklists)
+            ? data.overdueMonthlyChecklists.filter(Boolean)
+            : [];
+
+        setText("lastUpdate", snapshot.lastUpdate || data.lastUpdate, "Latest upload pending");
+        setText("missingChecklists", overdueChecklistCount, "-");
+        setText("overdueTraining", overdueTrainingCount, "-");
+        setText("trainingDueSoon", dueSoonCount, "-");
+
+        setInlineStat("missingChecklists", overdueChecklistCount, "red");
+        setInlineStat("overdueTraining", overdueTrainingCount, "red");
+        setInlineStat("trainingDueSoon", dueSoonCount, "orange");
 
         renderFollowup(
           "checklistFollowupBox",
-          "checklistFollowupPill",
+          null,
           "checklistFollowupList",
-          snapshot.overdueMonthlyChecklists,
-          "No missing or overdue Safety Eq Checklists listed in the current update.",
+          checklistItems,
+          overdueChecklistCount > 0 ? `${overdueChecklistCount} checklist item(s) overdue. Open SafetyHQ for full details.` : "No missing or overdue Safety Eq Checklists listed in the current update.",
           "Checklist",
-          "red"
+          "red",
+          Infinity
         );
 
-        renderFollowup(
-          "trainingFollowupBox",
-          "trainingFollowupPill",
-          "trainingFollowupList",
-          snapshot.overdueTrainingItems,
-          "No overdue training listed in the current update.",
-          "Training",
-          "red"
-        );
+        const hasOverdueTraining = overdueTrainingCount > 0 || overdueTrainingItems.length > 0;
+        toggleBox("trainingFollowupBox", hasOverdueTraining);
+        if (hasOverdueTraining) {
+          renderFollowup(
+            "trainingFollowupBox",
+            null,
+            "trainingFollowupList",
+            overdueTrainingItems,
+            `${overdueTrainingCount} overdue training item(s). Open SafetyHQ for full details.`,
+            "Training",
+            "red",
+            Infinity
+          );
+        }
 
-        renderFollowup(
-          "trainingDueSoonFollowupBox",
-          "trainingDueSoonFollowupPill",
-          "trainingDueSoonFollowupList",
-          dueSoonItems,
-          "No training due within 7 days listed in the current update.",
-          "Training",
-          "orange"
-        );
+        const hasDueSoonTraining = dueSoonCount > 0 || dueSoonItems.length > 0;
+        toggleBox("trainingDueSoonFollowupBox", hasDueSoonTraining);
+        if (dueSoonItems.length > 0) {
+          renderFollowup(
+            "trainingDueSoonFollowupBox",
+            null,
+            "trainingDueSoonFollowupList",
+            dueSoonItems,
+            "",
+            "Training",
+            "orange",
+            Infinity
+          );
+        } else if (hasDueSoonTraining) {
+          const dueSoonBox = document.getElementById("trainingDueSoonFollowupBox");
+          cleanStatusClasses(dueSoonBox);
+          if (dueSoonBox) dueSoonBox.classList.add("status-orange");
+          renderDueSoonFallback("trainingDueSoonFollowupList", dueSoonCount);
+        }
+
+        const safetyUrl = snapshot.safetyHqUrl || data.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
+        const safetyLink = document.getElementById("safetySnapshotLink");
+        const trainingLink = document.getElementById("trainingSnapshotLink");
+        if (safetyLink) safetyLink.href = safetyUrl;
+        if (trainingLink) trainingLink.href = safetyUrl;
       } catch (error) {
-        console.error("PowerHub Safety Snapshot failed to load:", error);
-        setText("lastUpdate", "Unable to load latest SafetyHQ update", "Unable to load latest SafetyHQ update");
+        console.error("PowerHub SafetyHQ feed error:", error);
+        setText("lastUpdate", "Latest upload unavailable", "Latest upload unavailable");
+        setInlineStat("missingChecklists", 0, "red");
+        setInlineStat("overdueTraining", 0, "red");
+        setInlineStat("trainingDueSoon", 0, "orange");
       }
     }
 
