@@ -1,487 +1,1459 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CBPS PowerHub</title>
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#06264a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="PowerHub">
-<link rel="apple-touch-icon" href="assets/icon-192.png">
-<style>
-:root{
-  --bg:#eef3f8;
-  --text:#1f2937;
-  --muted:#64748b;
-  --line:#dbe3ef;
-  --brand:#1f4e79;
-  --brand-dark:#163b5c;
-  --brand-deep:#06264a;
-  --ok:#1f7a1f;
-  --warn:#b7791f;
-  --bad:#b42318;
-  --card:#ffffff;
-  --soft:#f8fbff;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:linear-gradient(180deg,#f7fbff 0%,#eef3f8 42%,#e8f0f8 100%);
-  color:var(--text);
-}
-a{color:inherit}
-.site-header{
-  background:
-    radial-gradient(circle at 18% 18%,rgba(255,255,255,.18),transparent 26%),
-    linear-gradient(135deg,#06264a 0%,#163b5c 54%,#1f4e79 100%);
-  color:#fff;
-  box-shadow:0 10px 28px rgba(15,23,42,.18);
-}
-.header-inner{
-  max-width:1280px;
-  margin:0 auto;
-  padding:18px 20px;
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:16px;
-  align-items:center;
-}
-.brand-block{min-width:0}
-.brand-eyebrow{
-  display:block;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:#bfdbfe;
-  margin-bottom:4px;
-}
-.brand-title{
-  margin:0;
-  font-size:34px;
-  line-height:1.05;
-  font-weight:900;
-  letter-spacing:-.04em;
-}
-.brand-subtitle{
-  margin:7px 0 0;
-  font-size:14px;
-  color:#dbeafe;
-  font-weight:800;
-}
-.tools-dropdown{position:relative;justify-self:end;z-index:20}
-.tools-dropdown summary{
-  list-style:none;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  min-width:168px;
-  min-height:44px;
-  padding:10px 14px;
-  border-radius:999px;
-  border:1px solid rgba(219,234,254,.42);
-  background:rgba(255,255,255,.13);
-  color:#fff;
-  font-size:13px;
-  font-weight:900;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.20),0 12px 24px rgba(15,23,42,.16);
-}
-.tools-dropdown summary::-webkit-details-marker{display:none}
-.tools-dropdown summary::after{content:"▾";font-size:12px;color:#bfdbfe}
-.tools-menu{
-  position:absolute;
-  top:52px;
-  right:0;
-  min-width:240px;
-  display:grid;
-  gap:8px;
-  padding:10px;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:#fff;
-  color:var(--text);
-  box-shadow:0 22px 48px rgba(15,23,42,.24);
-}
-.tools-menu a{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  min-height:40px;
-  padding:10px 12px;
-  border-radius:12px;
-  border:1px solid rgba(219,227,239,.85);
-  background:linear-gradient(180deg,#ffffff,#f8fbff);
-  color:var(--brand-dark);
-  text-decoration:none;
-  font-size:13px;
-  font-weight:900;
-}
-.tools-menu a::after{content:"↗";color:#94a3b8;font-size:12px}
-.tools-menu a:hover{background:#eef6ff;border-color:#bfd3ea}
-.wrap{max-width:1280px;margin:0 auto;padding:20px}
-.updated-line{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  width:100%;
-  color:var(--brand-dark);
-  background:linear-gradient(180deg,#f8fbff,#eef6ff);
-  border-left:5px solid var(--brand);
-  border-radius:12px;
-  font-size:15px;
-  font-weight:900;
-  margin:0 0 16px;
-  padding:10px 14px;
-  box-shadow:0 8px 20px rgba(15,23,42,.08);
-}
-.hub-grid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;
-  align-items:start;
-}
-.panel,.card{
-  background:linear-gradient(180deg,#fff,#f9fbfe);
-  border:1px solid rgba(203,213,225,.78);
-  border-radius:22px;
-  box-shadow:0 12px 34px rgba(15,23,42,.09);
-}
-.panel{padding:16px;min-height:360px}
-.card{padding:14px}
-.section-title{font-size:22px;font-weight:900;margin:0 0 8px;letter-spacing:-.02em;color:#111827}
-.section-note{color:var(--muted);font-size:13px;margin:0 0 14px;line-height:1.35}
-.panel-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
-.small-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;margin:0 0 4px}
-.snapshot-stack{display:grid;gap:12px}
-.snapshot-card{border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}
-.snapshot-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:12px 14px;background:var(--soft);border-bottom:1px solid var(--line)}
-.snapshot-card-head h3{font-size:16px;margin:0;font-weight:900;color:#334155}
-.snapshot-count{font-size:22px;line-height:1;font-weight:900;color:var(--bad);white-space:nowrap}
-.snapshot-meta{margin-top:3px;font-size:12px;font-weight:800;color:var(--muted)}
-.compact-list{display:grid}
-.compact-item{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit}
-.compact-item:last-child{border-bottom:none}
-.compact-item:hover{background:rgba(31,78,121,.05)}
-.item-primary{font-size:14px;font-weight:900;color:#111827;line-height:1.25}
-.item-secondary{font-size:12px;color:var(--muted);font-weight:800;margin-top:3px;line-height:1.25}
-.item-status{font-size:12px;font-weight:900;border-radius:999px;padding:5px 8px;white-space:nowrap;background:#fde8e8;color:var(--bad)}
-.item-status.severe{background:#7f1d1d;color:#fff;border:1px solid #991b1b}
-.empty-message{padding:14px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35;background:#fff}
-.hidden{display:none!important}
-.hub-link-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.hub-link{
-  display:flex;
-  min-height:86px;
-  flex-direction:column;
-  justify-content:space-between;
-  gap:10px;
-  border:1px solid var(--line);
-  border-radius:16px;
-  background:#fff;
-  padding:14px;
-  text-decoration:none;
-  color:var(--text);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.82);
-}
-.hub-link:hover{background:#eef6ff;border-color:#bfd3ea}
-.hub-link strong{font-size:16px;color:#111827}
-.hub-link span{font-size:12px;color:var(--muted);font-weight:800;line-height:1.3}
-.coming-soon{
-  display:flex;
-  min-height:236px;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  border:1px dashed #bfd3ea;
-  border-radius:18px;
-  background:
-    radial-gradient(circle at top left,rgba(31,78,121,.12),transparent 34%),
-    linear-gradient(180deg,#ffffff,#f8fbff);
-  padding:18px;
-}
-.coming-soon strong{display:block;font-size:20px;margin-bottom:6px;color:#111827}
-.coming-soon span{display:block;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35}
-.footer{text-align:center;color:var(--muted);font-size:12px;font-weight:700;margin:20px 0 8px}
-@media(max-width:980px){
-  .hub-grid{grid-template-columns:1fr}
-  .panel{min-height:0}
-}
-@media(max-width:620px){
-  .header-inner{grid-template-columns:1fr;align-items:stretch;padding:16px 14px}
-  .brand-title{font-size:30px}
-  .brand-subtitle{font-size:13px}
-  .tools-dropdown{justify-self:stretch}
-  .tools-dropdown summary{width:100%;border-radius:14px}
-  .tools-menu{position:static;margin-top:8px;min-width:0;width:100%}
-  .wrap{padding:14px}
-  .updated-line{justify-content:center;text-align:center;font-size:14px;margin-bottom:12px}
-  .panel{padding:12px;border-radius:18px}
-  .section-title{font-size:20px}
-  .hub-link-grid{grid-template-columns:1fr}
-  .compact-item{grid-template-columns:1fr;align-items:start}
-  .item-status{justify-self:start}
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PowerHub</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cbps-blue: #123f73;
+      --cbps-blue-dark: #0b2a4e;
+      --cbps-blue-soft: #eaf2fb;
+      --cbps-border: #d8e0ea;
+      --cbps-text: #1f2933;
+      --cbps-muted: #64748b;
+      --cbps-green: #1f7a4d;
+      --cbps-orange: #b86b00;
+      --cbps-red: #b42318;
+      --white: #ffffff;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.10);
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(0, 157, 255, 0.08), transparent 26%),
+        radial-gradient(circle at 88% 22%, rgba(18, 63, 115, 0.08), transparent 28%),
+        linear-gradient(180deg, #f3f6fa 0%, #eef2f6 45%, #f7f9fb 100%);
+      color: var(--cbps-text);
+    }
+
+    @media (min-width: 980px) {
+      body {
+        background:
+          linear-gradient(rgba(243, 246, 250, 0.04), rgba(247, 249, 251, 0.48)),
+          url("assets/background_hub_v2.png") center top / cover no-repeat fixed,
+          linear-gradient(180deg, #e9f0f7 0%, #edf3f8 45%, #f6f9fc 100%);
+      }
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page-shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background-color: #06172d;
+      color: var(--white);
+      border-radius: 0 0 24px 24px;
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+      margin: 0 -16px 18px;
+      aspect-ratio: 1920 / 360;
+      height: auto;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center center;
+      z-index: 0;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(rgba(5, 18, 36, 0.34), rgba(5, 18, 36, 0.62));
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1500px, 100%);
+      margin: 0 auto;
+      padding: 0 16px;
+      display: block;
+    }
+
+    .hero-copy {
+      max-width: 780px;
+    }
+
+    .eyebrow {
+      margin: 0 0 11px;
+      font-size: clamp(0.74rem, 0.95vw, 0.9rem);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      opacity: 0.9;
+      font-weight: 850;
+    }
+
+    .site-title {
+      margin: 0;
+      font-size: clamp(3.35rem, 6.2vw, 5.9rem);
+      font-weight: 900;
+      line-height: 0.95;
+      letter-spacing: -0.055em;
+    }
+
+    .title-power {
+      color: #ffffff;
+    }
+
+    .title-hub {
+      background: linear-gradient(180deg, #ffffff 0%, #7ddcff 26%, #009dff 66%, #006fd6 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 10px rgba(0, 157, 255, 0.42),
+        0 0 22px rgba(0, 111, 214, 0.32);
+      position: relative;
+    }
+
+    .site-title::after {
+      content: "";
+      display: block;
+      width: 170px;
+      height: 3px;
+      margin-top: 0.45rem;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.95), rgba(125, 220, 255, 0));
+      box-shadow: 0 0 14px rgba(0, 157, 255, 0.42);
+    }
+
+    .site-subtitle {
+      margin: 0.8rem 0 0;
+      font-size: clamp(0.98rem, 1.35vw, 1.25rem);
+      line-height: 1.3;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.88);
+    }
+
+
+    .section-title {
+      margin: 22px 2px 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 1.28rem;
+      color: var(--cbps-blue-dark);
+      font-family: "Rajdhani", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+    }
+
+    .section-title h2::after {
+      content: "";
+      display: block;
+      width: 90px;
+      height: 3px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.95), rgba(125, 220, 255, 0));
+      box-shadow: 0 0 12px rgba(0, 157, 255, 0.22);
+    }
+
+    .section-title p {
+      margin: 5px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .snapshot-section {
+      display: block;
+      color: inherit;
+    }
+
+    .snapshot-header {
+      margin: 22px 2px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .snapshot-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .inline-stat-group {
+      display: inline-flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding-top: 1px;
+    }
+
+    .inline-stat {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      color: var(--cbps-muted);
+      white-space: nowrap;
+    }
+
+    .inline-stat-value {
+      font-size: 1.28rem;
+      line-height: 1;
+      font-weight: 950;
+      color: var(--cbps-blue-dark);
+    }
+
+    .inline-stat-label {
+      font-size: 0.7rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.is-hidden {
+      display: none;
+    }
+
+    .inline-stat.status-green .inline-stat-value,
+    .inline-stat.status-green .inline-stat-label {
+      color: var(--cbps-green);
+    }
+
+    .inline-stat.status-orange .inline-stat-value,
+    .inline-stat.status-orange .inline-stat-label {
+      color: var(--cbps-orange);
+    }
+
+    .inline-stat.status-red .inline-stat-value,
+    .inline-stat.status-red .inline-stat-label {
+      color: var(--cbps-red);
+    }
+
+    .snapshot-header h2 {
+      margin: 0;
+      font-size: 1.28rem;
+      color: var(--cbps-blue-dark);
+      font-family: "Rajdhani", Inter, ui-sans-serif, system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.055em;
+      text-transform: uppercase;
+      position: relative;
+      display: inline-block;
+      padding-bottom: 10px;
+      width: fit-content;
+    }
+
+    .snapshot-header h2::after {
+      content: "";
+      display: block;
+      width: 90px;
+      height: 3px;
+      margin-top: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.95), rgba(125, 220, 255, 0));
+      box-shadow: 0 0 12px rgba(0, 157, 255, 0.22);
+    }
+
+    .last-update {
+      font-size: 0.82rem;
+      color: var(--cbps-muted);
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .training-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .training-section {
+      display: block;
+      color: inherit;
+    }
+
+    .metric {
+      min-height: 108px;
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-md);
+      padding: 12px 10px 11px;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      text-align: center;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .metric-label {
+      min-height: 42px;
+      margin: 0;
+      color: var(--cbps-muted);
+      font-size: 0.76rem;
+      line-height: 1.2;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .metric-value {
+      margin: 9px 0 0;
+      font-size: 2.1rem;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--cbps-blue-dark);
+      text-align: center;
+    }
+
+    .metric-subtext {
+      min-height: 15px;
+      margin: 5px 0 0;
+      font-size: 0.7rem;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--cbps-muted);
+    }
+
+    .metric.status-red .metric-subtext {
+      color: var(--cbps-red);
+    }
+
+    .metric.status-orange .metric-subtext {
+      color: var(--cbps-orange);
+    }
+
+    .metric.status-green .metric-subtext {
+      color: var(--cbps-green);
+    }
+
+    .metric.status-red .metric-value {
+      color: var(--cbps-red);
+    }
+
+    .metric.status-orange .metric-value {
+      color: var(--cbps-orange);
+    }
+
+    .metric.status-green .metric-value {
+      color: var(--cbps-green);
+    }
+
+    .followup-panel {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+    }
+
+    .followup-box {
+      border: 1px solid var(--cbps-border);
+      border-left-width: 5px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: #ffffff;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .snapshot-section:hover .followup-box,
+    .training-section:hover .followup-box {
+      box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    }
+
+    .snapshot-section:hover .followup-box:hover,
+    .training-section:hover .followup-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(15, 23, 42, 0.12);
+      border-color: #b6c7da;
+    }
+
+    .followup-box.status-green {
+      border-left-color: var(--cbps-green);
+    }
+
+    .followup-box.status-orange {
+      border-left-color: var(--cbps-orange);
+    }
+
+    .followup-box.status-red {
+      border-left-color: var(--cbps-red);
+    }
+
+    .followup-box-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: baseline;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--cbps-border);
+      background: #fbfdff;
+    }
+
+    .followup-box-header h3 {
+      margin: 0;
+      font-size: 0.94rem;
+      color: var(--cbps-blue-dark);
+    }
+
+    .status-pill {
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 0.72rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .status-pill.status-green {
+      background: #dcfae6;
+      color: var(--cbps-green);
+    }
+
+    .status-pill.status-orange {
+      background: #fff1d6;
+      color: var(--cbps-orange);
+    }
+
+    .status-pill.status-red {
+      background: #fee4e2;
+      color: var(--cbps-red);
+    }
+
+    .followup-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .followup-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--cbps-border);
+    }
+
+    .followup-item:last-child {
+      border-bottom: 0;
+    }
+
+    .followup-name {
+      margin: 0;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: var(--cbps-text);
+    }
+
+    .followup-detail {
+      margin: 3px 0 0;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: var(--cbps-muted);
+    }
+
+    .followup-empty {
+      padding: 13px 14px;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      color: var(--cbps-muted);
+      background: #fbfdff;
+    }
+
+    .followup-box.status-green .followup-empty {
+      color: var(--cbps-green);
+      background: #f0fdf4;
+    }
+
+    .followup-box.status-orange .followup-empty {
+      color: var(--cbps-orange);
+      background: #fffbeb;
+    }
+
+    .followup-box.status-red .followup-empty {
+      color: var(--cbps-red);
+      background: #fff5f5;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .tools-section {
+      position: relative;
+    }
+
+    .hub-card,
+    .hub-dropdown,
+    .announcement-card {
+      position: relative;
+      background: var(--white);
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.07);
+      overflow: hidden;
+    }
+
+    .hub-card::before,
+    .hub-dropdown::before,
+    .announcement-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 18px;
+      right: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.78), rgba(125, 220, 255, 0));
+      opacity: 0.85;
+    }
+
+    .hub-card {
+      display: block;
+      padding: 18px;
+      min-height: 112px;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .tool-button-card {
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      padding: 8px 8px 10px;
+      min-height: auto;
+      overflow: visible;
+    }
+
+    .tool-button-card::before {
+      display: none;
+    }
+
+    .tool-button-card:hover {
+      border-color: transparent;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .tool-button-slot {
+      width: 100%;
+      min-height: 72px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 0;
+    }
+
+    .tool-button-image {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      display: block;
+    }
+
+    .tool-card-note {
+      display: none;
+    }
+
+    .quicklink-card {
+      position: relative;
+      z-index: 4;
+    }
+
+    .quicklink-details summary {
+      display: block;
+      cursor: pointer;
+    }
+
+    .quicklink-bubble {
+      display: none;
+      position: absolute;
+      top: calc(100% - 2px);
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      width: min(320px, 92vw);
+      padding: 10px;
+      border: 1px solid var(--cbps-border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
+      backdrop-filter: blur(6px);
+      overflow: hidden;
+    }
+
+    .quicklink-bubble::after {
+      content: "";
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      width: 190px;
+      height: 100px;
+      background: url("assets/Logo_HSI.png") no-repeat center / contain;
+      opacity: 0.09;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .quicklink-bubble::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 14px;
+      height: 14px;
+      background: rgba(255, 255, 255, 0.98);
+      border-left: 1px solid var(--cbps-border);
+      border-top: 1px solid var(--cbps-border);
+      z-index: 3;
+    }
+
+    .quicklink-details[open] .quicklink-bubble {
+      display: grid;
+      gap: 7px;
+    }
+
+    .quicklink-bubble a {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-start;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 12px;
+      border-radius: 12px;
+      color: var(--cbps-text);
+      font-size: 0.9rem;
+      font-weight: 750;
+      background: transparent;
+      border: 1px solid transparent;
+    }
+
+    .quicklink-bubble a:hover {
+      background: rgba(232, 243, 252, 0.38);
+      color: var(--cbps-blue-dark);
+      border-color: rgba(182, 199, 218, 0.55);
+    }
+
+    .quicklink-hint {
+      color: var(--cbps-muted);
+      font-size: 0.74rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .quicklink-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .quicklink-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: var(--cbps-blue-dark);
+      font-size: 0.78rem;
+      font-weight: 900;
+      flex: 0 0 22px;
+    }
+
+    .hub-card:active {
+      transform: scale(0.99);
+    }
+
+    .hub-card:hover,
+    .hub-dropdown:hover,
+    .announcement-card:hover {
+      border-color: #b6c7da;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.10);
+    }
+
+    .card-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue);
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .hub-card h3,
+    .dropdown-summary h3,
+    .announcement-card h3 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--cbps-blue-dark);
+    }
+
+    .hub-card p,
+    .dropdown-summary p,
+    .announcement-card p {
+      margin: 7px 0 0;
+      color: var(--cbps-muted);
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    details {
+      width: 100%;
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .dropdown-summary {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 18px;
+    }
+
+    .dropdown-summary .card-icon {
+      margin: 0;
+    }
+
+    .chevron {
+      color: var(--cbps-muted);
+      font-weight: 800;
+      transition: transform 0.18s ease;
+    }
+
+    details[open] .chevron {
+      transform: rotate(90deg);
+    }
+
+    .dropdown-links {
+      border-top: 1px solid var(--cbps-border);
+      background: #fbfdff;
+      padding: 8px;
+    }
+
+    .dropdown-links a {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      color: var(--cbps-text);
+      font-size: 0.92rem;
+    }
+
+    .dropdown-links a:hover {
+      background: var(--cbps-blue-soft);
+      color: var(--cbps-blue-dark);
+    }
+
+    .link-hint {
+      color: var(--cbps-muted);
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .announcement-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin: 4px 0 18px;
+      padding: 16px 0;
+      border-top: 1px solid rgba(216, 224, 234, 0.92);
+      border-bottom: 1px solid rgba(216, 224, 234, 0.92);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.65),
+        0 1px 0 rgba(255, 255, 255, 0.65);
+    }
+
+    .announcement-title {
+      margin: 0;
+    }
+
+    .announcement-title h2 {
+      margin: 0;
+      font-size: 1.18rem;
+      color: var(--cbps-blue-dark);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .announcement-ticker {
+      position: relative;
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .announcement-window {
+      overflow: hidden;
+      padding: 2px 0;
+    }
+
+    .announcement-track {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      min-width: max-content;
+      animation: announcement-scroll 34s linear infinite;
+    }
+
+    .announcement-item {
+      color: var(--cbps-blue-dark);
+      font-size: 0.92rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .announcement-divider {
+      display: inline-block;
+      width: 2px;
+      height: 18px;
+      margin: 0 22px;
+      background: rgba(11, 42, 78, 0.32);
+      border-radius: 999px;
+      flex: 0 0 auto;
+    }
+
+    .announcement-ticker:hover .announcement-track {
+      animation-play-state: paused;
+    }
+
+    @keyframes announcement-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .announcement-track {
+        animation: none;
+        white-space: normal;
+        flex-wrap: wrap;
+      }
+
+      .announcement-divider {
+        display: none;
+      }
+    }
+
+    .footer {
+      margin: 30px 0 8px;
+      padding: 18px 4px 20px;
+      color: var(--cbps-muted);
+      font-size: 0.82rem;
+      text-align: center;
+      border-top: 1px solid rgba(216, 224, 234, 0.9);
+    }
+
+    .footer-brand {
+      margin: 0;
+      color: var(--cbps-blue-dark);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-disclaimer {
+      max-width: 820px;
+      margin: 8px auto 0;
+      font-size: 0.76rem;
+      line-height: 1.45;
+      color: var(--cbps-muted);
+    }
+
+    @media (max-width: 700px) {
+      .hero {
+        aspect-ratio: auto;
+        height: clamp(230px, 48vw, 285px);
+        padding: 18px 16px;
+      }
+
+
+      .hero-bg {
+        object-fit: cover;
+        object-position: 30% center;
+      }
+
+      .announcement-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .eyebrow {
+        font-size: 0.7rem;
+      }
+
+      .site-title {
+        font-size: 3rem;
+        letter-spacing: -0.05em;
+      }
+
+      .site-subtitle {
+        max-width: 320px;
+        font-size: 0.9rem;
+        letter-spacing: 0.06em;
+      }
+    }
+
+    @media (min-width: 680px) {
+      .page-shell {
+        padding: 22px;
+      }
+
+      .hero {
+        margin: 0 -22px 20px;
+        padding: 30px 22px;
+        aspect-ratio: 1920 / 360;
+        height: auto;
+      }
+
+      .snapshot-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .training-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .card-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 26px;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero {
+        border-radius: 0 0 34px 34px;
+        aspect-ratio: 1920 / 360;
+        height: auto;
+      }
+
+      .hero-inner {
+        padding-left: clamp(300px, 27vw, 470px);
+        display: block;
+      }
+
+      .hub-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 40%) minmax(0, 40%) minmax(0, 20%);
+        gap: 22px;
+        align-items: start;
+      }
+
+      .training-section,
+      .tools-section {
+        position: relative;
+        padding-left: 22px;
+      }
+
+      .training-section::before,
+      .tools-section::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 24px;
+        bottom: 12px;
+        width: 3px;
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(0, 157, 255, 0), rgba(0, 157, 255, 0.72), rgba(125, 220, 255, 0));
+        box-shadow: 0 0 12px rgba(0, 157, 255, 0.24);
+      }
+
+      .snapshot-section,
+      .training-section,
+      .tools-section {
+        position: sticky;
+        top: 18px;
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .tool-button-slot {
+        min-height: 56px;
+      }
+
+      .tool-button-image {
+        max-width: 220px;
+      }
+
+      .hub-card {
+        min-height: 142px;
+      }
+
+      .tool-button-card {
+        min-height: auto;
+      }
+    }
+    .site-version {
+      margin: 6px 0 0;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      color: var(--cbps-muted);
+      letter-spacing: 0.02em;
+      text-align: center;
+    }
+  </style>
 </head>
+
 <body>
-<header class="site-header">
-  <div class="header-inner">
-    <div class="brand-block">
-      <span class="brand-eyebrow">Coastal Bend Power Services</span>
-      <h1 class="brand-title">CBPS PowerHub</h1>
-      <p class="brand-subtitle">Safety. Training. Procedures. Resources.</p>
+  <header class="hero">
+    <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="" aria-hidden="true">
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Coastal Bend Power Services, LLC</p>
+        <h1 class="site-title">
+          <span class="title-power">Power</span><span class="title-hub">Hub</span>
+        </h1>
+        <p class="site-subtitle">Plan. Communicate. Deliver.</p>
+      </div>
+
     </div>
-    <details class="tools-dropdown">
-      <summary>Company Tools</summary>
-      <nav class="tools-menu" aria-label="Company tools">
-        <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
-        <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
-        <a href="https://coastalbendpower.github.io/SafetyHQ/" target="_blank" rel="noopener noreferrer">SafetyHQ</a>
-        <a href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" target="_blank" rel="noopener noreferrer">Procedures</a>
-        <a href="#hr-docs">HR Docs</a>
-        <a href="#other-docs">Other Docs</a>
-        <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Company Website</a>
-      </nav>
-    </details>
-  </div>
-</header>
+  </header>
 
-<main class="wrap">
-  <div class="updated-line" id="last-update">Last Update: 05/14/2026 5:02 PM</div>
-
-  <section class="hub-grid" aria-label="PowerHub homepage sections">
-    <section class="panel safety-panel" aria-labelledby="safety-title">
-      <div class="panel-header">
-        <div>
-          <p class="small-kicker">Safety Snapshot</p>
-          <h2 class="section-title" id="safety-title">Action Items</h2>
-          <p class="section-note" id="monthly-note">May 2026 checklists due 05/08/2026. Required for employees assigned a company vehicle.</p>
+  <main class="page-shell">
+    <section class="announcement-row" aria-label="Announcements">
+      <div class="announcement-title">
+        <h2>Announcements:</h2>
+      </div>
+      <div class="announcement-ticker">
+        <div class="announcement-window">
+          <div class="announcement-track">
+            <span class="announcement-item">Future space for company updates, safety announcements, and important reminders.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item">Check SafetyHQ regularly for current checklist and training status.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item">Plan. Communicate. Deliver.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Future space for company updates, safety announcements, and important reminders.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Check SafetyHQ regularly for current checklist and training status.</span>
+            <span class="announcement-divider" aria-hidden="true"></span>
+            <span class="announcement-item" aria-hidden="true">Plan. Communicate. Deliver.</span>
+          </div>
         </div>
       </div>
+    </section>
 
-      <div class="snapshot-stack">
-        <article class="snapshot-card" id="checklist-card">
-          <div class="snapshot-card-head">
-            <div>
-              <h3>Missing / Overdue Safety Eq Checklists</h3>
-              <div class="snapshot-meta">Company vehicle checklist follow-up</div>
+    <section class="hub-layout">
+      <aside>
+        <a class="snapshot-section" id="safetySnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard" title="Open SafetyHQ for full checklist and training details">
+          <div class="snapshot-header">
+            <div class="snapshot-title-row">
+              <h2>Safety Snapshot</h2>
+              <div class="inline-stat-group" aria-label="Safety Snapshot counts">
+                <span class="inline-stat status-green" id="missingChecklistsStat">
+                  <span class="inline-stat-value" id="missingChecklists">-</span>
+                  <span class="inline-stat-label">Overdue</span>
+                </span>
+              </div>
             </div>
-            <div class="snapshot-count" id="checklist-count">4</div>
-          </div>
-          <div class="compact-list" id="checklist-list">
-            <a class="compact-item" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
-              <div><div class="item-primary">Johnathon Torres</div><div class="item-secondary">EQ V008</div></div><span class="item-status">6d Overdue</span>
-            </a>
-            <a class="compact-item" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
-              <div><div class="item-primary">Hayden Henry</div><div class="item-secondary">EQ V013 · Missed Apr 2026</div></div><span class="item-status">6d Overdue</span>
-            </a>
-            <a class="compact-item" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
-              <div><div class="item-primary">Kurt Foerster</div><div class="item-secondary">EQ V027</div></div><span class="item-status">6d Overdue</span>
-            </a>
-            <a class="compact-item" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
-              <div><div class="item-primary">Zach Hasdorff</div><div class="item-secondary">EQ V029</div></div><span class="item-status">6d Overdue</span>
-            </a>
-          </div>
-        </article>
-
-        <article class="snapshot-card hidden" id="training-overdue-card">
-          <div class="snapshot-card-head">
-            <div>
-              <h3>Overdue Training</h3>
-              <div class="snapshot-meta">HSI training items past due</div>
+            <div class="last-update">
+              Last Update: <strong id="lastUpdate">Loading Last Data Update...</strong>
             </div>
-            <div class="snapshot-count" id="training-overdue-count">0</div>
           </div>
-          <div class="compact-list" id="training-overdue-list"></div>
-        </article>
-      </div>
+
+          <div class="followup-panel">
+            <div class="followup-box status-green" id="checklistFollowupBox">
+              <div class="followup-box-header">
+                <h3>Missing / Overdue Safety Eq Checklists</h3>
+              </div>
+              <div class="followup-list" id="checklistFollowupList">
+                <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </aside>
+
+      <section class="training-section" aria-label="Training Requirements">
+        <a class="snapshot-section" id="trainingSnapshotLink" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ training details" title="Open SafetyHQ for full training details">
+          <div class="snapshot-header">
+            <div class="snapshot-title-row">
+              <h2>Training Requirements</h2>
+              <div class="inline-stat-group" aria-label="Training Requirement counts">
+                <span class="inline-stat status-green" id="overdueTrainingStat">
+                  <span class="inline-stat-value" id="overdueTraining">-</span>
+                  <span class="inline-stat-label">Overdue</span>
+                </span>
+                <span class="inline-stat status-orange" id="trainingDueSoonStat">
+                  <span class="inline-stat-value" id="trainingDueSoon">-</span>
+                  <span class="inline-stat-label">Due Soon</span>
+                </span>
+              </div>
+            </div>
+            <div class="last-update">Current training status from SafetyHQ.</div>
+          </div>
+
+          <div class="followup-panel">
+            <div class="followup-box status-green" id="trainingFollowupBox">
+              <div class="followup-box-header">
+                <h3>Overdue Training</h3>
+              </div>
+              <div class="followup-list" id="trainingFollowupList">
+                <div class="followup-empty">No overdue training listed in the current update.</div>
+              </div>
+            </div>
+
+            <div class="followup-box status-green" id="trainingDueSoonFollowupBox">
+              <div class="followup-box-header">
+                <h3>Training Due Soon</h3>
+              </div>
+              <div class="followup-list" id="trainingDueSoonFollowupList">
+                <div class="followup-empty">No training due within 7 days listed in the current update.</div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </section>
+
+      <section class="tools-section">
+        <div class="section-title">
+          <h2>Company Tools</h2>
+          <p>Fast access to the main systems employees and team leads use most.</p>
+        </div>
+
+        <div class="card-grid">
+          <div class="hub-card tool-button-card quicklink-card" title="Open HSI Quick Links">
+            <details class="quicklink-details">
+              <summary aria-label="Open HSI Quick Links">
+                <div class="tool-button-slot">
+                  <img class="tool-button-image" src="assets/button_HSI Quick Links.png" alt="HSI Quick Links">
+                </div>
+              </summary>
+              <div class="quicklink-bubble">
+                <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">↗</span>
+                    <span>HSI Login</span>
+                  </span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/legacy/module_records/new?module_name_id=10" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">✓</span>
+                    <span>Create Checklist</span>
+                  </span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/legacy/module_records/new?module_name_id=12" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">!</span>
+                    <span>Report an Incident</span>
+                  </span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/module-record/index/14?offset=0&amp;limit=20&amp;column=id&amp;direction=desc&amp;filters%5Bscope%5D=all&amp;filters%5Bcreated_at%5D=all" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">★</span>
+                    <span>Log a Good Catch</span>
+                  </span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/lms/dashboard/assignments" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">▣</span>
+                    <span>LMS / Training</span>
+                  </span>
+                </a>
+                <a href="https://sys.hsiplatform.com/coastalbendpower/ds/na/sms/module-record/index/43?offset=0&amp;limit=20&amp;column=doc_title&amp;direction=desc&amp;filters%5Bscope%5D=all&amp;filters%5Bcreated_at%5D=all&amp;filters%5Bstate%5D=159" target="_blank" rel="noopener">
+                  <span class="quicklink-left">
+                    <span class="quicklink-icon">≡</span>
+                    <span>HSI Doc Center</span>
+                  </span>
+                </a>
+              </div>
+            </details>
+          </div>
+
+          <a class="hub-card tool-button-card" href="#" title="Open HR Docs">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_HR Docs.png" alt="HR Docs">
+            </div>
+          </a>
+
+          <a class="hub-card tool-button-card" href="https://coastalbendpower.github.io/SafetyHQ/" title="Open the full SafetyHQ dashboard">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_SafetyHQ.png" alt="SafetyHQ">
+            </div>
+          </a>
+
+          <a class="hub-card tool-button-card" href="#" title="Open Procedure Center">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_ProceduresDashboard.png" alt="Procedure Center">
+            </div>
+          </a>
+
+          <a class="hub-card tool-button-card" href="#" title="Open Other Docs">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_Other Docs.png" alt="Other Docs">
+            </div>
+          </a>
+
+          <a class="hub-card tool-button-card" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;error_message=Internal+error&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" title="Open ShareSync Login">
+            <div class="tool-button-slot">
+              <img class="tool-button-image" src="assets/button_ShareSync Login.png" alt="ShareSync Login">
+            </div>
+          </a>
+        </div>
+      </section>
     </section>
 
-    <section class="panel hr-panel" aria-labelledby="hr-title">
-      <p class="small-kicker">Employee Resources</p>
-      <h2 class="section-title" id="hr-title">HR Hub</h2>
-      <p class="section-note">Clean placeholders for employee documents and internal resources.</p>
-      <div class="hub-link-grid">
-        <a class="hub-link" id="hr-docs" href="#hr-docs"><strong>HR Docs</strong><span>Employee-facing HR documents and acknowledgements.</span></a>
-        <a class="hub-link" href="#policies"><strong>Policies</strong><span>Company policies and reference material.</span></a>
-        <a class="hub-link" href="#forms"><strong>Forms</strong><span>Common request forms and printable resources.</span></a>
-        <a class="hub-link" href="#employee-resources"><strong>Employee Resources</strong><span>Helpful links, contacts, and support items.</span></a>
-      </div>
-    </section>
+    <footer class="footer">
+      <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
+      <p class="footer-disclaimer">
+        Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.
+      </p>
+    <p class="site-version">Version 1.3.82</p>
+    </footer>
+  </main>
+  <script>
+    const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
+    const DEFAULT_SAFETYHQ_URL = "https://coastalbendpower.github.io/SafetyHQ/";
 
-    <section class="panel leadership-panel" aria-labelledby="leadership-title">
-      <p class="small-kicker">Future Use</p>
-      <h2 class="section-title" id="leadership-title">Leadership Hub</h2>
-      <p class="section-note">Reserved for crew lead, admin, and leadership resources.</p>
-      <div class="coming-soon">
-        <div><strong>Coming Soon</strong><span>This area is intentionally left open for future leadership tools, reports, and announcements.</span></div>
-      </div>
-    </section>
-  </section>
-
-  <div class="footer">Coastal Bend Power Services • PowerHub</div>
-</main>
-
-<script>
-const SAFETYHQ_LIVE_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
-const HSI_LOGIN_URL = "https://coastalbendpower.na.hsiplatform.com/users/sign_in";
-
-function text(id, value){
-  const el = document.getElementById(id);
-  if(el && value !== undefined && value !== null && value !== "") el.textContent = value;
-}
-function esc(value){
-  return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
-}
-function fmtDate(value){
-  if(!value) return "";
-  const s = String(value);
-  const m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if(m) return `${m[2]}/${m[3]}/${m[1]}`;
-  return s;
-}
-function normalizeRows(source){
-  if(!source) return [];
-  if(Array.isArray(source)) return source;
-  if(Array.isArray(source.rows)) return source.rows;
-  if(Array.isArray(source.items)) return source.items;
-  if(Array.isArray(source.values)) return source.values;
-  return [];
-}
-function cell(row, keys, index){
-  if(Array.isArray(row)) return row[index] ?? "";
-  for(const k of keys){ if(row && row[k] !== undefined && row[k] !== null) return row[k]; }
-  return "";
-}
-function getMetric(data, keys){
-  const sources = [data.summary, data.dashboardMetrics, data.metrics, data];
-  for(const src of sources){
-    if(!src) continue;
-    for(const key of keys){
-      if(src[key] !== undefined && src[key] !== null && src[key] !== "") return src[key];
+    function setText(id, value, fallback = "-") {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.textContent = value ?? fallback;
     }
-  }
-  return "";
-}
-function daysPastDueFromDate(value){
-  if(!value) return 0;
-  const due = new Date(String(value).slice(0,10) + "T00:00:00");
-  if(Number.isNaN(due.getTime())) return 0;
-  const today = new Date();
-  const localToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  return Math.max(0, Math.floor((localToday - due) / 86400000));
-}
-function statusLooksComplete(status, completed){
-  const lower = String(status || "").toLowerCase();
-  return lower.includes("complete") || Boolean(completed);
-}
-function rowIsOverdue(row){
-  const status = cell(row,["dashboardStatus","Dashboard Status","status","Status"],4);
-  const days = Number(cell(row,["daysOverdue","Days Overdue"],5));
-  const due = cell(row,["dueDate","Due Date"],3);
-  const lower = String(status).toLowerCase();
-  return lower.includes("overdue") || lower.includes("missing") || days > 0 || daysPastDueFromDate(due) > 0;
-}
-function renderChecklists(rows){
-  const list = document.getElementById("checklist-list");
-  const count = document.getElementById("checklist-count");
-  if(!list || !rows.length) return;
 
-  const filtered = rows.filter(r => {
-    const employee = cell(r,["employee","Employee"],0);
-    const status = cell(r,["dashboardStatus","Dashboard Status","status","Status"],4);
-    const completed = cell(r,["completionDate","completedAt","Completion Date"],3);
-    return employee && employee !== "Employee" && !statusLooksComplete(status, completed) && rowIsOverdue(r);
-  });
+    function getFirstNumber(...values) {
+      for (const value of values) {
+        const numberValue = Number(value);
+        if (Number.isFinite(numberValue)) return numberValue;
+      }
+      return 0;
+    }
 
-  if(count) count.textContent = String(filtered.length);
-  list.innerHTML = filtered.length ? filtered.map(r => {
-    const employee = cell(r,["employee","Employee"],0);
-    const eq = cell(r,["eq","eqNumber","EQ #","vehicle","Vehicle"],1);
-    const daysRaw = Number(cell(r,["daysOverdue","Days Overdue"],5));
-    const due = cell(r,["dueDate","Due Date"],2);
-    const days = daysRaw > 0 ? daysRaw : daysPastDueFromDate(due);
-    const notes = cell(r,["notes","Notes","missedMonths","Missed Months"],6);
-    const severe = days > 10 ? " severe" : "";
-    const statusText = days > 0 ? `${days}d Overdue` : "Missing";
-    const secondary = [eq ? `EQ ${esc(eq)}` : "Safety Equipment Checklist", notes ? esc(notes) : ""].filter(Boolean).join(" · ");
-    return `<a class="compact-item" href="${HSI_LOGIN_URL}" target="_blank" rel="noopener noreferrer"><div><div class="item-primary">${esc(employee)}</div><div class="item-secondary">${secondary}</div></div><span class="item-status${severe}">${esc(statusText)}</span></a>`;
-  }).join("") : `<div class="empty-message">No missing or overdue safety equipment checklists are listed in the latest upload.</div>`;
-}
-function renderOverdueTraining(rows){
-  const card = document.getElementById("training-overdue-card");
-  const list = document.getElementById("training-overdue-list");
-  const count = document.getElementById("training-overdue-count");
-  if(!card || !list) return;
+    function setInlineStat(id, value, statusType = "red") {
+      const stat = document.getElementById(`${id}Stat`);
+      if (!stat) return;
 
-  const filtered = rows.filter(r => {
-    const employee = cell(r,["employee","Employee"],0);
-    const requirement = cell(r,["requirementName","requirement","training","Requirement","Training"],1);
-    return employee && requirement && rowIsOverdue(r);
-  });
+      const numberValue = Number(value) || 0;
+      stat.classList.remove("status-green", "status-orange", "status-red", "is-hidden");
 
-  if(!filtered.length){
-    card.classList.add("hidden");
-    list.innerHTML = "";
-    if(count) count.textContent = "0";
-    return;
-  }
+      if (numberValue <= 0) {
+        stat.classList.add("is-hidden");
+        return;
+      }
 
-  card.classList.remove("hidden");
-  if(count) count.textContent = String(filtered.length);
-  list.innerHTML = filtered.map(r => {
-    const employee = cell(r,["employee","Employee"],0);
-    const requirement = cell(r,["requirementName","requirement","training","Requirement","Training"],1);
-    const due = cell(r,["dueDate","Due Date"],3);
-    const daysRaw = Number(cell(r,["daysOverdue","Days Overdue"],5));
-    const days = daysRaw > 0 ? daysRaw : daysPastDueFromDate(due);
-    const severe = days > 10 ? " severe" : "";
-    const statusText = days > 0 ? `${days}d Overdue` : "Overdue";
-    return `<a class="compact-item" href="${HSI_LOGIN_URL}" target="_blank" rel="noopener noreferrer"><div><div class="item-primary">${esc(employee)}</div><div class="item-secondary">${esc(requirement)}${due ? ` · Due ${esc(fmtDate(due))}` : ""}</div></div><span class="item-status${severe}">${esc(statusText)}</span></a>`;
-  }).join("");
-}
-function updatePowerHub(data){
-  if(!data || typeof data !== "object") return;
-  const lastUpdate = getMetric(data,["lastUpdate","Last Update","updated","timestamp"]);
-  if(lastUpdate) text("last-update", `Last Update: ${lastUpdate}`);
+      stat.classList.add(statusType === "orange" ? "status-orange" : "status-red");
+    }
 
-  const month = getMetric(data,["currentMonth","Current Month"]);
-  const due = getMetric(data,["monthlyDueDate","Monthly Due Date"]);
-  if(month || due) text("monthly-note", `${month || "Monthly"} checklists due ${fmtDate(due)}. Required for employees assigned a company vehicle.`);
+    function cleanStatusClasses(element) {
+      if (!element) return;
+      element.classList.remove("status-green", "status-orange", "status-red");
+    }
 
-  const monthlyRows = normalizeRows(data.monthlyStatus || data.monthly || data.checklistStatus || data.checklists || data["Monthly Status"]);
-  renderChecklists(monthlyRows);
+    function toggleBox(boxId, shouldShow) {
+      const box = document.getElementById(boxId);
+      if (!box) return;
+      box.hidden = !shouldShow;
+    }
 
-  const trainingRows = normalizeRows(data.trainingStatus || data.training || data.trainingItems || data.overdueItems || data["Training Status"]);
-  renderOverdueTraining(trainingRows);
-}
-window.safetyHQLiveCallback = updatePowerHub;
-function loadSafetyHQLive(){
-  const s = document.createElement("script");
-  s.src = SAFETYHQ_LIVE_URL + "?callback=safetyHQLiveCallback&v=" + Date.now();
-  s.async = true;
-  s.onerror = () => console.warn("PowerHub live safety snapshot failed to load; using page fallback data.");
-  document.body.appendChild(s);
-  setTimeout(() => { try { s.remove(); } catch(e){} }, 30000);
-}
-loadSafetyHQLive();
-setInterval(loadSafetyHQLive, 5 * 60 * 1000);
-</script>
+    function renderFollowup(boxId, pillId, listId, items, emptyText, itemType, statusType = "red", limit = Infinity) {
+      const box = document.getElementById(boxId);
+      const pill = pillId ? document.getElementById(pillId) : null;
+      const list = document.getElementById(listId);
+      if (!box || !list) return;
 
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("service-worker.js").catch(err => {
-      console.warn("PowerHub service worker registration failed:", err);
-    });
-  });
-}
-</script>
-</body>
-</html>
+      const safeItems = Array.isArray(items) ? items.filter(Boolean) : [];
+      const hasItems = safeItems.length > 0;
+      const activeStatus = statusType === "orange" ? "status-orange" : "status-red";
+
+      cleanStatusClasses(box);
+      box.classList.add(hasItems ? activeStatus : "status-green");
+
+      if (pill) {
+        cleanStatusClasses(pill);
+        pill.classList.add(hasItems ? activeStatus : "status-green");
+        pill.textContent = hasItems ? `${safeItems.length} Open` : "None";
+      }
+
+      if (!hasItems) {
+        list.innerHTML = emptyText ? `<div class="followup-empty">${emptyText}</div>` : "";
+        return;
+      }
+
+      const displayItems = Number.isFinite(limit) ? safeItems.slice(0, limit) : safeItems;
+
+      list.innerHTML = displayItems.map((item) => {
+        const employee = item.employee || item.name || item.employeeName || "Employee";
+        const vehicle = item.eq || item.equipment || item.vehicle || item.asset || "";
+        const requirement = item.requirementName || item.training || item.trainingTitle || item.course || item.courseName || item.checklistName || item.title || itemType;
+        const dueValue = item.dueDate || item.due || item.deadline || "";
+        const dueDate = dueValue ? `Due: ${dueValue}` : "Due date not listed";
+        const rawDaysOverdue = item.daysOverdue ?? item.overdueDays;
+        const rawDaysUntil = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining ?? item.daysToDue;
+        const days = rawDaysOverdue != null
+          ? ` • ${rawDaysOverdue}d overdue`
+          : rawDaysUntil != null
+            ? ` • due in ${rawDaysUntil}d`
+            : "";
+        const detailParts = itemType === "Checklist" && vehicle
+          ? [vehicle, dueDate + days]
+          : [requirement, dueDate + days];
+
+        return `
+          <div class="followup-item">
+            <div>
+              <p class="followup-name">${employee}</p>
+              <p class="followup-detail">${detailParts.filter(Boolean).join(" • ")}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function getDueSoonTrainingItems(snapshot = {}, data = {}) {
+      const possibleSources = [
+        snapshot.trainingDueSoonItems,
+        snapshot.dueSoonTrainingItems,
+        snapshot.upcomingTrainingItems,
+        snapshot.inTrainingWindowItems,
+        snapshot.trainingItemsDueSoon,
+        snapshot.trainingWithin7DaysItems,
+        snapshot.trainingDueWithin7DaysItems,
+        snapshot.trainingRequirementsDueSoon,
+        snapshot.trainingDueSoonList,
+        snapshot.dueSoonTrainingList,
+        data.trainingDueSoonItems,
+        data.dueSoonTrainingItems,
+        data.upcomingTrainingItems,
+        data.inTrainingWindowItems,
+        data.trainingItemsDueSoon,
+        data.trainingWithin7DaysItems,
+        data.trainingDueWithin7DaysItems,
+        data.trainingRequirementsDueSoon,
+        data.trainingDueSoonList,
+        data.dueSoonTrainingList
+      ];
+
+      const allItems = possibleSources
+        .filter(Array.isArray)
+        .flat()
+        .filter(Boolean);
+
+      return allItems.filter((item) => {
+        const rawDays = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining ?? item.daysToDue;
+        const daysUntilDue = Number(rawDays);
+
+        if (N
