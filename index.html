@@ -1111,11 +1111,11 @@
       margin: 6px 0 0;
       font-size: 0.72rem;
       line-height: 1.35;
-      color: rgba(255, 255, 255, 0.58);
+      color: var(--cbps-muted);
       letter-spacing: 0.02em;
       text-align: center;
     }
-$1
+  </style>
 </head>
 
 <body>
@@ -1322,8 +1322,8 @@ $1
       <p class="footer-disclaimer">
         Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.
       </p>
-    <p class="site-version">Version 1.3.80</p>
-$1
+    <p class="site-version">Version 1.3.82</p>
+    </footer>
   </main>
   <script>
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
@@ -1456,186 +1456,4 @@ $1
         const rawDays = item.daysUntilDue ?? item.daysUntil ?? item.dueInDays ?? item.daysRemaining ?? item.daysToDue;
         const daysUntilDue = Number(rawDays);
 
-        if (Number.isFinite(daysUntilDue)) {
-          return daysUntilDue >= 0 && daysUntilDue <= 7;
-        }
-
-        const dueValue = item.dueDate || item.due || item.deadline;
-        if (dueValue) {
-          const dueTime = new Date(dueValue).getTime();
-          const today = new Date();
-          today.setHours(0, 0, 0, 0);
-          if (Number.isFinite(dueTime)) {
-            const daysFromDate = Math.ceil((dueTime - today.getTime()) / 86400000);
-            return daysFromDate >= 0 && daysFromDate <= 7;
-          }
-        }
-
-        return true;
-      });
-    }
-
-    function getOverdueTrainingItems(snapshot = {}, data = {}) {
-      const possibleSources = [
-        snapshot.overdueTrainingItems,
-        snapshot.trainingOverdueItems,
-        snapshot.overdueTrainings,
-        snapshot.trainingItemsOverdue,
-        data.overdueTrainingItems,
-        data.trainingOverdueItems,
-        data.overdueTrainings,
-        data.trainingItemsOverdue
-      ];
-
-      return (possibleSources.find(Array.isArray) || []).filter(Boolean);
-    }
-
-    function renderDueSoonFallback(listId, dueSoonCount) {
-      const list = document.getElementById(listId);
-      if (!list) return;
-
-      if (dueSoonCount > 0) {
-        list.innerHTML = `<div class="followup-empty">${dueSoonCount} training item(s) due soon. Open SafetyHQ for full details.</div>`;
-      } else {
-        list.innerHTML = "";
-      }
-    }
-
-    async function loadSafetySnapshot() {
-      const isGitHubPages = window.location.hostname === "coastalbendpower.github.io";
-      if (!isGitHubPages) {
-        setText("lastUpdate", "Preview mode - SafetyHQ feed loads on GitHub Pages", "Preview mode - SafetyHQ feed loads on GitHub Pages");
-        setInlineStat("missingChecklists", 0, "red");
-        setInlineStat("overdueTraining", 0, "red");
-        setInlineStat("trainingDueSoon", 0, "orange");
-        return;
-      }
-
-      try {
-        const response = await fetch(SAFETYHQ_FEED_URL, { cache: "no-store" });
-        if (!response.ok) throw new Error(`SafetyHQ feed returned ${response.status}`);
-        const data = await response.json();
-        const snapshot = data.powerHubSnapshot || {};
-
-        console.log("PowerHub SafetyHQ feed response:", data);
-        console.log("PowerHub powerHubSnapshot:", snapshot);
-
-        const dueSoonItems = getDueSoonTrainingItems(snapshot, data);
-        const overdueTrainingItems = getOverdueTrainingItems(snapshot, data);
-
-        const dueSoonCountFromFeed = getFirstNumber(
-          snapshot.trainingDueSoon,
-          snapshot.dueSoonTraining,
-          snapshot.trainingDueSoonCount,
-          snapshot.dueSoonTrainingCount,
-          snapshot.upcomingTraining,
-          snapshot.upcomingTrainingCount,
-          snapshot.trainingWithin7Days,
-          snapshot.trainingWithin7DaysCount,
-          snapshot.trainingDueWithin7Days,
-          snapshot.trainingDueWithin7DaysCount,
-          data.trainingDueSoon,
-          data.dueSoonTraining,
-          data.trainingDueSoonCount,
-          data.dueSoonTrainingCount,
-          data.upcomingTraining,
-          data.upcomingTrainingCount,
-          data.trainingWithin7Days,
-          data.trainingWithin7DaysCount,
-          data.trainingDueWithin7Days,
-          data.trainingDueWithin7DaysCount
-        );
-
-        const overdueTrainingCountFromFeed = getFirstNumber(
-          snapshot.overdueTraining,
-          snapshot.overdueTrainingCount,
-          snapshot.trainingOverdue,
-          snapshot.trainingOverdueCount,
-          data.overdueTraining,
-          data.overdueTrainingCount,
-          data.trainingOverdue,
-          data.trainingOverdueCount
-        );
-
-        const dueSoonCount = dueSoonItems.length || dueSoonCountFromFeed || 0;
-        const overdueChecklistCount = getFirstNumber(snapshot.missingChecklists, snapshot.overdueChecklists, data.missingChecklists, data.overdueChecklists);
-        const overdueTrainingCount = overdueTrainingItems.length || overdueTrainingCountFromFeed || 0;
-        const checklistItems = Array.isArray(snapshot.overdueMonthlyChecklists)
-          ? snapshot.overdueMonthlyChecklists.filter(Boolean)
-          : Array.isArray(data.overdueMonthlyChecklists)
-            ? data.overdueMonthlyChecklists.filter(Boolean)
-            : [];
-
-        setText("lastUpdate", snapshot.lastUpdate || data.lastUpdate, "Latest upload pending");
-        setText("missingChecklists", overdueChecklistCount, "-");
-        setText("overdueTraining", overdueTrainingCount, "-");
-        setText("trainingDueSoon", dueSoonCount, "-");
-
-        setInlineStat("missingChecklists", overdueChecklistCount, "red");
-        setInlineStat("overdueTraining", overdueTrainingCount, "red");
-        setInlineStat("trainingDueSoon", dueSoonCount, "orange");
-
-        renderFollowup(
-          "checklistFollowupBox",
-          null,
-          "checklistFollowupList",
-          checklistItems,
-          overdueChecklistCount > 0 ? `${overdueChecklistCount} checklist item(s) overdue. Open SafetyHQ for full details.` : "No missing or overdue Safety Eq Checklists listed in the current update.",
-          "Checklist",
-          "red",
-          Infinity
-        );
-
-        const hasOverdueTraining = overdueTrainingCount > 0 || overdueTrainingItems.length > 0;
-        toggleBox("trainingFollowupBox", hasOverdueTraining);
-        if (hasOverdueTraining) {
-          renderFollowup(
-            "trainingFollowupBox",
-            null,
-            "trainingFollowupList",
-            overdueTrainingItems,
-            `${overdueTrainingCount} overdue training item(s). Open SafetyHQ for full details.`,
-            "Training",
-            "red",
-            Infinity
-          );
-        }
-
-        const hasDueSoonTraining = dueSoonCount > 0 || dueSoonItems.length > 0;
-        toggleBox("trainingDueSoonFollowupBox", hasDueSoonTraining);
-        if (dueSoonItems.length > 0) {
-          renderFollowup(
-            "trainingDueSoonFollowupBox",
-            null,
-            "trainingDueSoonFollowupList",
-            dueSoonItems,
-            "",
-            "Training",
-            "orange",
-            Infinity
-          );
-        } else if (hasDueSoonTraining) {
-          const dueSoonBox = document.getElementById("trainingDueSoonFollowupBox");
-          cleanStatusClasses(dueSoonBox);
-          if (dueSoonBox) dueSoonBox.classList.add("status-orange");
-          renderDueSoonFallback("trainingDueSoonFollowupList", dueSoonCount);
-        }
-
-        const safetyUrl = snapshot.safetyHqUrl || data.safetyHqUrl || DEFAULT_SAFETYHQ_URL;
-        const safetyLink = document.getElementById("safetySnapshotLink");
-        const trainingLink = document.getElementById("trainingSnapshotLink");
-        if (safetyLink) safetyLink.href = safetyUrl;
-        if (trainingLink) trainingLink.href = safetyUrl;
-      } catch (error) {
-        console.error("PowerHub SafetyHQ feed error:", error);
-        setText("lastUpdate", "Latest upload unavailable", "Latest upload unavailable");
-        setInlineStat("missingChecklists", 0, "red");
-        setInlineStat("overdueTraining", 0, "red");
-        setInlineStat("trainingDueSoon", 0, "orange");
-      }
-    }
-
-    loadSafetySnapshot();
-  </script>
-</body>
-</html>
+        if (N
