@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.0.3 Working Copy</title>
+  <title>PowerHub v2.0.4 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -81,7 +81,8 @@
     .site-title::after { content: ""; display: block; width: 170px; height: 3px; margin-top: .45rem; border-radius: 999px; background: linear-gradient(90deg, transparent, #009dff, transparent); }
     .site-subtitle { margin: .7rem 0 0; font-size: clamp(.86rem, 1.14vw, 1.05rem); font-weight: 750; letter-spacing: .08em; color: rgba(255,255,255,.88); }
 
-    .announcement-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; margin: 4px 0 18px; padding: 10px 0; border-top: 1px solid rgba(216,224,234,.92); border-bottom: 1px solid rgba(216,224,234,.92); overflow: visible; position: relative; z-index: 80; }
+    .announcement-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; margin: 4px 0 18px; overflow: visible; position: relative; z-index: 80; }
+    .announcement-main { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(216,224,234,.92); border-bottom: 1px solid rgba(216,224,234,.92); min-width: 0; }
     .announcement-title h2 { margin: 0; font-size: 1.18rem; color: var(--blue-dark); white-space: nowrap; }
     .announcement-text { color: var(--blue-dark); font-size: .92rem; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
@@ -133,7 +134,7 @@
     .site-version { margin: 6px 0 0; font-size: .72rem; color: var(--muted); }
 
     @media (max-width: 900px) { .hub-layout { grid-template-columns: 1fr; } .hr-section, .crew-section { padding-left: 0; } .hr-section::before, .crew-section::before { display: none; } }
-    @media (max-width: 700px) { .hero { min-height: 300px; overflow: visible; } .hero-bg { object-position: center center; } .hero-inner { padding: 22px 14px 22px 98px; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; } .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; } .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; } .site-title { font-size: clamp(2rem, 11.5vw, 2.9rem); } .eyebrow { font-size: .62rem; } .site-subtitle { font-size: .76rem; } .announcement-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; padding: 8px 0; } .announcement-title h2 { font-size: .95rem; } .announcement-text { font-size: .78rem; } }
+    @media (max-width: 700px) { .hero { min-height: 300px; overflow: visible; } .hero-bg { object-position: center center; } .hero-inner { padding: 22px 14px 22px 98px; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; } .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; } .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; } .site-title { font-size: clamp(2rem, 11.5vw, 2.9rem); } .eyebrow { font-size: .62rem; } .site-subtitle { font-size: .76rem; } .announcement-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; } .announcement-main { grid-template-columns: auto minmax(0, 1fr); gap: 8px; padding: 8px 0; } .announcement-title h2 { font-size: .95rem; } .announcement-text { font-size: .78rem; } }
   </style>
 </head>
 <body>
@@ -151,8 +152,10 @@
     </header>
 
     <section class="announcement-row" aria-label="Announcements">
-      <div class="announcement-title"><h2>Announcements:</h2></div>
-      <div class="announcement-text">Future space for company updates, safety announcements, and important reminders. Check SafetyHQ regularly for current checklist and training status.</div>
+      <div class="announcement-main">
+        <div class="announcement-title"><h2>Announcements:</h2></div>
+        <div class="announcement-text">Future space for company updates, safety announcements, and important reminders. Check SafetyHQ regularly for current checklist and training status.</div>
+      </div>
       <details class="hero-quicklinks">
         <summary aria-label="Open Quick Links">
           <img src="assets/button_MAIN Quick Links.png" alt="Quick Links">
@@ -211,7 +214,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.0.3</p>
+      <p class="site-version">Version: the_hub_html_v_2.0.4</p>
     </footer>
   </main>
 </body>
