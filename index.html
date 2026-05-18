@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.0.6 Working Copy</title>
+  <title>PowerHub v2.0.7 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -114,6 +114,15 @@
     .followup-box { border: 1px solid var(--border); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 8px 22px rgba(15,23,42,.07); }
     .followup-box-header { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 12px 14px; border-bottom: 1px solid var(--border); background: #fbfdff; }
     .followup-box-header h3 { margin: 0; font-size: .94rem; color: var(--blue-dark); }
+    .box-count { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-dark); font-size: .72rem; font-weight: 950; white-space: nowrap; }
+    .followup-list { display: grid; gap: 0; background: #fff; }
+    .followup-item { display: grid; gap: 3px; padding: 11px 14px; border-top: 1px solid rgba(216,224,234,.78); }
+    .followup-item:first-child { border-top: 0; }
+    .followup-item strong { color: var(--blue-dark); font-size: .88rem; }
+    .followup-item span { color: var(--muted); font-size: .78rem; font-weight: 750; line-height: 1.3; }
+    .followup-more { padding: 10px 14px; border-top: 1px solid rgba(216,224,234,.78); background: #fbfdff; color: var(--blue-dark); font-size: .78rem; font-weight: 900; }
+    .followup-box.has-open { border-left-color: var(--red); }
+    .followup-box.has-open .box-count { background: #fff1f0; color: var(--red); }
     .followup-empty { padding: 13px 14px; font-size: .88rem; line-height: 1.4; color: var(--green); background: #f0fdf4; }
 
     .hr-section, .crew-section { position: relative; padding-left: 22px; }
@@ -178,18 +187,18 @@
           <div class="snapshot-header">
             <div class="snapshot-title-row">
               <h2 id="safety-title">Safety Snapshot</h2>
-              <div class="inline-stat"><span class="inline-stat-value" id="missingChecklists">-</span><span class="inline-stat-label">Open</span></div>
+              <div class="inline-stat"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Open</span></div>
             </div>
-            <div class="last-update">Last Update: <strong id="lastUpdate">Loading Last Data Update...</strong></div>
+            <div class="last-update">Last Update: <strong id="lastUpdate">Loading latest dashboard update...</strong></div>
           </div>
           <div class="followup-panel">
             <div class="followup-box" id="checklistFollowupBox">
-              <div class="followup-box-header"><h3>Missing / Overdue Checklists</h3></div>
-              <div class="followup-empty">No missing or overdue Safety Eq Checklists listed in the current update.</div>
+              <div class="followup-box-header"><h3>Missing / Overdue Checklists</h3><span class="box-count" id="checklistCount">Loading</span></div>
+              <div class="followup-empty">Checking latest SafetyHQ checklist status...</div>
             </div>
             <div class="followup-box" id="trainingFollowupBox">
-              <div class="followup-box-header"><h3>Overdue Training</h3></div>
-              <div class="followup-empty">No overdue training listed in the current update.</div>
+              <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount">Loading</span></div>
+              <div class="followup-empty">Checking latest SafetyHQ training status...</div>
             </div>
           </div>
         </a>
@@ -214,8 +223,143 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.0.6</p>
+      <p class="site-version">Version: the_hub_html_v_2.0.7</p>
     </footer>
   </main>
+  <script>
+    const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
+
+    const els = {
+      lastUpdate: document.getElementById("lastUpdate"),
+      openItemsCount: document.getElementById("openItemsCount"),
+      checklistBox: document.getElementById("checklistFollowupBox"),
+      trainingBox: document.getElementById("trainingFollowupBox"),
+      checklistCount: document.getElementById("checklistCount"),
+      trainingCount: document.getElementById("trainingCount")
+    };
+
+    function cleanText(value) {
+      return String(value ?? "").trim();
+    }
+
+    function getDateText(item) {
+      return cleanText(item.dueDate || item.date || item.completedAt || item.completionDate || "");
+    }
+
+    function isChecklistItem(item) {
+      const type = cleanText(item.type).toLowerCase();
+      const name = cleanText(item.requirementName || item.checklistName || item.name).toLowerCase();
+      return type === "checklist" || name.includes("checklist") || name.includes("monthly safety equipment");
+    }
+
+    function isTrainingItem(item) {
+      const type = cleanText(item.type).toLowerCase();
+      return type === "training";
+    }
+
+    function normalizeItems(rawItems) {
+      if (!Array.isArray(rawItems)) return [];
+      return rawItems
+        .map(item => ({
+          employee: cleanText(item.employee || item.Employee || item.name),
+          requirementName: cleanText(item.requirementName || item.checklistName || item.Requirement || item.requirement || item.title),
+          type: cleanText(item.type || item.Type),
+          dueDate: getDateText(item),
+          daysOverdue: item.daysOverdue ?? item.days ?? item.overdueDays ?? ""
+        }))
+        .filter(item => item.employee && item.requirementName);
+    }
+
+    function getOverdueItems(data) {
+      const direct = normalizeItems(data?.overdueItems);
+      if (direct.length) return direct;
+
+      const fromTraining = normalizeItems(data?.trainingStatus || data?.trainingItems || data?.training)
+        .filter(item => /overdue/i.test(item.type) || Number(item.daysOverdue) > 0);
+      const fromChecklist = normalizeItems(data?.monthlyStatus || data?.checklistStatus || data?.checklists)
+        .filter(item => /overdue|missing/i.test(item.type) || Number(item.daysOverdue) > 0);
+
+      return [...fromChecklist, ...fromTraining];
+    }
+
+    function renderBox(box, countEl, items, emptyText) {
+      const count = items.length;
+      countEl.textContent = String(count);
+      box.classList.toggle("has-open", count > 0);
+
+      const oldBody = box.querySelector(".followup-empty, .followup-list");
+      if (oldBody) oldBody.remove();
+
+      if (!count) {
+        const empty = document.createElement("div");
+        empty.className = "followup-empty";
+        empty.textContent = emptyText;
+        box.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement("div");
+      list.className = "followup-list";
+      items.slice(0, 3).forEach(item => {
+        const row = document.createElement("div");
+        row.className = "followup-item";
+
+        const title = document.createElement("strong");
+        title.textContent = item.employee;
+
+        const details = document.createElement("span");
+        const date = item.dueDate ? ` • Due: ${item.dueDate}` : "";
+        const overdue = item.daysOverdue !== "" && item.daysOverdue !== null ? ` • ${item.daysOverdue}d overdue` : "";
+        details.textContent = `${item.requirementName}${date}${overdue}`;
+
+        row.appendChild(title);
+        row.appendChild(details);
+        list.appendChild(row);
+      });
+
+      if (count > 3) {
+        const more = document.createElement("div");
+        more.className = "followup-more";
+        more.textContent = `+${count - 3} more — open SafetyHQ for full details`;
+        list.appendChild(more);
+      }
+
+      box.appendChild(list);
+    }
+
+    async function loadSafetySnapshot() {
+      els.lastUpdate.textContent = "Loading latest dashboard update...";
+      els.openItemsCount.textContent = "-";
+      els.checklistCount.textContent = "Loading";
+      els.trainingCount.textContent = "Loading";
+
+      try {
+        const response = await fetch(`${SAFETYHQ_FEED_URL}?hub=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Feed returned ${response.status}`);
+        const data = await response.json();
+        const summary = data?.summary || data?.dashboardSummary || {};
+        const overdueItems = getOverdueItems(data);
+        const checklistItems = overdueItems.filter(isChecklistItem);
+        const trainingItems = overdueItems.filter(isTrainingItem);
+        const openCount = Number(summary.totalOpenItems ?? summary.openItems ?? (checklistItems.length + trainingItems.length)) || 0;
+
+        els.lastUpdate.textContent = cleanText(summary.lastUpdate || data?.lastUpdate || "Latest update loaded");
+        els.openItemsCount.textContent = String(openCount);
+
+        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No missing or overdue Safety Equipment Checklists listed in the current update.");
+        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training listed in the current update.");
+      } catch (error) {
+        console.error("PowerHub Safety Snapshot load failed:", error);
+        els.lastUpdate.textContent = "Unable to load latest update";
+        els.openItemsCount.textContent = "!";
+        els.checklistCount.textContent = "!";
+        els.trainingCount.textContent = "!";
+        renderBox(els.checklistBox, els.checklistCount, [], "Unable to load checklist status. Open SafetyHQ for full details.");
+        renderBox(els.trainingBox, els.trainingCount, [], "Unable to load training status. Open SafetyHQ for full details.");
+      }
+    }
+
+    loadSafetySnapshot();
+  </script>
 </body>
 </html>
