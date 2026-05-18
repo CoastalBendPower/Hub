@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.0.2 Working Copy</title>
+  <title>PowerHub v2.0.3 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -64,7 +64,7 @@
       pointer-events: none;
     }
 
-    .hero-inner { position: relative; z-index: 20; padding: 32px 18px 32px clamp(140px, 15vw, 260px); width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 22px; }
+    .hero-inner { position: relative; z-index: 20; padding: 32px 18px 32px clamp(168px, 18vw, 312px); width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 22px; }
     .hero-copy { max-width: 760px; }
     .hero-quicklinks { justify-self: end; align-self: start; width: min(64px, 7vw); min-width: 54px; position: relative; z-index: 60; margin-right: 0; }
     .hero-quicklinks summary { list-style: none; cursor: pointer; }
@@ -75,13 +75,13 @@
     .quicklinks-menu a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(216,224,234,.88); background: linear-gradient(180deg,#fff,#f8fbff); color: var(--blue-dark); font-size: .84rem; font-weight: 850; }
     .quicklinks-menu a::after { content: "↗"; color: var(--muted); font-size: .78rem; }
     .quicklinks-menu a:hover { background: var(--blue-soft); border-color: #b6c7da; }
-    .eyebrow { margin: 0 0 10px; font-size: .82rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 850; opacity: .9; }
-    .site-title { margin: 0; font-size: clamp(3rem, 6vw, 5.7rem); line-height: .95; font-weight: 950; letter-spacing: -.055em; }
+    .eyebrow { margin: 0 0 10px; font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 850; opacity: .9; }
+    .site-title { margin: 0; font-size: clamp(2.65rem, 5.35vw, 5.05rem); line-height: .95; font-weight: 950; letter-spacing: -.055em; }
     .title-hub { color: #009dff; text-shadow: 0 0 14px rgba(0,157,255,.48); }
     .site-title::after { content: ""; display: block; width: 170px; height: 3px; margin-top: .45rem; border-radius: 999px; background: linear-gradient(90deg, transparent, #009dff, transparent); }
-    .site-subtitle { margin: .8rem 0 0; font-size: clamp(.95rem, 1.3vw, 1.2rem); font-weight: 750; letter-spacing: .08em; color: rgba(255,255,255,.88); }
+    .site-subtitle { margin: .7rem 0 0; font-size: clamp(.86rem, 1.14vw, 1.05rem); font-weight: 750; letter-spacing: .08em; color: rgba(255,255,255,.88); }
 
-    .announcement-row { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: center; margin: 4px 0 18px; padding: 16px 0; border-top: 1px solid rgba(216,224,234,.92); border-bottom: 1px solid rgba(216,224,234,.92); }
+    .announcement-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; margin: 4px 0 18px; padding: 10px 0; border-top: 1px solid rgba(216,224,234,.92); border-bottom: 1px solid rgba(216,224,234,.92); overflow: visible; position: relative; z-index: 80; }
     .announcement-title h2 { margin: 0; font-size: 1.18rem; color: var(--blue-dark); white-space: nowrap; }
     .announcement-text { color: var(--blue-dark); font-size: .92rem; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
@@ -133,7 +133,7 @@
     .site-version { margin: 6px 0 0; font-size: .72rem; color: var(--muted); }
 
     @media (max-width: 900px) { .hub-layout { grid-template-columns: 1fr; } .hr-section, .crew-section { padding-left: 0; } .hr-section::before, .crew-section::before { display: none; } }
-    @media (max-width: 700px) { .hero { min-height: 300px; overflow: visible; } .hero-bg { object-position: center center; } .hero-inner { padding: 22px 14px 22px 82px; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 10px; } .hero-quicklinks { justify-self: end; align-self: start; width: 52px; min-width: 52px; margin-left: auto; } .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; } .site-title { font-size: clamp(2.25rem, 13vw, 3.2rem); } .eyebrow { font-size: .68rem; } .site-subtitle { font-size: .82rem; } .announcement-row { grid-template-columns: 1fr; } }
+    @media (max-width: 700px) { .hero { min-height: 300px; overflow: visible; } .hero-bg { object-position: center center; } .hero-inner { padding: 22px 14px 22px 98px; grid-template-columns: minmax(0, 1fr); align-items: start; gap: 10px; } .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; } .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; } .site-title { font-size: clamp(2rem, 11.5vw, 2.9rem); } .eyebrow { font-size: .62rem; } .site-subtitle { font-size: .76rem; } .announcement-row { grid-template-columns: auto minmax(0, 1fr) auto; gap: 8px; padding: 8px 0; } .announcement-title h2 { font-size: .95rem; } .announcement-text { font-size: .78rem; } }
   </style>
 </head>
 <body>
@@ -147,26 +147,26 @@
           <p class="site-subtitle">Plan. Communicate. Deliver.</p>
         </div>
 
-        <details class="hero-quicklinks">
-          <summary aria-label="Open Quick Links">
-            <img src="assets/button_MAIN Quick Links.png" alt="Quick Links">
-          </summary>
-          <nav class="quicklinks-menu" aria-label="Quick Links">
-            <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
-            <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
-            <a href="https://coastalbendpower.github.io/SafetyHQ/" target="_blank" rel="noopener noreferrer">SafetyHQ</a>
-            <a href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" target="_blank" rel="noopener noreferrer">Procedures</a>
-            <a href="#hr-docs">HR Docs</a>
-            <a href="#crew-lead-tools">Crew Lead Tools</a>
-            <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Company Website</a>
-          </nav>
-        </details>
-      </div>
+        </div>
     </header>
 
     <section class="announcement-row" aria-label="Announcements">
       <div class="announcement-title"><h2>Announcements:</h2></div>
-      <div class="announcement-text">Future space for company updates, safety announcements, and important reminders. Check SafetyHQ regularly for current checklist and training status. Plan. Communicate. Deliver.</div>
+      <div class="announcement-text">Future space for company updates, safety announcements, and important reminders. Check SafetyHQ regularly for current checklist and training status.</div>
+      <details class="hero-quicklinks">
+        <summary aria-label="Open Quick Links">
+          <img src="assets/button_MAIN Quick Links.png" alt="Quick Links">
+        </summary>
+        <nav class="quicklinks-menu" aria-label="Quick Links">
+          <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
+          <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
+          <a href="https://coastalbendpower.github.io/SafetyHQ/" target="_blank" rel="noopener noreferrer">SafetyHQ</a>
+          <a href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" target="_blank" rel="noopener noreferrer">Procedures</a>
+          <a href="#hr-docs">HR Docs</a>
+          <a href="#crew-lead-tools">Crew Lead Tools</a>
+          <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Company Website</a>
+        </nav>
+      </details>
     </section>
 
     <section class="hub-layout">
@@ -211,7 +211,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.0.2</p>
+      <p class="site-version">Version: the_hub_html_v_2.0.3</p>
     </footer>
   </main>
 </body>
