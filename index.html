@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.0.7 Working Copy</title>
+  <title>PowerHub v2.0.8 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -223,11 +223,11 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.0.7</p>
+      <p class="site-version">Version: the_hub_html_v_2.0.8</p>
     </footer>
   </main>
   <script>
-    const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
+    const SAFETYHQ_PAGE_URL = "https://coastalbendpower.github.io/SafetyHQ/";
 
     const els = {
       lastUpdate: document.getElementById("lastUpdate"),
@@ -239,58 +239,73 @@
     };
 
     function cleanText(value) {
-      return String(value ?? "").trim();
+      return String(value || "").split(String.fromCharCode(10)).join(" ").split(String.fromCharCode(9)).join(" ").replaceAll("  ", " ").trim();
     }
 
-    function getDateText(item) {
-      return cleanText(item.dueDate || item.date || item.completedAt || item.completionDate || "");
+    function compactSpaces(value) {
+      let text = cleanText(value);
+      while (text.includes("  ")) text = text.replaceAll("  ", " ");
+      return text;
     }
 
-    function isChecklistItem(item) {
-      const type = cleanText(item.type).toLowerCase();
-      const name = cleanText(item.requirementName || item.checklistName || item.name).toLowerCase();
-      return type === "checklist" || name.includes("checklist") || name.includes("monthly safety equipment");
+    function getPageLines(doc) {
+      return doc.body.innerText.split(String.fromCharCode(10)).map(compactSpaces).filter(Boolean);
     }
 
-    function isTrainingItem(item) {
-      const type = cleanText(item.type).toLowerCase();
-      return type === "training";
+    function extractLastUpdate(lines) {
+      const line = lines.find(item => item.startsWith("Updated:"));
+      return line ? line.replace("Updated:", "").trim() : "Latest SafetyHQ update loaded";
     }
 
-    function normalizeItems(rawItems) {
-      if (!Array.isArray(rawItems)) return [];
-      return rawItems
-        .map(item => ({
-          employee: cleanText(item.employee || item.Employee || item.name),
-          requirementName: cleanText(item.requirementName || item.checklistName || item.Requirement || item.requirement || item.title),
-          type: cleanText(item.type || item.Type),
-          dueDate: getDateText(item),
-          daysOverdue: item.daysOverdue ?? item.days ?? item.overdueDays ?? ""
-        }))
-        .filter(item => item.employee && item.requirementName);
+    function extractChecklistItems(lines) {
+      const start = lines.findIndex(item => item === "Employee EQ #Status");
+      const completed = lines.findIndex((item, index) => index > start && item === "### Completed");
+      if (start < 0 || completed < 0) return [];
+
+      return lines.slice(start + 1, completed)
+        .filter(line => line.includes("Overdue") || line.includes("Missing"))
+        .map(line => {
+          const words = line.split(" ");
+          const eqIndex = words.findIndex(word => word.length === 4 && word.toUpperCase().startsWith("V"));
+          if (eqIndex < 0) {
+            return { employee: line, requirementName: "Monthly Safety Equipment Checklist", detail: "Overdue / Missing" };
+          }
+          return {
+            employee: words.slice(0, eqIndex).join(" "),
+            requirementName: "Monthly Safety Equipment Checklist",
+            detail: words.slice(eqIndex).join(" ")
+          };
+        });
     }
 
-    function getOverdueItems(data) {
-      const direct = normalizeItems(data?.overdueItems);
-      if (direct.length) return direct;
+    function extractTrainingItems(lines) {
+      const header = lines.findIndex(item => item === "Employee Training Status");
+      if (header < 0) return [];
 
-      const fromTraining = normalizeItems(data?.trainingStatus || data?.trainingItems || data?.training)
-        .filter(item => /overdue/i.test(item.type) || Number(item.daysOverdue) > 0);
-      const fromChecklist = normalizeItems(data?.monthlyStatus || data?.checklistStatus || data?.checklists)
-        .filter(item => /overdue|missing/i.test(item.type) || Number(item.daysOverdue) > 0);
-
-      return [...fromChecklist, ...fromTraining];
+      return lines.slice(header + 1)
+        .filter(line => line.includes("Overdue"))
+        .filter(line => !line.startsWith("Coastal Bend Power Services"))
+        .map(line => {
+          const overdueAt = line.indexOf("Overdue");
+          const beforeOverdue = line.slice(0, overdueAt).trim();
+          const parts = beforeOverdue.split(" ");
+          const days = parts.pop() || "";
+          const main = parts.join(" ");
+          const nameParts = main.split(" ").slice(0, 2);
+          const employee = nameParts.join(" ");
+          const requirementName = main.split(" ").slice(2).join(" ") || "Training Requirement";
+          return { employee, requirementName, detail: days + " Overdue" };
+        });
     }
 
     function renderBox(box, countEl, items, emptyText) {
-      const count = items.length;
-      countEl.textContent = String(count);
-      box.classList.toggle("has-open", count > 0);
+      countEl.textContent = String(items.length);
+      box.classList.toggle("has-open", items.length > 0);
 
       const oldBody = box.querySelector(".followup-empty, .followup-list");
       if (oldBody) oldBody.remove();
 
-      if (!count) {
+      if (!items.length) {
         const empty = document.createElement("div");
         empty.className = "followup-empty";
         empty.textContent = emptyText;
@@ -300,27 +315,23 @@
 
       const list = document.createElement("div");
       list.className = "followup-list";
+
       items.slice(0, 3).forEach(item => {
         const row = document.createElement("div");
         row.className = "followup-item";
-
         const title = document.createElement("strong");
         title.textContent = item.employee;
-
         const details = document.createElement("span");
-        const date = item.dueDate ? ` • Due: ${item.dueDate}` : "";
-        const overdue = item.daysOverdue !== "" && item.daysOverdue !== null ? ` • ${item.daysOverdue}d overdue` : "";
-        details.textContent = `${item.requirementName}${date}${overdue}`;
-
+        details.textContent = item.requirementName + " • " + item.detail;
         row.appendChild(title);
         row.appendChild(details);
         list.appendChild(row);
       });
 
-      if (count > 3) {
+      if (items.length > 3) {
         const more = document.createElement("div");
         more.className = "followup-more";
-        more.textContent = `+${count - 3} more — open SafetyHQ for full details`;
+        more.textContent = "+" + (items.length - 3) + " more — open SafetyHQ for full details";
         list.appendChild(more);
       }
 
@@ -334,20 +345,19 @@
       els.trainingCount.textContent = "Loading";
 
       try {
-        const response = await fetch(`${SAFETYHQ_FEED_URL}?hub=${Date.now()}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Feed returned ${response.status}`);
-        const data = await response.json();
-        const summary = data?.summary || data?.dashboardSummary || {};
-        const overdueItems = getOverdueItems(data);
-        const checklistItems = overdueItems.filter(isChecklistItem);
-        const trainingItems = overdueItems.filter(isTrainingItem);
-        const openCount = Number(summary.totalOpenItems ?? summary.openItems ?? (checklistItems.length + trainingItems.length)) || 0;
+        const response = await fetch(SAFETYHQ_PAGE_URL + "?hub=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("SafetyHQ returned " + response.status);
+        const html = await response.text();
+        const doc = new DOMParser().parseFromString(html, "text/html");
+        const lines = getPageLines(doc);
+        const checklistItems = extractChecklistItems(lines);
+        const trainingItems = extractTrainingItems(lines);
+        const openCount = checklistItems.length + trainingItems.length;
 
-        els.lastUpdate.textContent = cleanText(summary.lastUpdate || data?.lastUpdate || "Latest update loaded");
+        els.lastUpdate.textContent = extractLastUpdate(lines);
         els.openItemsCount.textContent = String(openCount);
-
-        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No missing or overdue Safety Equipment Checklists listed in the current update.");
-        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training listed in the current update.");
+        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No missing or overdue Safety Equipment Checklists listed in SafetyHQ.");
+        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training listed in SafetyHQ.");
       } catch (error) {
         console.error("PowerHub Safety Snapshot load failed:", error);
         els.lastUpdate.textContent = "Unable to load latest update";
