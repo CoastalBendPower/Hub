@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.1.6 Working Copy</title>
+  <title>PowerHub v2.1.7 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -83,8 +83,9 @@
     .hero-quicklinks summary { list-style: none; cursor: pointer; }
     .hero-quicklinks summary::-webkit-details-marker { display: none; }
     .hero-quicklinks img { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 26px rgba(0,0,0,.35)); }
-    .quicklinks-menu { display: none; position: absolute; right: 0; top: calc(100% + 10px); z-index: 9999; min-width: 240px; padding: 10px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.98); box-shadow: 0 22px 48px rgba(15,23,42,.25); }
+    .quicklinks-menu { display: none; position: absolute; right: 0; top: calc(100% + 10px); z-index: 9999; min-width: 280px; padding: 12px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.98); box-shadow: 0 22px 48px rgba(15,23,42,.25); }
     .hero-quicklinks[open] .quicklinks-menu { display: grid; gap: 8px; }
+    .quicklinks-group-label { margin: 4px 2px 0; color: var(--muted); font-size: .66rem; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
     .quicklinks-menu a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(216,224,234,.88); background: linear-gradient(180deg,#fff,#f8fbff); color: var(--blue-dark); font-size: .84rem; font-weight: 850; }
     .quicklinks-menu a::after { content: "↗"; color: var(--muted); font-size: .78rem; }
     .quicklinks-menu a:hover { background: var(--blue-soft); border-color: #b6c7da; }
@@ -107,6 +108,9 @@
     .resource-card:hover { transform: translateY(-2px); border-color: #b6c7da; box-shadow: 0 12px 28px rgba(15,23,42,.10); }
     .resource-card strong { font-size: 1.05rem; color: var(--blue-dark); }
     .resource-card span { color: var(--muted); font-size: .9rem; line-height: 1.35; font-weight: 700; }
+    .crew-card { min-height: 82px; padding: 14px; gap: 6px; }
+    .crew-card strong { font-size: .94rem; }
+    .crew-card span { font-size: .78rem; line-height: 1.28; }
     .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px dashed #b6c7da; border-radius: 22px; background: rgba(255,255,255,.86); box-shadow: 0 8px 22px rgba(15,23,42,.05); backdrop-filter: blur(8px); }
     .tbd-card strong { display: block; font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 6px; }
     .tbd-card span { display: block; color: var(--muted); font-size: .88rem; font-weight: 700; line-height: 1.4; }
@@ -184,13 +188,18 @@
           <img src="assets/button_MAIN Quick Links.png" alt="Quick Links">
         </summary>
         <nav class="quicklinks-menu" aria-label="Quick Links">
-          <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
-          <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
+          <div class="quicklinks-group-label">Safety</div>
           <a href="https://coastalbendpower.github.io/SafetyHQ/" target="_blank" rel="noopener noreferrer">SafetyHQ</a>
           <a href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" target="_blank" rel="noopener noreferrer">Procedures</a>
+          <a href="#jso-input">JSA / JSO Input</a>
+          <div class="quicklinks-group-label">Company Tools</div>
+          <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
+          <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
+          <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Website</a>
+          <div class="quicklinks-group-label">Resources</div>
           <a href="#hr-docs">HR Docs</a>
           <a href="#crew-lead-tools">Crew Lead Tools</a>
-          <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Company Website</a>
+          <a href="#other-docs">Other Docs</a>
         </nav>
       </details>
     </section>
@@ -232,15 +241,19 @@
       </section>
 
       <section class="hub-column crew-section" aria-labelledby="crew-title">
-        <div class="section-title"><h2 id="crew-title">Crew Lead Tools</h2><p>Future space for field leadership resources.</p></div>
-        <div class="tbd-card" id="crew-lead-tools"><div><strong>TBD</strong><span>Reserved for crew lead tools, checklists, reports, and leadership resources.</span></div></div>
+        <div class="section-title"><h2 id="crew-title">Crew Lead Tools</h2><p>Field leadership shortcuts and crew resources.</p></div>
+        <div class="hub-card-grid" id="crew-lead-tools">
+          <a class="resource-card crew-card" id="jso-input" href="#jso-input"><strong>JSA / JSO Input</strong><span>AEP-required field input shortcut.</span></a>
+          <a class="resource-card crew-card" href="#field-audits"><strong>Field Audits</strong><span>Audit and observation links.</span></a>
+          <a class="resource-card crew-card" href="#crew-resources"><strong>Crew Resources</strong><span>Forms, references, and quick docs.</span></a>
+        </div>
       </section>
     </section>
 
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.1.6</p>
+      <p class="site-version">Version: the_hub_html_v_2.1.7</p>
     </footer>
   </main>
 
