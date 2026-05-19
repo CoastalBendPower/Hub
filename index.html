@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.0.9 Working Copy</title>
+  <title>PowerHub v2.1.0 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -28,6 +28,7 @@
       color: var(--text);
     }
 
+    a { color: inherit; }
     .page-shell { width: min(1180px, 100%); margin: 0 auto; padding: 16px; }
 
     .hero {
@@ -87,7 +88,6 @@
     .announcement-text { color: var(--blue-dark); font-size: .92rem; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
     .hub-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
-
     .section-title { margin: 22px 2px 12px; }
     .hub-column { min-width: 0; }
     .hub-card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -102,10 +102,12 @@
     .section-title h2::after, .snapshot-header h2::after { content: ""; display: block; width: 90px; height: 3px; margin-top: 8px; border-radius: 999px; background: linear-gradient(90deg, transparent, #009dff, transparent); }
     .section-title p { margin: 5px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.35; }
 
-    .snapshot-section { display: block; color: inherit; }
+    .snapshot-section { display: block; color: inherit; text-decoration: none; }
+    .snapshot-section * { text-decoration: none; }
     .snapshot-header { margin: 22px 2px 12px; display: flex; flex-direction: column; gap: 5px; }
     .snapshot-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .inline-stat { display: inline-flex; align-items: baseline; gap: 5px; color: var(--muted); white-space: nowrap; }
+    .inline-stat { display: inline-flex; align-items: baseline; gap: 5px; color: var(--muted); white-space: nowrap; text-decoration: none; }
+    .inline-stat * { text-decoration: none; }
     .inline-stat-value { font-size: 1.28rem; font-weight: 950; color: var(--blue-dark); }
     .inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
     .last-update { font-size: .82rem; color: var(--muted); }
@@ -128,15 +130,6 @@
     .hr-section, .crew-section { position: relative; padding-left: 22px; }
     .hr-section::before, .crew-section::before { content: ""; position: absolute; left: 0; top: 24px; bottom: 12px; width: 3px; border-radius: 999px; background: linear-gradient(180deg, transparent, rgba(0,157,255,.72), transparent); }
 
-    .card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .hub-card { display: block; background: #fff; border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); overflow: hidden; min-height: 90px; padding: 14px; }
-    .tool-button-slot { min-height: 56px; display: flex; align-items: center; justify-content: center; }
-    .tool-button-image { width: 100%; max-width: 220px; height: auto; }
-    .quicklink-bubble { display: none; padding: 10px; border-top: 1px solid var(--border); background: #fbfdff; }
-    details[open] .quicklink-bubble { display: grid; gap: 7px; }
-    .quicklink-bubble a { display: flex; gap: 10px; padding: 10px 12px; border-radius: 12px; color: var(--text); font-size: .9rem; font-weight: 750; }
-    .quicklink-bubble a:hover { background: var(--blue-soft); }
-
     .footer { margin: 30px 0 8px; padding: 18px 4px 20px; color: var(--muted); font-size: .82rem; text-align: center; border-top: 1px solid rgba(216,224,234,.9); }
     .footer-brand { margin: 0; color: var(--blue-dark); font-weight: 800; }
     .footer-disclaimer { max-width: 820px; margin: 8px auto 0; font-size: .76rem; line-height: 1.45; }
@@ -156,8 +149,7 @@
           <h1 class="site-title"><span class="title-power">Power</span><span class="title-hub">Hub</span></h1>
           <p class="site-subtitle">Plan. Communicate. Deliver.</p>
         </div>
-
-        </div>
+      </div>
     </header>
 
     <section class="announcement-row" aria-label="Announcements">
@@ -223,9 +215,10 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.0.9</p>
+      <p class="site-version">Version: the_hub_html_v_2.1.0</p>
     </footer>
   </main>
+
   <script>
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
 
@@ -238,121 +231,185 @@
       trainingCount: document.getElementById("trainingCount")
     };
 
-    function cleanText(value) {
-      let text = String(value || "");
-      text = text.split(String.fromCharCode(10)).join(" ");
-      text = text.split(String.fromCharCode(9)).join(" ");
-      text = text.split(String.fromCharCode(13)).join(" ");
-      while (text.includes("  ")) text = text.replaceAll("  ", " ");
-      return text.trim();
+    function text(value) {
+      let out = String(value || "").trim();
+      while (out.includes("  ")) out = out.replaceAll("  ", " ");
+      return out;
     }
 
-    function simpleKey(value) {
-      const text = cleanText(value).toLowerCase();
+    function key(value) {
+      const source = text(value).toLowerCase();
       let out = "";
-      for (const ch of text) {
+      for (const ch of source) {
         if ((ch >= "a" && ch <= "z") || (ch >= "0" && ch <= "9")) out += ch;
       }
       return out;
     }
 
-    function toNumber(value) {
-      const text = String(value || "");
+    function num(value) {
+      const source = String(value || "");
       let out = "";
-      for (const ch of text) {
+      for (const ch of source) {
         if ((ch >= "0" && ch <= "9") || ch === "." || ch === "-") out += ch;
       }
-      const num = Number(out);
-      return Number.isFinite(num) ? num : 0;
+      const parsed = Number(out);
+      return Number.isFinite(parsed) ? parsed : 0;
     }
 
-    function flattenObjects(value, objects) {
-      if (Array.isArray(value)) {
-        value.forEach(item => flattenObjects(item, objects));
-      } else if (value && typeof value === "object") {
-        objects.push(value);
-        Object.values(value).forEach(item => flattenObjects(item, objects));
-      }
-    }
-
-    function allObjects(data) {
-      const objects = [];
-      flattenObjects(data, objects);
-      return objects;
-    }
-
-    function getField(obj, names) {
+    function get(obj, names) {
       const map = {};
-      Object.keys(obj || {}).forEach(key => { map[simpleKey(key)] = key; });
+      Object.keys(obj || {}).forEach(k => { map[key(k)] = k; });
       for (const name of names) {
-        const key = map[simpleKey(name)];
-        if (key) return cleanText(obj[key]);
+        const found = map[key(name)];
+        if (found) return text(obj[found]);
       }
       return "";
     }
 
-    function objectText(obj) {
-      return Object.values(obj || {}).map(cleanText).filter(Boolean).join(" ");
+    function collectObjects(value, output) {
+      if (Array.isArray(value)) {
+        value.forEach(item => collectObjects(item, output));
+      } else if (value && typeof value === "object") {
+        output.push(value);
+        Object.values(value).forEach(item => collectObjects(item, output));
+      }
     }
 
-    function findLastUpdate(data) {
-      const summary = data.summary || data.dashboardSummary || data.metrics || {};
-      const fromSummary = getField(summary, ["lastUpdate", "updated", "timestamp", "last updated", "data updated"]);
-      if (fromSummary) return fromSummary;
-      for (const obj of allObjects(data)) {
-        const found = getField(obj, ["lastUpdate", "updated", "timestamp", "last updated", "data updated"]);
-        if (found && (found.includes("202") || found.includes("/"))) return found;
+    function collectRows(value, path, output) {
+      if (Array.isArray(value)) {
+        const primitive = value.length && value.every(item => item === null || typeof item !== "object");
+        if (primitive) {
+          output.push({ path: path, row: value.map(text), line: value.map(text).filter(Boolean).join(" ") });
+        } else {
+          value.forEach(item => collectRows(item, path, output));
+        }
+      } else if (value && typeof value === "object") {
+        Object.keys(value).forEach(k => collectRows(value[k], path + " " + k, output));
+      }
+    }
+
+    function objectLine(obj) {
+      return Object.values(obj || {}).map(text).filter(Boolean).join(" ");
+    }
+
+    function isOpen(line) {
+      const lower = text(line).toLowerCase();
+      return lower.includes("overdue") || lower.includes("missing") || lower.includes("delinquent") || lower.includes("past due");
+    }
+
+    function isComplete(line) {
+      const lower = text(line).toLowerCase();
+      return (lower.includes("complete") || lower.includes("completed") || lower.includes("closed")) && !isOpen(lower);
+    }
+
+    function isChecklistText(line) {
+      const lower = text(line).toLowerCase();
+      return lower.includes("checklist") || lower.includes("monthly safety equipment") || lower.includes("equipment inspection") || lower.includes("vehicle inspection") || lower.includes(" eq ") || lower.includes(" v0") || lower.includes(" v1") || lower.includes(" v2") || lower.includes(" v3") || lower.includes(" v4") || lower.includes(" v5") || lower.includes(" v6") || lower.includes(" v7") || lower.includes(" v8") || lower.includes(" v9");
+    }
+
+    function isTrainingText(line) {
+      const lower = text(line).toLowerCase();
+      return !isChecklistText(lower) && (lower.includes("training") || lower.includes("course") || lower.includes("curriculum") || lower.includes("requirement") || lower.includes("lms"));
+    }
+
+    function normalizeObjectItem(obj, fallbackPath) {
+      const line = objectLine(obj) + " " + fallbackPath;
+      return {
+        employee: get(obj, ["employee", "employee name", "name", "assignee", "asset assignee"]),
+        requirementName: get(obj, ["requirementName", "requirement", "training", "training name", "checklistName", "checklist", "item", "title", "course"]),
+        status: get(obj, ["status", "current status", "state"]),
+        dueDate: get(obj, ["dueDate", "due date", "date due", "deadline"]),
+        eq: get(obj, ["eq", "eq #", "eq number", "equipment", "vehicle", "asset", "asset name"]),
+        daysOverdue: get(obj, ["daysOverdue", "days overdue", "overdue days", "days"]),
+        fullText: line
+      };
+    }
+
+    function normalizeRowItem(entry, fallbackType) {
+      const words = entry.line.split(" ").filter(Boolean);
+      let eqIndex = -1;
+      words.forEach((word, index) => {
+        const w = word.toUpperCase();
+        if (eqIndex < 0 && w.length >= 3 && w.length <= 5 && w.charAt(0) === "V") eqIndex = index;
+      });
+      if (fallbackType === "checklist" && eqIndex > 0) {
+        return { employee: words.slice(0, eqIndex).join(" "), requirementName: "Monthly Safety Equipment Checklist", eq: words[eqIndex], status: words.slice(eqIndex + 1).join(" "), fullText: entry.line };
+      }
+      return { employee: words.slice(0, 2).join(" "), requirementName: words.slice(2).join(" ") || fallbackType, status: isOpen(entry.line) ? "Open" : "", fullText: entry.line };
+    }
+
+    function findMetric(data, names) {
+      const objects = [];
+      collectObjects(data, objects);
+      for (const obj of objects) {
+        for (const name of names) {
+          const value = get(obj, [name]);
+          if (value !== "") return num(value);
+        }
+      }
+      const rows = [];
+      collectRows(data, "", rows);
+      for (const row of rows) {
+        const first = key(row.row[0] || "");
+        for (const name of names) {
+          if (first === key(name) || first.includes(key(name))) return num(row.row[1] || row.line);
+        }
+      }
+      return 0;
+    }
+
+    function findUpdate(data) {
+      const objects = [];
+      collectObjects(data, objects);
+      for (const obj of objects) {
+        const value = get(obj, ["lastUpdate", "updated", "timestamp", "last updated", "data updated"]);
+        if (value && (value.includes("/") || value.includes("202"))) return value;
+      }
+      const rows = [];
+      collectRows(data, "", rows);
+      for (const row of rows) {
+        const line = row.line;
+        if (line.toLowerCase().startsWith("updated:")) return line.replace("Updated:", "").trim();
+        if (key(row.row[0] || "").includes("lastupdate")) return text(row.row[1]);
       }
       return "Latest SafetyHQ update loaded";
     }
 
-    function hasOpenText(text) {
-      const lower = cleanText(text).toLowerCase();
-      return lower.includes("overdue") || lower.includes("missing") || lower.includes("delinquent") || lower.includes("past due");
-    }
-
-    function isCompleteText(text) {
-      const lower = cleanText(text).toLowerCase();
-      return (lower.includes("complete") || lower.includes("completed") || lower.includes("closed")) && !hasOpenText(lower);
-    }
-
-    function normalizeItem(obj) {
-      const text = objectText(obj);
-      return {
-        employee: getField(obj, ["employee", "employee name", "name", "assignee", "asset assignee"]),
-        requirementName: getField(obj, ["requirementName", "requirement", "training", "training name", "checklistName", "checklist", "item", "title", "course"]),
-        status: getField(obj, ["status", "current status", "state"]),
-        dueDate: getField(obj, ["dueDate", "due date", "date due", "deadline"]),
-        eq: getField(obj, ["eq", "eq number", "equipment", "vehicle", "asset", "asset name"]),
-        daysOverdue: getField(obj, ["daysOverdue", "days overdue", "overdue days", "days"]),
-        type: getField(obj, ["type", "category", "section"]),
-        fullText: text
-      };
-    }
-
-    function isChecklist(item) {
-      const text = (item.fullText + " " + item.type + " " + item.requirementName).toLowerCase();
-      return text.includes("checklist") || text.includes("monthly safety equipment") || text.includes("equipment inspection") || text.includes("vehicle inspection");
-    }
-
-    function isTraining(item) {
-      const text = (item.fullText + " " + item.type + " " + item.requirementName).toLowerCase();
-      return !isChecklist(item) && (text.includes("training") || text.includes("course") || text.includes("curriculum") || text.includes("requirement"));
-    }
-
     function extractItems(data) {
-      const items = allObjects(data).map(normalizeItem);
-      const checklistItems = [];
-      const trainingItems = [];
-
-      items.forEach(item => {
-        const text = item.fullText + " " + item.status + " " + item.type;
-        if (!hasOpenText(text) || isCompleteText(text)) return;
-        if (isChecklist(item) && (item.employee || item.eq || item.requirementName)) checklistItems.push(item);
-        if (isTraining(item) && (item.employee || item.requirementName)) trainingItems.push(item);
+      const checklist = [];
+      const training = [];
+      const objects = [];
+      collectObjects(data, objects);
+      objects.forEach(obj => {
+        const item = normalizeObjectItem(obj, "");
+        if (!isOpen(item.fullText) || isComplete(item.fullText)) return;
+        if (isChecklistText(item.fullText) && (item.employee || item.eq || item.requirementName)) checklist.push(item);
+        if (isTrainingText(item.fullText) && (item.employee || item.requirementName)) training.push(item);
       });
 
-      return { checklistItems, trainingItems };
+      const rows = [];
+      collectRows(data, "", rows);
+      rows.forEach(entry => {
+        if (!isOpen(entry.line) || isComplete(entry.line)) return;
+        const path = entry.path.toLowerCase();
+        if (path.includes("checklist") || path.includes("monthly") || isChecklistText(entry.line)) checklist.push(normalizeRowItem(entry, "checklist"));
+        if (path.includes("training") || isTrainingText(entry.line)) training.push(normalizeRowItem(entry, "training"));
+      });
+
+      return { checklistItems: dedupe(checklist), trainingItems: dedupe(training) };
+    }
+
+    function dedupe(items) {
+      const seen = new Set();
+      const out = [];
+      items.forEach(item => {
+        const id = key(item.employee + item.requirementName + item.eq + item.status + item.fullText);
+        if (!seen.has(id)) {
+          seen.add(id);
+          out.push(item);
+        }
+      });
+      return out;
     }
 
     function itemTitle(item, fallback) {
@@ -369,13 +426,13 @@
       return main + (parts.length ? " - " + parts.join(" - ") : "");
     }
 
-    function renderBox(box, countEl, items, visibleCount, emptyText, fallbackTitle, fallbackDetail) {
-      countEl.textContent = String(visibleCount);
-      box.classList.toggle("has-open", visibleCount > 0);
+    function renderBox(box, countEl, items, count, emptyText, fallbackTitle, fallbackDetail) {
+      countEl.textContent = String(count);
+      box.classList.toggle("has-open", count > 0);
       const oldBody = box.querySelector(".followup-empty, .followup-list");
       if (oldBody) oldBody.remove();
 
-      if (!visibleCount) {
+      if (!count) {
         const empty = document.createElement("div");
         empty.className = "followup-empty";
         empty.textContent = emptyText;
@@ -385,24 +442,24 @@
 
       const list = document.createElement("div");
       list.className = "followup-list";
-      const rows = items.length ? items.slice(0, 3) : [{ employee: visibleCount + " open item(s)", requirementName: fallbackDetail, status: "Open SafetyHQ for full details" }];
+      const rows = items.length ? items.slice(0, 3) : [{ employee: count + " open item(s)", requirementName: fallbackDetail, status: "Open SafetyHQ for full details" }];
 
       rows.forEach(item => {
         const row = document.createElement("div");
         row.className = "followup-item";
         const title = document.createElement("strong");
         title.textContent = itemTitle(item, fallbackTitle);
-        const details = document.createElement("span");
-        details.textContent = itemDetails(item, fallbackDetail);
+        const detail = document.createElement("span");
+        detail.textContent = itemDetails(item, fallbackDetail);
         row.appendChild(title);
-        row.appendChild(details);
+        row.appendChild(detail);
         list.appendChild(row);
       });
 
-      if (visibleCount > rows.length) {
+      if (count > rows.length) {
         const more = document.createElement("div");
         more.className = "followup-more";
-        more.textContent = "+" + (visibleCount - rows.length) + " more - open SafetyHQ for full details";
+        more.textContent = "+" + (count - rows.length) + " more - open SafetyHQ for full details";
         list.appendChild(more);
       }
       box.appendChild(list);
@@ -418,16 +475,17 @@
         const response = await fetch(SAFETYHQ_FEED_URL + "?hub=" + Date.now(), { cache: "no-store" });
         if (!response.ok) throw new Error("SafetyHQ feed returned " + response.status);
         const data = await response.json();
-        const summary = data.summary || data.dashboardSummary || {};
+        console.log("PowerHub SafetyHQ feed", data);
+
         const found = extractItems(data);
-        const summaryChecklists = toNumber(summary.overdueChecklists || summary.missingChecklists || summary.checklistsOpen || summary.openChecklists);
-        const summaryTraining = toNumber(summary.overdueTraining || summary.trainingOpen || summary.openTraining);
-        const summaryOpen = toNumber(summary.totalOpenItems || summary.openItems);
-        const checklistCount = found.checklistItems.length || summaryChecklists;
+        const summaryChecklist = findMetric(data, ["overdueChecklists", "missingChecklists", "checklistsOpen", "openChecklists", "overdue checklist", "missing checklist"]);
+        const summaryTraining = findMetric(data, ["overdueTraining", "trainingOpen", "openTraining", "overdue training"]);
+        const summaryOpen = findMetric(data, ["totalOpenItems", "openItems", "total open items", "open item count"]);
+        const checklistCount = found.checklistItems.length || summaryChecklist;
         const trainingCount = found.trainingItems.length || summaryTraining;
         const openCount = summaryOpen || checklistCount + trainingCount;
 
-        els.lastUpdate.textContent = findLastUpdate(data);
+        els.lastUpdate.textContent = findUpdate(data);
         els.openItemsCount.textContent = String(openCount);
         renderBox(els.checklistBox, els.checklistCount, found.checklistItems, checklistCount, "No missing or overdue Safety Equipment Checklists listed in SafetyHQ.", "Checklist Item", "Monthly Safety Equipment Checklist");
         renderBox(els.trainingBox, els.trainingCount, found.trainingItems, trainingCount, "No overdue training listed in SafetyHQ.", "Training Item", "Training Requirement");
