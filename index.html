@@ -222,29 +222,30 @@
       .hero-inner {
         min-height: 0;
         height: 100%;
-        padding: 18px 22px 18px 39%;
+        padding: 18px 26px 18px 33%;
         grid-template-columns: minmax(0, 1fr);
         align-items: center;
-        justify-items: end;
+        justify-items: center;
         text-align: left;
         gap: 10px;
       }
       .hero-copy {
-        max-width: 250px;
+        width: min(100%, 305px);
+        max-width: 305px;
         margin: 0;
         padding: 0;
         border-radius: 0;
         background: transparent;
         box-shadow: none;
         backdrop-filter: none;
-        text-shadow: 0 2px 12px rgba(0,0,0,.55);
+        text-shadow: 0 2px 12px rgba(0,0,0,.60);
       }
-      .site-title::after { width: 108px; margin: .34rem 0 0; }
+      .site-title::after { width: 104px; margin: .30rem 0 0; }
       .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; }
       .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; }
-      .site-title { font-size: clamp(1.72rem, 8.9vw, 2.28rem); }
-      .eyebrow { font-size: .48rem; letter-spacing: .10em; margin-bottom: 7px; }
-      .site-subtitle { font-size: .61rem; letter-spacing: .055em; margin-top: .54rem; }
+      .site-title { font-size: clamp(1.62rem, 8.25vw, 2.06rem); }
+      .eyebrow { font-size: .46rem; letter-spacing: .095em; margin-bottom: 7px; white-space: nowrap; }
+      .site-subtitle { font-size: .58rem; letter-spacing: .05em; margin-top: .48rem; white-space: nowrap; }
       .announcement-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
       .announcement-main { grid-template-columns: auto minmax(0, 1fr); gap: 8px; padding: 8px 0; }
       .announcement-title h2 { font-size: .95rem; }
@@ -255,11 +256,12 @@
 
     @media (max-width: 430px) {
       .hero { min-height: 0; aspect-ratio: 16 / 9; }
-      .hero-inner { min-height: 0; height: 100%; padding: 16px 16px 16px 38%; }
-      .hero-copy { max-width: 218px; padding: 0; }
-      .site-title { font-size: clamp(1.58rem, 8.8vw, 2.08rem); }
-      .eyebrow { font-size: .42rem; letter-spacing: .085em; }
-      .site-subtitle { font-size: .56rem; }
+      .hero-inner { min-height: 0; height: 100%; padding: 15px 18px 15px 32%; justify-items: center; }
+      .hero-copy { width: min(100%, 260px); max-width: 260px; padding: 0; }
+      .site-title { font-size: clamp(1.46rem, 7.75vw, 1.88rem); }
+      .eyebrow { font-size: .39rem; letter-spacing: .075em; }
+      .site-subtitle { font-size: .50rem; letter-spacing: .04em; }
+      .site-title::after { width: 88px; }
     }
   </style>
 </head>
@@ -354,7 +356,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.2.3</p>
+      <p class="site-version">Version: the_hub_html_v_2.2.4</p>
     </footer>
   </main>
 
