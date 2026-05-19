@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.1.8 Working Copy</title>
+  <title>PowerHub v2.1.9 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -25,7 +25,14 @@
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        linear-gradient(90deg, rgba(247,249,252,.16) 0%, rgba(247,249,252,.74) 18%, rgba(247,249,252,.985) 50%, rgba(247,249,252,.74) 82%, rgba(247,249,252,.16) 100%),
+        linear-gradient(
+          90deg,
+          rgba(247,249,252,.08) 0%,
+          rgba(247,249,252,.38) 22%,
+          rgba(247,249,252,.55) 50%,
+          rgba(247,249,252,.38) 78%,
+          rgba(247,249,252,.08) 100%
+        ),
         radial-gradient(circle at 18% 18%, rgba(0,157,255,.16), transparent 28%),
         radial-gradient(circle at 82% 18%, rgba(18,63,115,.16), transparent 30%),
         url("assets/background_hub_v2.png") center top / cover fixed no-repeat,
@@ -38,8 +45,8 @@
       width: min(1180px, calc(100% - 96px));
       margin: 0 auto;
       padding: 16px;
-      background: linear-gradient(180deg, rgba(247,249,252,.78), rgba(247,249,252,.94) 260px, rgba(247,249,252,.88));
-      box-shadow: 0 0 54px rgba(247,249,252,.78);
+      background: transparent;
+      box-shadow: none;
       min-height: 100vh;
     }
 
@@ -83,7 +90,7 @@
     .hero-quicklinks summary { list-style: none; cursor: pointer; }
     .hero-quicklinks summary::-webkit-details-marker { display: none; }
     .hero-quicklinks img { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 26px rgba(0,0,0,.35)); }
-    .quicklinks-menu { display: none; position: absolute; right: 0; top: calc(100% + 10px); z-index: 9999; min-width: 280px; padding: 12px; border: 1px solid var(--border); border-radius: 18px; background: rgba(255,255,255,.98); box-shadow: 0 22px 48px rgba(15,23,42,.25); }
+    .quicklinks-menu { display: none; position: absolute; right: 0; top: calc(100% + 10px); z-index: 9999; min-width: 280px; padding: 12px; border: 1px solid rgba(216,224,234,.72); border-radius: 18px; background: rgba(255,255,255,.78); box-shadow: 0 22px 48px rgba(15,23,42,.25); backdrop-filter: blur(8px); }
     .hero-quicklinks[open] .quicklinks-menu { display: grid; gap: 8px; }
     .quicklinks-group-label { margin: 4px 2px 0; color: var(--muted); font-size: .66rem; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
     .quicklinks-menu a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(216,224,234,.88); background: linear-gradient(180deg,#fff,#f8fbff); color: var(--blue-dark); font-size: .84rem; font-weight: 850; }
@@ -104,14 +111,14 @@
     .section-title { margin: 22px 2px 12px; }
     .hub-column { min-width: 0; }
     .hub-card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .resource-card { display: flex; min-height: 112px; flex-direction: column; justify-content: space-between; gap: 10px; padding: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(216,224,234,.92); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; backdrop-filter: blur(8px); }
+    .resource-card { display: flex; min-height: 112px; flex-direction: column; justify-content: space-between; gap: 10px; padding: 18px; background: rgba(255,255,255,.78); border: 1px solid rgba(216,224,234,.72); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; backdrop-filter: blur(8px); }
     .resource-card:hover { transform: translateY(-2px); border-color: #b6c7da; box-shadow: 0 12px 28px rgba(15,23,42,.10); }
     .resource-card strong { font-size: 1.05rem; color: var(--blue-dark); }
     .resource-card span { color: var(--muted); font-size: .9rem; line-height: 1.35; font-weight: 700; }
     .crew-card { min-height: 82px; padding: 14px; gap: 6px; }
     .crew-card strong { font-size: .94rem; }
     .crew-card span { font-size: .78rem; line-height: 1.28; }
-    .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px dashed #b6c7da; border-radius: 22px; background: rgba(255,255,255,.86); box-shadow: 0 8px 22px rgba(15,23,42,.05); backdrop-filter: blur(8px); }
+    .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px solid rgba(216,224,234,.72); border-radius: 22px; background: rgba(255,255,255,.78); box-shadow: 0 8px 22px rgba(15,23,42,.05); backdrop-filter: blur(8px); }
     .tbd-card strong { display: block; font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 6px; }
     .tbd-card span { display: block; color: var(--muted); font-size: .88rem; font-weight: 700; line-height: 1.4; }
     .section-title h2, .snapshot-header h2 { margin: 0; font-size: 1.28rem; color: var(--blue-dark); font-weight: 850; letter-spacing: .055em; text-transform: uppercase; display: inline-block; padding-bottom: 10px; }
@@ -132,7 +139,7 @@
     .snapshot-link:hover { text-decoration: underline; }
 
     .followup-panel { display: grid; gap: 10px; }
-    .followup-box { border: 1px solid rgba(216,224,234,.94); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.95); box-shadow: 0 8px 22px rgba(15,23,42,.07); backdrop-filter: blur(8px); }
+    .followup-box { border: 1px solid rgba(216,224,234,.72); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.86); box-shadow: 0 8px 22px rgba(15,23,42,.07); backdrop-filter: blur(8px); }
     .followup-box-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid rgba(182,199,218,.82); background: linear-gradient(90deg, rgba(234,242,251,.96), rgba(255,255,255,.98)); }
     .followup-box-header h3 { margin: 0; font-size: .8rem; color: var(--blue-dark); font-weight: 950; letter-spacing: .075em; text-transform: uppercase; }
     .box-count { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-dark); font-size: .72rem; font-weight: 950; white-space: nowrap; }
@@ -253,7 +260,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.1.8</p>
+      <p class="site-version">Version: the_hub_html_v_2.1.9</p>
     </footer>
   </main>
 
