@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.1.0 Working Copy</title>
+  <title>PowerHub v2.1.2 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -87,7 +87,7 @@
     .announcement-title h2 { margin: 0; font-size: 1.18rem; color: var(--blue-dark); white-space: nowrap; }
     .announcement-text { color: var(--blue-dark); font-size: .92rem; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-    .hub-layout { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; align-items: start; }
+    .hub-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); gap: 22px; align-items: start; }
     .section-title { margin: 22px 2px 12px; }
     .hub-column { min-width: 0; }
     .hub-card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
@@ -106,9 +106,11 @@
     .snapshot-section * { text-decoration: none; }
     .snapshot-header { margin: 22px 2px 12px; display: flex; flex-direction: column; gap: 5px; }
     .snapshot-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .inline-stat { display: inline-flex; align-items: baseline; gap: 5px; color: var(--muted); white-space: nowrap; text-decoration: none; }
-    .inline-stat * { text-decoration: none; }
+    .snapshot-stat-stack { display: grid; gap: 4px; justify-items: end; color: var(--muted); white-space: nowrap; text-decoration: none; }
+    .snapshot-stat-row { display: inline-flex; align-items: baseline; gap: 5px; text-decoration: none; }
+    .snapshot-stat-row * { text-decoration: none; }
     .inline-stat-value { font-size: 1.28rem; font-weight: 950; color: var(--blue-dark); }
+    .due-soon-value { color: var(--orange); }
     .inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
     .last-update { font-size: .82rem; color: var(--muted); }
 
@@ -179,7 +181,10 @@
           <div class="snapshot-header">
             <div class="snapshot-title-row">
               <h2 id="safety-title">Safety Snapshot</h2>
-              <div class="inline-stat"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Open</span></div>
+              <div class="snapshot-stat-stack" aria-label="Safety Snapshot counts">
+                <div class="snapshot-stat-row"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Overdue</span></div>
+                <div class="snapshot-stat-row due-soon-row" id="dueSoonRow" hidden><span class="inline-stat-value due-soon-value" id="dueSoonCount">0</span><span class="inline-stat-label">Due Soon</span></div>
+              </div>
             </div>
             <div class="last-update">Last Update: <strong id="lastUpdate">Loading latest dashboard update...</strong></div>
           </div>
@@ -215,7 +220,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.1.0</p>
+      <p class="site-version">Version: the_hub_html_v_2.1.2</p>
     </footer>
   </main>
 
@@ -228,7 +233,9 @@
       checklistBox: document.getElementById("checklistFollowupBox"),
       trainingBox: document.getElementById("trainingFollowupBox"),
       checklistCount: document.getElementById("checklistCount"),
-      trainingCount: document.getElementById("trainingCount")
+      trainingCount: document.getElementById("trainingCount"),
+      dueSoonRow: document.getElementById("dueSoonRow"),
+      dueSoonCount: document.getElementById("dueSoonCount")
     };
 
     function text(value) {
@@ -378,10 +385,17 @@
     function extractItems(data) {
       const checklist = [];
       const training = [];
+      const dueSoon = [];
       const objects = [];
       collectObjects(data, objects);
       objects.forEach(obj => {
         const item = normalizeObjectItem(obj, "");
+        const line = item.fullText;
+        const lower = text(line).toLowerCase();
+        const daysUntilDue = num(get(obj, ["daysUntilDue", "days until due", "due in", "days remaining"]));
+        const dueSoonText = lower.includes("due soon") || lower.includes("due within") || lower.includes("in window") || lower.includes("upcoming") || (daysUntilDue > 0 && daysUntilDue <= 7);
+
+        if (dueSoonText && !isOpen(line) && !isComplete(line)) dueSoon.push(item);
         if (!isOpen(item.fullText) || isComplete(item.fullText)) return;
         if (isChecklistText(item.fullText) && (item.employee || item.eq || item.requirementName)) checklist.push(item);
         if (isTrainingText(item.fullText) && (item.employee || item.requirementName)) training.push(item);
@@ -390,13 +404,16 @@
       const rows = [];
       collectRows(data, "", rows);
       rows.forEach(entry => {
+        const lower = text(entry.line).toLowerCase();
+        const dueSoonText = lower.includes("due soon") || lower.includes("due within") || lower.includes("in window") || lower.includes("upcoming");
+        if (dueSoonText && !isOpen(entry.line) && !isComplete(entry.line)) dueSoon.push(normalizeRowItem(entry, "due soon"));
         if (!isOpen(entry.line) || isComplete(entry.line)) return;
         const path = entry.path.toLowerCase();
         if (path.includes("checklist") || path.includes("monthly") || isChecklistText(entry.line)) checklist.push(normalizeRowItem(entry, "checklist"));
         if (path.includes("training") || isTrainingText(entry.line)) training.push(normalizeRowItem(entry, "training"));
       });
 
-      return { checklistItems: dedupe(checklist), trainingItems: dedupe(training) };
+      return { checklistItems: dedupe(checklist), trainingItems: dedupe(training), dueSoonItems: dedupe(dueSoon) };
     }
 
     function dedupe(items) {
@@ -470,6 +487,8 @@
       els.openItemsCount.textContent = "-";
       els.checklistCount.textContent = "Loading";
       els.trainingCount.textContent = "Loading";
+      els.dueSoonRow.hidden = true;
+      els.dueSoonCount.textContent = "0";
 
       try {
         const response = await fetch(SAFETYHQ_FEED_URL + "?hub=" + Date.now(), { cache: "no-store" });
@@ -481,12 +500,16 @@
         const summaryChecklist = findMetric(data, ["overdueChecklists", "missingChecklists", "checklistsOpen", "openChecklists", "overdue checklist", "missing checklist"]);
         const summaryTraining = findMetric(data, ["overdueTraining", "trainingOpen", "openTraining", "overdue training"]);
         const summaryOpen = findMetric(data, ["totalOpenItems", "openItems", "total open items", "open item count"]);
+        const summaryDueSoon = findMetric(data, ["dueSoon", "due soon", "dueSoonItems", "due soon items", "trainingDueSoon", "dueSoonTraining", "upcomingTraining", "inTrainingWindowItems"]);
         const checklistCount = found.checklistItems.length || summaryChecklist;
         const trainingCount = found.trainingItems.length || summaryTraining;
-        const openCount = summaryOpen || checklistCount + trainingCount;
+        const overdueCount = summaryOpen || checklistCount + trainingCount;
+        const dueSoonCount = found.dueSoonItems.length || summaryDueSoon;
 
         els.lastUpdate.textContent = findUpdate(data);
-        els.openItemsCount.textContent = String(openCount);
+        els.openItemsCount.textContent = String(overdueCount);
+        els.dueSoonCount.textContent = String(dueSoonCount);
+        els.dueSoonRow.hidden = dueSoonCount <= 0;
         renderBox(els.checklistBox, els.checklistCount, found.checklistItems, checklistCount, "No missing or overdue Safety Equipment Checklists listed in SafetyHQ.", "Checklist Item", "Monthly Safety Equipment Checklist");
         renderBox(els.trainingBox, els.trainingCount, found.trainingItems, trainingCount, "No overdue training listed in SafetyHQ.", "Training Item", "Training Requirement");
       } catch (error) {
