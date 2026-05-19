@@ -70,15 +70,20 @@
       box-shadow: var(--shadow);
     }
 
-    .hero-bg {
+    .hero-media {
       position: absolute;
       inset: 0;
+      border-radius: 0 0 34px 34px;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      display: block;
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center center;
-      border-radius: 0 0 34px 34px;
-      z-index: 0;
     }
 
     .hero::before {
@@ -193,6 +198,8 @@
         min-height: 214px;
         overflow: hidden;
         border-radius: 0 0 28px 28px;
+        aspect-ratio: 16 / 9;
+        min-height: 0;
         margin: 0 -12px 18px;
         background:
           radial-gradient(circle at 18% 50%, rgba(0,157,255,.28), transparent 42%),
@@ -200,11 +207,12 @@
         border: 1px solid rgba(0,157,255,.18);
         border-top: 0;
       }
+      .hero-media { border-radius: 0 0 28px 28px; }
       .hero-bg {
         object-fit: cover;
-        object-position: 24% center;
+        object-position: center center;
         opacity: .98;
-        filter: saturate(1.08) contrast(1.04) brightness(1.02);
+        filter: saturate(1.06) contrast(1.04) brightness(1.02);
       }
       .hero::before {
         background:
@@ -212,29 +220,31 @@
           radial-gradient(circle at 20% 48%, rgba(0,157,255,.22), transparent 34%);
       }
       .hero-inner {
-        min-height: 214px;
-        padding: 22px 18px;
+        min-height: 0;
+        height: 100%;
+        padding: 18px 22px 18px 39%;
         grid-template-columns: minmax(0, 1fr);
         align-items: center;
-        justify-items: center;
-        text-align: center;
+        justify-items: end;
+        text-align: left;
         gap: 10px;
       }
       .hero-copy {
-        max-width: 330px;
-        margin: 0 auto;
-        padding: 14px 16px;
-        border-radius: 22px;
-        background: rgba(2,10,24,.18);
-        box-shadow: 0 18px 35px rgba(0,0,0,.10);
-        backdrop-filter: blur(1px);
+        max-width: 250px;
+        margin: 0;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+        text-shadow: 0 2px 12px rgba(0,0,0,.55);
       }
-      .site-title::after { width: 124px; margin: .38rem auto 0; }
+      .site-title::after { width: 108px; margin: .34rem 0 0; }
       .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; }
       .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; }
-      .site-title { font-size: clamp(2rem, 10.8vw, 2.85rem); }
-      .eyebrow { font-size: .58rem; letter-spacing: .13em; }
-      .site-subtitle { font-size: .72rem; letter-spacing: .06em; }
+      .site-title { font-size: clamp(1.72rem, 8.9vw, 2.28rem); }
+      .eyebrow { font-size: .48rem; letter-spacing: .10em; margin-bottom: 7px; }
+      .site-subtitle { font-size: .61rem; letter-spacing: .055em; margin-top: .54rem; }
       .announcement-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
       .announcement-main { grid-template-columns: auto minmax(0, 1fr); gap: 8px; padding: 8px 0; }
       .announcement-title h2 { font-size: .95rem; }
@@ -244,19 +254,22 @@
     }
 
     @media (max-width: 430px) {
-      .hero { min-height: 204px; }
-      .hero-inner { min-height: 204px; padding: 20px 14px; }
-      .hero-copy { max-width: 300px; padding: 12px 14px; }
-      .site-title { font-size: clamp(1.86rem, 10.4vw, 2.42rem); }
-      .eyebrow { font-size: .54rem; }
-      .site-subtitle { font-size: .68rem; }
+      .hero { min-height: 0; aspect-ratio: 16 / 9; }
+      .hero-inner { min-height: 0; height: 100%; padding: 16px 16px 16px 38%; }
+      .hero-copy { max-width: 218px; padding: 0; }
+      .site-title { font-size: clamp(1.58rem, 8.8vw, 2.08rem); }
+      .eyebrow { font-size: .42rem; letter-spacing: .085em; }
+      .site-subtitle { font-size: .56rem; }
     }
   </style>
 </head>
 <body>
   <main class="page-shell">
     <header class="hero">
-      <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="" aria-hidden="true">
+      <picture class="hero-media" aria-hidden="true">
+        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png">
+        <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="">
+      </picture>
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Coastal Bend Power Services, LLC</p>
@@ -341,7 +354,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.2.2</p>
+      <p class="site-version">Version: the_hub_html_v_2.2.3</p>
     </footer>
   </main>
 
