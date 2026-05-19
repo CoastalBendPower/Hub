@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PowerHub v2.1.4 Working Copy</title>
+  <title>PowerHub v2.1.5 Working Copy</title>
   <style>
     :root {
       --blue: #123f73;
@@ -24,12 +24,24 @@
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 18% 18%, rgba(0,157,255,.08), transparent 26%), linear-gradient(180deg, #f3f6fa 0%, #eef2f6 45%, #f7f9fb 100%);
+      background:
+        linear-gradient(90deg, rgba(247,249,252,.58) 0%, rgba(247,249,252,.96) 22%, rgba(247,249,252,.985) 50%, rgba(247,249,252,.96) 78%, rgba(247,249,252,.58) 100%),
+        radial-gradient(circle at 18% 18%, rgba(0,157,255,.16), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(18,63,115,.16), transparent 30%),
+        url("assets/banner_the_hub_v3.png") center top / cover fixed no-repeat,
+        linear-gradient(180deg, #f3f6fa 0%, #eef2f6 45%, #f7f9fb 100%);
       color: var(--text);
     }
 
     a { color: inherit; }
-    .page-shell { width: min(1180px, 100%); margin: 0 auto; padding: 16px; }
+    .page-shell {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(247,249,252,.82), rgba(247,249,252,.96) 260px, rgba(247,249,252,.92));
+      box-shadow: 0 0 70px rgba(247,249,252,.92);
+      min-height: 100vh;
+    }
 
     .hero {
       position: relative;
@@ -91,11 +103,11 @@
     .section-title { margin: 22px 2px 12px; }
     .hub-column { min-width: 0; }
     .hub-card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .resource-card { display: flex; min-height: 112px; flex-direction: column; justify-content: space-between; gap: 10px; padding: 18px; background: #fff; border: 1px solid var(--border); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .resource-card { display: flex; min-height: 112px; flex-direction: column; justify-content: space-between; gap: 10px; padding: 18px; background: rgba(255,255,255,.94); border: 1px solid rgba(216,224,234,.92); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; backdrop-filter: blur(8px); }
     .resource-card:hover { transform: translateY(-2px); border-color: #b6c7da; box-shadow: 0 12px 28px rgba(15,23,42,.10); }
     .resource-card strong { font-size: 1.05rem; color: var(--blue-dark); }
     .resource-card span { color: var(--muted); font-size: .9rem; line-height: 1.35; font-weight: 700; }
-    .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px dashed #b6c7da; border-radius: 22px; background: rgba(255,255,255,.78); box-shadow: 0 8px 22px rgba(15,23,42,.05); }
+    .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px dashed #b6c7da; border-radius: 22px; background: rgba(255,255,255,.86); box-shadow: 0 8px 22px rgba(15,23,42,.05); backdrop-filter: blur(8px); }
     .tbd-card strong { display: block; font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 6px; }
     .tbd-card span { display: block; color: var(--muted); font-size: .88rem; font-weight: 700; line-height: 1.4; }
     .section-title h2, .snapshot-header h2 { margin: 0; font-size: 1.28rem; color: var(--blue-dark); font-weight: 850; letter-spacing: .055em; text-transform: uppercase; display: inline-block; padding-bottom: 10px; }
@@ -116,9 +128,9 @@
     .snapshot-link:hover { text-decoration: underline; }
 
     .followup-panel { display: grid; gap: 10px; }
-    .followup-box { border: 1px solid var(--border); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: #fff; box-shadow: 0 8px 22px rgba(15,23,42,.07); }
-    .followup-box-header { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 12px 14px; border-bottom: 1px solid var(--border); background: #fbfdff; }
-    .followup-box-header h3 { margin: 0; font-size: .94rem; color: var(--blue-dark); }
+    .followup-box { border: 1px solid rgba(216,224,234,.94); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.95); box-shadow: 0 8px 22px rgba(15,23,42,.07); backdrop-filter: blur(8px); }
+    .followup-box-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid rgba(182,199,218,.82); background: linear-gradient(90deg, rgba(234,242,251,.96), rgba(255,255,255,.98)); }
+    .followup-box-header h3 { margin: 0; font-size: .8rem; color: var(--blue-dark); font-weight: 950; letter-spacing: .075em; text-transform: uppercase; }
     .box-count { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--blue-soft); color: var(--blue-dark); font-size: .72rem; font-weight: 950; white-space: nowrap; }
     .followup-list { display: grid; gap: 0; background: #fff; }
     .followup-item { display: grid; gap: 4px; padding: 11px 14px; border-top: 1px solid rgba(216,224,234,.78); }
@@ -133,7 +145,8 @@
     .followup-expander[open] summary { border-bottom: 1px solid rgba(216,224,234,.78); }
     .followup-extra-list { background: #fff; }
     .followup-box.has-open { border-left-color: var(--red); }
-    .followup-box.has-open .box-count { background: #fff1f0; color: var(--red); }
+    .followup-box.has-open .followup-box-header { background: linear-gradient(90deg, #fff1f0, #fff); border-bottom-color: rgba(180,35,24,.16); }
+    .followup-box.has-open .box-count { background: #fff; color: var(--red); border: 1px solid rgba(180,35,24,.18); }
     .followup-empty { padding: 13px 14px; font-size: .88rem; line-height: 1.4; color: var(--green); background: #f0fdf4; }
 
     .hr-section, .crew-section { position: relative; padding-left: 22px; }
@@ -164,7 +177,7 @@
     <section class="announcement-row" aria-label="Announcements">
       <div class="announcement-main">
         <div class="announcement-title"><h2>Announcements:</h2></div>
-        <div class="announcement-text">Future space for company updates, safety announcements, and important reminders. Check SafetyHQ regularly for current checklist and training status.</div>
+        <div class="announcement-text">Company updates, safety alerts, and employee resources.</div>
       </div>
       <details class="hero-quicklinks">
         <summary aria-label="Open Quick Links">
@@ -227,7 +240,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.1.4</p>
+      <p class="site-version">Version: the_hub_html_v_2.1.5</p>
     </footer>
   </main>
 
