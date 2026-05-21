@@ -48,6 +48,7 @@
     }
 
     a { color: inherit; }
+
     .page-shell {
       width: min(1180px, calc(100% - 96px));
       margin: 0 auto;
@@ -162,11 +163,6 @@
     .followup-item strong { color: var(--blue-dark); font-size: .88rem; min-width: 0; }
     .followup-item span { color: var(--muted); font-size: .76rem; font-weight: 750; line-height: 1.25; }
     .overdue-pill { color: var(--red) !important; font-size: .76rem !important; font-weight: 950 !important; white-space: nowrap; text-align: right; }
-    .followup-expander { border-top: 1px solid rgba(216,224,234,.78); background: #fbfdff; }
-    .followup-expander summary { cursor: pointer; padding: 10px 14px; color: var(--blue-dark); font-size: .78rem; font-weight: 900; list-style: none; }
-    .followup-expander summary::-webkit-details-marker { display: none; }
-    .followup-expander[open] summary { border-bottom: 1px solid rgba(216,224,234,.78); }
-    .followup-extra-list { background: #fff; }
     .followup-box.has-open { border-left-color: var(--red); }
     .followup-box.has-open .followup-box-header { background: linear-gradient(90deg, #fff1f0, #fff); border-bottom-color: rgba(180,35,24,.16); }
     .followup-box.has-open .box-count { background: #fff; color: var(--red); border: 1px solid rgba(180,35,24,.18); }
@@ -356,7 +352,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: the_hub_html_v_2.2.5_PWA</p>
+      <p class="site-version">Version: the_hub_html_v_2.2.6</p>
     </footer>
   </main>
 
@@ -629,23 +625,7 @@
       const list = document.createElement("div");
       list.className = "followup-list";
       const safeItems = items.length ? items : [{ employee: count + " item(s)", requirementName: fallbackDetail, status: "Overdue" }];
-      const visibleRows = safeItems.slice(0, 3);
-      const hiddenRows = safeItems.slice(3);
-
-      visibleRows.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
-
-      if (hiddenRows.length) {
-        const expander = document.createElement("details");
-        expander.className = "followup-expander";
-        const summary = document.createElement("summary");
-        summary.textContent = "+" + hiddenRows.length + " more";
-        const extraList = document.createElement("div");
-        extraList.className = "followup-extra-list";
-        hiddenRows.forEach(item => appendFollowupItem(extraList, item, fallbackTitle, fallbackDetail));
-        expander.appendChild(summary);
-        expander.appendChild(extraList);
-        list.appendChild(expander);
-      }
+      safeItems.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
       box.appendChild(list);
     }
 
