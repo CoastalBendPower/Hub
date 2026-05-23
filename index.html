@@ -143,10 +143,35 @@
     .snapshot-header { margin: 22px 2px 12px; display: flex; flex-direction: column; gap: 5px; }
     .snapshot-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
     .snapshot-stat-stack { display: grid; gap: 4px; justify-items: end; color: var(--muted); white-space: nowrap; text-decoration: none; }
-    .snapshot-stat-row { display: inline-flex; align-items: baseline; gap: 5px; text-decoration: none; }
-    .snapshot-stat-row * { text-decoration: none; }
-    .inline-stat-value { font-size: 1.28rem; font-weight: 950; color: var(--blue-dark); }
-    .inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.snapshot-stat-row { display: inline-flex; align-items: baseline; gap: 5px; text-decoration: none; }
+.snapshot-stat-row * { text-decoration: none; }
+.inline-stat-value { font-size: 1.28rem; font-weight: 950; color: var(--blue-dark); }
+.inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+
+.snapshot-stat-stack.has-overdue {
+  border: 2px solid rgba(180,35,24,.45);
+  background: rgba(253,232,232,.95);
+  color: var(--red);
+  border-radius: 14px;
+  padding: 8px 12px;
+  box-shadow: 0 8px 18px rgba(180,35,24,.14);
+}
+
+.snapshot-stat-stack.has-overdue .snapshot-stat-row {
+  align-items: center;
+  gap: 6px;
+}
+
+.snapshot-stat-stack.has-overdue .snapshot-stat-row::before {
+  content: "🚩";
+  font-size: .88rem;
+  line-height: 1;
+}
+
+.snapshot-stat-stack.has-overdue .inline-stat-value,
+.snapshot-stat-stack.has-overdue .inline-stat-label {
+  color: var(--red);
+}
     .last-update { font-size: .82rem; color: var(--muted); }
     .snapshot-link { display: inline-flex; margin-top: 10px; color: var(--blue-dark); font-size: .8rem; font-weight: 950; text-decoration: none; }
     .snapshot-link:hover { text-decoration: underline; }
@@ -318,7 +343,7 @@
           </div>
           <div class="followup-panel">
             <div class="followup-box" id="checklistFollowupBox">
-              <div class="followup-box-header"><h3>Missing / Overdue Checklists</h3><span class="box-count" id="checklistCount">Loading</span></div>
+              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount">Loading</span></div>
               <div class="followup-empty">Loading Latest Update</div>
             </div>
             <div class="followup-box" id="trainingFollowupBox">
@@ -636,6 +661,7 @@
       els.checklistCount.textContent = "Loading";
       els.trainingCount.textContent = "Loading";
       els.overdueCountRow.hidden = true;
+      els.overdueCountRow.classList.remove("has-overdue");
 
       try {
         const response = await fetch(SAFETYHQ_FEED_URL + "?hub=" + Date.now(), { cache: "no-store" });
@@ -654,6 +680,7 @@
         els.lastUpdate.textContent = findUpdate(data);
         els.openItemsCount.textContent = String(overdueCount);
         els.overdueCountRow.hidden = overdueCount <= 0;
+        els.overdueCountRow.classList.toggle("has-overdue", overdueCount > 0);
         renderBox(els.checklistBox, els.checklistCount, found.checklistItems, checklistCount, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
         renderBox(els.trainingBox, els.trainingCount, found.trainingItems, trainingCount, "No overdue training", "Training Item", "Training Requirement");
       } catch (error) {
