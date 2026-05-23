@@ -149,23 +149,29 @@
 .inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
 
 .snapshot-stat-stack.has-overdue {
-  border: 2px solid rgba(180,35,24,.45);
-  background: rgba(253,232,232,.95);
+  border: 1px solid rgba(180,35,24,.34);
+  background: rgba(253,232,232,.72);
   color: var(--red);
-  border-radius: 14px;
-  padding: 8px 12px;
-  box-shadow: 0 8px 18px rgba(180,35,24,.14);
+  border-radius: 999px;
+  padding: 4px 8px;
+  box-shadow: none;
 }
 
 .snapshot-stat-stack.has-overdue .snapshot-stat-row {
   align-items: center;
-  gap: 6px;
+  gap: 4px;
 }
 
-.snapshot-stat-stack.has-overdue .snapshot-stat-row::before {
-  content: "🚩";
-  font-size: .88rem;
-  line-height: 1;
+.snapshot-stat-stack.has-overdue .inline-stat-value {
+  color: var(--red);
+  font-size: 1.05rem;
+  font-weight: 950;
+}
+
+.snapshot-stat-stack.has-overdue .inline-stat-label {
+  color: var(--red);
+  font-size: .62rem;
+  font-weight: 950;
 }
 
 .snapshot-stat-stack.has-overdue .inline-stat-value,
@@ -378,7 +384,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.2</p>
+      <p class="site-version">Version: PowerHub v3.0.4</p>
     </footer>
   </main>
 
