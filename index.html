@@ -151,16 +151,163 @@
 
     .hero-inner { position: relative; z-index: 20; padding: 32px 18px 32px clamp(185px, 20vw, 343px); width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 22px; }
     .hero-copy { max-width: 760px; transform: translateX(10%); }
-    .hero-quicklinks { justify-self: end; align-self: start; width: min(64px, 7vw); min-width: 54px; position: relative; z-index: 60; margin-right: 0; }
-    .hero-quicklinks summary { list-style: none; cursor: pointer; }
-    .hero-quicklinks summary::-webkit-details-marker { display: none; }
-    .hero-quicklinks img { display: block; width: 100%; height: auto; filter: drop-shadow(0 16px 26px rgba(0,0,0,.35)); }
-    .quicklinks-menu { display: none; position: absolute; right: 0; top: calc(100% + 10px); z-index: 9999; min-width: 280px; padding: 12px; border: 1px solid rgba(216,224,234,.72); border-radius: 18px; background: rgba(255,255,255,.78); box-shadow: 0 22px 48px rgba(15,23,42,.25); backdrop-filter: blur(8px); }
-    .hero-quicklinks[open] .quicklinks-menu { display: grid; gap: 8px; }
-    .quicklinks-group-label { margin: 4px 2px 0; color: var(--muted); font-size: .66rem; font-weight: 950; letter-spacing: .1em; text-transform: uppercase; }
-    .quicklinks-menu a { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 40px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(216,224,234,.88); background: linear-gradient(180deg,#fff,#f8fbff); color: var(--blue-dark); font-size: .84rem; font-weight: 850; }
-    .quicklinks-menu a::after { content: "↗"; color: var(--muted); font-size: .78rem; }
-    .quicklinks-menu a:hover { background: var(--blue-soft); border-color: #b6c7da; }
+
+    .hero-quicklinks {
+      justify-self: end;
+      align-self: center;
+      width: 64px;
+      min-width: 64px;
+      position: relative;
+      z-index: 140;
+      margin-right: 0;
+    }
+
+    .hero-quicklinks summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .hero-quicklinks summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .quicklinks-trigger {
+      width: 64px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      outline: none;
+    }
+
+    .quicklinks-trigger > img {
+      display: block;
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 16px 26px rgba(0,0,0,.35));
+      transition: transform .18s ease, filter .18s ease;
+    }
+
+    .quicklinks-trigger:hover > img,
+    .hero-quicklinks[open] .quicklinks-trigger > img {
+      transform: translateY(-1px) scale(1.03);
+      filter: drop-shadow(0 18px 30px rgba(0,157,255,.36));
+    }
+
+    .quicklinks-menu {
+      display: none;
+      position: absolute;
+      right: 74px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 9999;
+      grid-template-columns: repeat(5, 78px);
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(0,157,255,.30);
+      border-radius: 26px;
+      background:
+        radial-gradient(circle at 100% 50%, rgba(0,157,255,.32), transparent 34%),
+        linear-gradient(135deg, rgba(5,16,34,.97), rgba(10,38,72,.94));
+      box-shadow: 0 22px 48px rgba(15,23,42,.32), inset 0 1px 0 rgba(255,255,255,.10);
+      backdrop-filter: blur(10px);
+    }
+
+    .quicklinks-menu::after {
+      content: "";
+      position: absolute;
+      right: -12px;
+      top: 50%;
+      width: 18px;
+      height: 3px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(0,157,255,.75), rgba(255,255,255,.84));
+      box-shadow: 0 0 16px rgba(0,157,255,.62);
+    }
+
+    .hero-quicklinks[open] .quicklinks-menu {
+      display: grid;
+      animation: quickLauncherIn .16s ease-out both;
+    }
+
+    @keyframes quickLauncherIn {
+      from { opacity: 0; transform: translateY(-50%) translateX(14px) scale(.98); }
+      to { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
+    }
+
+    .quicklink-action {
+      min-width: 0;
+      min-height: 88px;
+      padding: 8px 6px 7px;
+      border-radius: 18px;
+      border: 1px solid rgba(0,157,255,.24);
+      background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.045));
+      color: #fff;
+      text-decoration: none;
+      display: grid;
+      justify-items: center;
+      align-content: center;
+      gap: 6px;
+      text-align: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+      transition: transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+    }
+
+    .quicklink-action:hover,
+    .quicklink-action:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(0,157,255,.66);
+      background: linear-gradient(180deg, rgba(0,157,255,.26), rgba(255,255,255,.07));
+      box-shadow: 0 12px 24px rgba(0,157,255,.18), inset 0 1px 0 rgba(255,255,255,.18);
+      outline: none;
+    }
+
+    .quicklink-action-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 34% 26%, rgba(255,255,255,.56), transparent 24%),
+        linear-gradient(145deg, #0f5792, #071f3d);
+      border: 1px solid rgba(0,157,255,.50);
+      box-shadow: 0 10px 20px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.24);
+      color: #fff;
+      font-size: .74rem;
+      font-weight: 950;
+      line-height: 1;
+      letter-spacing: -.02em;
+    }
+
+    .quicklink-action-icon img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    .quicklink-fallback {
+      position: relative;
+      z-index: 1;
+    }
+
+    .quicklink-label {
+      display: block;
+      color: rgba(255,255,255,.92);
+      font-size: .64rem;
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: .02em;
+    }
     .eyebrow { margin: 0 0 10px; font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 850; opacity: .9; }
     .site-title { margin: 0; font-size: clamp(2.65rem, 5.35vw, 5.05rem); line-height: .95; font-weight: 950; letter-spacing: -.055em; }
     .title-hub { color: #009dff; text-shadow: 0 0 14px rgba(0,157,255,.48); }
@@ -323,8 +470,41 @@
         transform: none;
       }
       .site-title::after { width: 96px; margin: .24rem 0 0; }
-      .hero-quicklinks { justify-self: end; align-self: center; width: 52px; min-width: 52px; margin-left: auto; }
-      .quicklinks-menu { position: absolute; right: 0; top: calc(100% + 8px); bottom: auto; min-width: min(220px, calc(100vw - 28px)); width: min(220px, calc(100vw - 28px)); margin-top: 0; }
+      .hero-quicklinks { justify-self: end; align-self: center; width: 54px; min-width: 54px; margin-left: auto; }
+      .quicklinks-trigger,
+      .quicklinks-trigger > img { width: 54px; height: 54px; }
+
+      .quicklinks-menu {
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        top: auto;
+        bottom: 18px;
+        transform: none;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px;
+        border-radius: 24px;
+      }
+
+      .quicklinks-menu::after { display: none; }
+
+      .hero-quicklinks[open] .quicklinks-menu {
+        display: grid;
+        animation: quickSheetIn .18s ease-out both;
+      }
+
+      @keyframes quickSheetIn {
+        from { opacity: 0; transform: translateY(16px) scale(.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .quicklink-action { min-height: 78px; padding: 8px 6px; }
+      .quicklink-action-icon { width: 42px; height: 42px; font-size: .68rem; }
+      .quicklink-label { font-size: .66rem; }
       .site-title { font-size: clamp(1.54rem, 7.85vw, 1.96rem); }
       .eyebrow { font-size: .43rem; letter-spacing: .085em; margin-bottom: 5px; white-space: nowrap; }
       .site-subtitle { font-size: .54rem; letter-spacing: .045em; margin-top: .38rem; white-space: nowrap; }
@@ -374,22 +554,49 @@
         </div>
       </div>
       <details class="hero-quicklinks">
-        <summary aria-label="Open Quick Links">
+        <summary class="quicklinks-trigger" aria-label="Open Quick Links">
           <img src="assets/button_MAIN Quick Links_v2.png" alt="Quick Links">
         </summary>
         <nav class="quicklinks-menu" aria-label="Quick Links">
-          <div class="quicklinks-group-label">Safety</div>
-          <a href="https://coastalbendpower.github.io/SafetyHQ/" target="_blank" rel="noopener noreferrer">SafetyHQ</a>
-          <a href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" target="_blank" rel="noopener noreferrer">Procedures</a>
-          <a href="#jso-input">JSA / JSO Input</a>
-          <div class="quicklinks-group-label">Company Tools</div>
-          <a href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">HSI Quick Links</a>
-          <a href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">ShareSync</a>
-          <a href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">CBPS Website</a>
-          <div class="quicklinks-group-label">Resources</div>
-          <a href="#hr-docs">HR Docs</a>
-          <a href="#crew-lead-tools">Crew Lead Tools</a>
-          <a href="#other-docs">Other Docs</a>
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">SHQ</span>
+              <img src="assets/icon_SafetyHQ_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">SafetyHQ</span>
+          </a>
+
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/procedures.html">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">PROC</span>
+              <img src="assets/icon_Procedures_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">Procedures</span>
+          </a>
+
+          <a class="quicklink-action" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">HSI</span>
+              <img src="assets/icon_HSI_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">HSI</span>
+          </a>
+
+          <a class="quicklink-action" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">SS</span>
+              <img src="assets/icon_ShareSync_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">ShareSync</span>
+          </a>
+
+          <a class="quicklink-action" href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">CBPS</span>
+              <img src="assets/icon_CBPS_Website_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">CBPS Site</span>
+          </a>
         </nav>
       </details>
     </section>
@@ -443,7 +650,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.10</p>
+      <p class="site-version">Version: PowerHub v3.0.11</p>
     </footer>
   </main>
 
@@ -824,6 +1031,18 @@ async function loadPowerHubAnnouncement() {
         renderBox(els.trainingBox, els.trainingCount, [], 0, "Unable to load training status. Open SafetyHQ for full details.", "Training Item", "Training Requirement");
       }
     }
+
+      document.addEventListener("click", event => {
+        const launcher = document.querySelector(".hero-quicklinks");
+        if (!launcher || !launcher.open) return;
+        if (!launcher.contains(event.target)) launcher.removeAttribute("open");
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        const launcher = document.querySelector(".hero-quicklinks");
+        if (launcher) launcher.removeAttribute("open");
+      });
 
       loadPowerHubAnnouncement();
       loadSafetySnapshot();
