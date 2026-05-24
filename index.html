@@ -49,6 +49,58 @@
 
     a { color: inherit; }
 
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .power-loader {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 850;
+      line-height: 1;
+      vertical-align: middle;
+    }
+
+    .power-loader img {
+      display: block;
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    .power-loader--inline img {
+      width: 22px;
+      height: 22px;
+    }
+
+    .power-loader--section {
+      width: 100%;
+      min-height: 38px;
+      padding: 2px 0;
+    }
+
+    .power-loader--section img {
+      width: 38px;
+      height: 38px;
+    }
+
+    .followup-empty .power-loader {
+      justify-content: flex-start;
+    }
+
     .page-shell {
       width: min(1180px, calc(100% - 96px));
       margin: 0 auto;
@@ -314,7 +366,12 @@
     <section class="announcement-row" aria-label="Announcements">
       <div class="announcement-main">
         <div class="announcement-title"><h2>Announcements:</h2></div>
-        <div class="announcement-text" id="powerhubAnnouncementText" aria-live="polite"></div>
+        <div class="announcement-text" id="powerhubAnnouncementText" aria-live="polite">
+          <span class="power-loader power-loader--inline" role="status" aria-label="Loading announcement">
+            <img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true">
+            <span class="sr-only">Loading announcement</span>
+          </span>
+        </div>
       </div>
       <details class="hero-quicklinks">
         <summary aria-label="Open Quick Links">
@@ -347,16 +404,16 @@
                 <div class="snapshot-stat-row"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Overdue</span></div>
               </div>
             </div>
-            <div class="last-update">Last Update: <strong id="lastUpdate">Loading Latest Update</strong></div>
+            <div class="last-update">Last Update: <strong id="lastUpdate"><span class="power-loader power-loader--inline" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></strong></div>
           </div>
           <div class="followup-panel">
             <div class="followup-box" id="checklistFollowupBox">
-              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount">Loading</span></div>
-              <div class="followup-empty">Loading Latest Update</div>
+              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount"></span></div>
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></div>
             </div>
             <div class="followup-box" id="trainingFollowupBox">
-              <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount">Loading</span></div>
-              <div class="followup-empty">Loading Latest Update</div>
+              <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount"></span></div>
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></div>
             </div>
           </div>
           <a class="snapshot-link" href="https://coastalbendpower.github.io/SafetyHQ/">View SafetyHQ</a>
@@ -386,13 +443,14 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.9</p>
+      <p class="site-version">Version: PowerHub v3.0.10</p>
     </footer>
   </main>
 
   <script>
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
+    const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -404,6 +462,30 @@
       trainingCount: document.getElementById("trainingCount"),
       overdueCountRow: document.getElementById("overdueCountRow")
     };
+
+    function escapeAttr(value) {
+      return String(value || "Loading").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function loaderMarkup(label, variant = "inline") {
+      const safeLabel = escapeAttr(label || "Loading");
+      return `<span class="power-loader power-loader--${variant}" role="status" aria-label="${safeLabel}"><img src="${POWER_LOADER_SRC}" alt="" aria-hidden="true"><span class="sr-only">${safeLabel}</span></span>`;
+    }
+
+    function setLoader(el, label, variant = "inline") {
+      if (!el) return;
+      el.innerHTML = loaderMarkup(label, variant);
+    }
+
+    function setBoxLoading(box, label) {
+      if (!box) return;
+      const oldBody = box.querySelector(".followup-empty, .followup-list");
+      if (oldBody) oldBody.remove();
+      const empty = document.createElement("div");
+      empty.className = "followup-empty";
+      empty.innerHTML = loaderMarkup(label, "section");
+      box.appendChild(empty);
+    }
 
     function text(value) {
       let out = String(value || "").trim();
@@ -689,7 +771,7 @@ async function loadPowerHubAnnouncement() {
   const fallback = "Please complete all assigned requirements by their due dates.";
   if (!els.announcementText) return;
 
-    els.announcementText.textContent = "";
+    setLoader(els.announcementText, "Loading announcement", "inline");
 
   try {
     const response = await fetch(UC_ANNOUNCEMENT_FEED_URL + "&t=" + Date.now(), { cache: "no-store" });
@@ -703,12 +785,14 @@ async function loadPowerHubAnnouncement() {
   }
 }
     async function loadSafetySnapshot() {
-      els.lastUpdate.textContent = "Loading Latest Update";
+      setLoader(els.lastUpdate, "Loading latest update", "inline");
       els.openItemsCount.textContent = "-";
-      els.checklistCount.textContent = "Loading";
-      els.trainingCount.textContent = "Loading";
+      els.checklistCount.textContent = "";
+      els.trainingCount.textContent = "";
       els.overdueCountRow.hidden = true;
       els.overdueCountRow.classList.remove("has-overdue");
+      setBoxLoading(els.checklistBox, "Loading checklist status");
+      setBoxLoading(els.trainingBox, "Loading training status");
 
       try {
         const response = await fetch(SAFETYHQ_FEED_URL + "?hub=" + Date.now(), { cache: "no-store" });
