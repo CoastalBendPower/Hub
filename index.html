@@ -68,11 +68,12 @@
     .site-subtitle { margin:.7rem 0 0; font-size:clamp(.86rem, 1.14vw, 1.05rem); font-weight:750; letter-spacing:.08em; color:rgba(255,255,255,.88); }
 
     .announcement-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:12px; align-items:center; margin:4px 0 18px; overflow:visible; position:relative; z-index:80; }
-    .announcement-main { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; gap:12px; align-items:center; padding:10px 0; border-top:1px solid rgba(216,224,234,.92); border-bottom:1px solid rgba(216,224,234,.92); min-width:0; }
+    .announcement-main { display:grid; grid-template-columns:auto minmax(0, 1fr); gap:12px; align-items:center; padding:10px 0; border-top:1px solid rgba(216,224,234,.92); border-bottom:1px solid rgba(216,224,234,.92); min-width:0; cursor:pointer; border-radius:18px; transition:background .18s ease, box-shadow .18s ease; }
+    .announcement-main:hover { background:rgba(255,255,255,.36); box-shadow:0 8px 18px rgba(15,23,42,.06); }
+    .announcement-main:focus-visible { outline:2px solid rgba(0,157,255,.72); outline-offset:4px; }
     .announcement-title h2 { margin:0; font-size:1.18rem; color:var(--blue-dark); white-space:nowrap; }
     .announcement-text { color:var(--blue-dark); font-size:.92rem; font-weight:750; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-width:0; }
-    .announcement-open { border:1px solid rgba(18,63,115,.18); background:rgba(255,255,255,.76); color:var(--blue-dark); border-radius:999px; padding:7px 11px; font-size:.76rem; font-weight:950; cursor:pointer; }
-    .announcement-open:hover { border-color:rgba(0,157,255,.45); box-shadow:0 8px 18px rgba(15,23,42,.08); }
+    .announcement-text::after { content:"Tap to open"; display:inline-block; margin-left:10px; color:var(--muted); font-size:.68rem; font-weight:950; letter-spacing:.06em; text-transform:uppercase; }
 
     .hero-quicklinks { justify-self:end; align-self:center; width:64px; min-width:64px; position:relative; z-index:140; margin-right:0; }
     .hero-quicklinks summary { list-style:none; cursor:pointer; }
@@ -105,6 +106,10 @@
     .crew-card { min-height:82px; padding:14px; gap:6px; }
     .crew-card strong { font-size:.94rem; }
     .crew-card span { font-size:.78rem; line-height:1.28; }
+    .coming-soon-card { display:grid; gap:8px; min-height:112px; padding:18px; background:rgba(255,255,255,.72); border:1px dashed rgba(18,63,115,.26); border-radius:22px; box-shadow:0 8px 22px rgba(15,23,42,.05); backdrop-filter:blur(8px); }
+    .coming-soon-badge { width:max-content; border-radius:999px; padding:5px 10px; background:var(--blue-soft); color:var(--blue-dark); font-size:.68rem; font-weight:950; letter-spacing:.075em; text-transform:uppercase; }
+    .coming-soon-card strong { color:var(--blue-dark); font-size:1.02rem; }
+    .coming-soon-card span { color:var(--muted); font-size:.88rem; line-height:1.35; font-weight:750; }
     .section-title h2, .snapshot-header h2 { margin:0; font-size:1.28rem; color:var(--blue-dark); font-weight:850; letter-spacing:.055em; text-transform:uppercase; display:inline-block; padding-bottom:10px; }
     .section-title h2::after, .snapshot-header h2::after { content:""; display:block; width:90px; height:3px; margin-top:8px; border-radius:999px; background:linear-gradient(90deg, transparent, #009dff, transparent); }
     .section-title p { margin:5px 0 0; color:var(--muted); font-size:.9rem; line-height:1.35; }
@@ -178,11 +183,11 @@
       .site-subtitle { font-size:.54rem; letter-spacing:.045em; margin-top:.38rem; white-space:nowrap; }
 
       .announcement-row { grid-template-columns:minmax(0, 1fr) auto; gap:8px; margin-bottom:12px; }
-      .announcement-main { grid-template-columns:1fr auto; gap:8px; padding:10px 0; }
+      .announcement-main { grid-template-columns:1fr; gap:8px; padding:10px 0; }
       .announcement-title { grid-column:1 / -1; }
       .announcement-title h2 { font-size:.95rem; }
       .announcement-text { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.8rem; line-height:1.28; }
-      .announcement-open { padding:7px 10px; font-size:.72rem; }
+      .announcement-text::after { display:block; margin:4px 0 0; font-size:.62rem; }
 
       .hero-quicklinks { justify-self:end; align-self:center; width:60px; min-width:60px; margin-left:auto; }
       .quicklinks-trigger, .quicklinks-trigger > img { width:60px; height:60px; }
@@ -225,10 +230,9 @@
     </header>
 
     <section class="announcement-row" aria-label="Team Note">
-      <div class="announcement-main">
+      <div class="announcement-main" id="teamNoteTrigger" role="button" tabindex="0" aria-label="Open Team Note">
         <div class="announcement-title"><h2>Team Note:</h2></div>
         <div class="announcement-text" id="powerhubAnnouncementText" aria-live="polite"><span class="power-loader power-loader--inline" role="status" aria-label="Loading announcement"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading announcement</span></span></div>
-        <button class="announcement-open" id="openAnnouncementModal" type="button">Open</button>
       </div>
       <details class="hero-quicklinks">
         <summary class="quicklinks-trigger" aria-label="Open Quick Links"><img src="assets/button_MAIN Quick Links_v2.png" alt="Quick Links"></summary>
@@ -292,19 +296,22 @@
       <section class="hub-column hr-section" aria-labelledby="hr-title">
         <div class="section-title"><h2 id="hr-title">HR Hub</h2><p>Employee documents, policies, forms, and internal resources.</p></div>
         <div class="hub-card-grid">
-          <a class="resource-card" id="hr-docs" href="#hr-docs"><strong>HR Docs</strong><span>Employee-facing HR documents and acknowledgements.</span></a>
-          <a class="resource-card" href="#policies"><strong>Policies</strong><span>Company policies and reference material.</span></a>
-          <a class="resource-card" href="#forms"><strong>Forms</strong><span>Common request forms and printable resources.</span></a>
-          <a class="resource-card" href="#employee-resources"><strong>Employee Resources</strong><span>Helpful links, contacts, and support items.</span></a>
+          <div class="coming-soon-card" aria-label="HR Hub coming soon">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <strong>HR resources are being organized.</strong>
+            <span>Secure HR document access and employee resources will be added here.</span>
+          </div>
         </div>
       </section>
 
-      <section class="hub-column crew-section" aria-labelledby="crew-title">
-        <div class="section-title"><h2 id="crew-title">Crew Lead Tools</h2><p>Field leadership shortcuts and crew resources.</p></div>
-        <div class="hub-card-grid" id="crew-lead-tools">
-          <a class="resource-card crew-card" id="jso-input" href="#jso-input"><strong>JSA / JSO Input</strong><span>AEP-required field input shortcut.</span></a>
-          <a class="resource-card crew-card" href="#field-audits"><strong>Field Audits</strong><span>Audit and observation links.</span></a>
-          <a class="resource-card crew-card" href="#crew-resources"><strong>Crew Resources</strong><span>Forms, references, and quick docs.</span></a>
+      <section class="hub-column crew-section" aria-labelledby="team-tools-title">
+        <div class="section-title"><h2 id="team-tools-title">Team Tools</h2><p>Field shortcuts, team resources, and support tools.</p></div>
+        <div class="hub-card-grid" id="team-tools">
+          <div class="coming-soon-card" aria-label="Team Tools coming soon">
+            <div class="coming-soon-badge">Coming Soon</div>
+            <strong>Team tools are being built.</strong>
+            <span>Field shortcuts, input forms, and crew resources will be added here.</span>
+          </div>
         </div>
       </section>
     </section>
@@ -312,7 +319,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.16</p>
+      <p class="site-version">Version: PowerHub v3.0.17</p>
     </footer>
   </main>
 
@@ -339,7 +346,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.16";
+    const POWERHUB_VERSION = "PowerHub v3.0.17";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -652,10 +659,20 @@
     }
 
     function setupAnnouncementModal() {
-      document.getElementById("openAnnouncementModal")?.addEventListener("click", () => {
+      const openAnnouncement = () => {
         if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
         els.announcementModal?.classList.add("is-open");
+      };
+
+      const teamNoteTrigger = document.getElementById("teamNoteTrigger");
+      teamNoteTrigger?.addEventListener("click", openAnnouncement);
+      teamNoteTrigger?.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openAnnouncement();
+        }
       });
+
       document.getElementById("closeAnnouncementModal")?.addEventListener("click", () => els.announcementModal?.classList.remove("is-open"));
       els.announcementModal?.addEventListener("click", event => { if (event.target === els.announcementModal) els.announcementModal.classList.remove("is-open"); });
       document.addEventListener("keydown", event => { if (event.key === "Escape") els.announcementModal?.classList.remove("is-open"); });
