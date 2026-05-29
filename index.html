@@ -106,10 +106,8 @@
     .crew-card { min-height:82px; padding:14px; gap:6px; }
     .crew-card strong { font-size:.94rem; }
     .crew-card span { font-size:.78rem; line-height:1.28; }
-    .coming-soon-card { display:grid; gap:8px; min-height:112px; padding:18px; background:rgba(255,255,255,.72); border:1px dashed rgba(18,63,115,.26); border-radius:22px; box-shadow:0 8px 22px rgba(15,23,42,.05); backdrop-filter:blur(8px); }
-    .coming-soon-badge { width:max-content; border-radius:999px; padding:5px 10px; background:var(--blue-soft); color:var(--blue-dark); font-size:.68rem; font-weight:950; letter-spacing:.075em; text-transform:uppercase; }
-    .coming-soon-card strong { color:var(--blue-dark); font-size:1.02rem; }
-    .coming-soon-card span { color:var(--muted); font-size:.88rem; line-height:1.35; font-weight:750; }
+    .coming-soon-card { display:grid; place-items:center; min-height:112px; padding:22px; background:rgba(255,255,255,.72); border:1px dashed rgba(18,63,115,.26); border-radius:22px; box-shadow:0 8px 22px rgba(15,23,42,.05); backdrop-filter:blur(8px); text-align:center; }
+    .coming-soon-sign { color:var(--blue-dark); font-size:clamp(1.55rem, 3vw, 2.35rem); font-weight:950; letter-spacing:.06em; text-transform:uppercase; }
     .section-title h2, .snapshot-header h2 { margin:0; font-size:1.28rem; color:var(--blue-dark); font-weight:850; letter-spacing:.055em; text-transform:uppercase; display:inline-block; padding-bottom:10px; }
     .section-title h2::after, .snapshot-header h2::after { content:""; display:block; width:90px; height:3px; margin-top:8px; border-radius:999px; background:linear-gradient(90deg, transparent, #009dff, transparent); }
     .section-title p { margin:5px 0 0; color:var(--muted); font-size:.9rem; line-height:1.35; }
@@ -127,59 +125,55 @@
     .snapshot-stat-stack.has-overdue .snapshot-stat-row { align-items:center; gap:4px; }
     .snapshot-stat-stack.has-overdue .inline-stat-value { color:var(--red); font-size:1.05rem; font-weight:950; }
     .snapshot-stat-stack.has-overdue .inline-stat-label { color:var(--red); font-size:.62rem; font-weight:950; }
-    .last-update { font-size:.82rem; color:var(--muted); }
+    .last-update-line { color:var(--muted); font-size:.78rem; font-weight:750; }
+    .snapshot-note { margin:0; color:var(--muted); font-size:.86rem; line-height:1.35; font-weight:700; }
+    .snapshot-card { display:grid; gap:12px; padding:18px; border:1px solid rgba(216,224,234,.72); border-radius:24px; background:rgba(255,255,255,.82); box-shadow:0 8px 22px rgba(15,23,42,.07); backdrop-filter:blur(8px); transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+    .snapshot-card:hover { transform:translateY(-2px); border-color:rgba(0,157,255,.28); box-shadow:0 12px 30px rgba(15,23,42,.10); }
+    .snapshot-card + .snapshot-card { margin-top:12px; }
+    .snapshot-card-title { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .snapshot-card-title h3 { margin:0; color:var(--blue-dark); font-size:1.02rem; }
+    .snapshot-card-title p { margin:4px 0 0; color:var(--muted); font-size:.82rem; line-height:1.3; font-weight:700; }
+    .status-pill { border-radius:999px; padding:5px 9px; font-size:.66rem; font-weight:950; letter-spacing:.08em; text-transform:uppercase; white-space:nowrap; }
+    .status-pill.ok { color:var(--green); background:#e8f7ee; }
+    .status-pill.warn { color:var(--orange); background:#fff5dc; }
+    .status-pill.danger { color:var(--red); background:#fde8e8; }
+    .snapshot-mini-list { display:grid; gap:8px; }
+    .mini-row { display:flex; justify-content:space-between; gap:8px; align-items:center; color:var(--muted); font-size:.84rem; font-weight:750; }
+    .mini-row strong { color:var(--text); }
+    .snapshot-footer { color:var(--muted); font-size:.78rem; line-height:1.35; font-weight:700; }
 
-    .followup-panel { display:grid; gap:10px; }
-    .followup-box { display:block; border:1px solid rgba(216,224,234,.72); border-left:5px solid var(--green); border-radius:16px; overflow:hidden; background:rgba(255,255,255,.86); box-shadow:0 8px 22px rgba(15,23,42,.07); backdrop-filter:blur(8px); color:inherit; }
-    .followup-box-header { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:10px 14px; border-bottom:1px solid rgba(182,199,218,.82); background:linear-gradient(90deg, rgba(234,242,251,.96), rgba(255,255,255,.98)); }
-    .followup-box-header h3 { margin:0; font-size:.8rem; color:var(--blue-dark); font-weight:950; letter-spacing:.075em; text-transform:uppercase; }
-    .box-count { display:none; }
-    .followup-list { display:grid; gap:0; background:#fff; }
-    .followup-item { display:grid; gap:4px; padding:11px 14px; border-top:1px solid rgba(216,224,234,.78); }
-    .followup-item:first-child { border-top:0; }
-    .followup-item-main { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
-    .followup-item strong { color:var(--blue-dark); font-size:.88rem; min-width:0; }
-    .followup-item span { color:var(--muted); font-size:.76rem; font-weight:750; line-height:1.25; }
-    .overdue-pill { color:var(--red) !important; font-size:.76rem !important; font-weight:950 !important; white-space:nowrap; text-align:right; }
-    .followup-box.has-open { border-left-color:var(--red); }
-    .followup-box.has-open .followup-box-header { background:linear-gradient(90deg, #fff1f0, #fff); border-bottom-color:rgba(180,35,24,.16); }
-    .followup-empty { padding:13px 14px; font-size:.88rem; line-height:1.4; color:var(--green); background:#f0fdf4; }
+    .app-modal { position:fixed; inset:0; z-index:10000; display:none; place-items:center; padding:22px; background:rgba(11,42,78,.45); backdrop-filter:blur(5px); }
+    .app-modal.is-open { display:grid; }
+    .app-modal-card { width:min(430px, 100%); border-radius:26px; background:#fff; box-shadow:0 28px 70px rgba(15,23,42,.36); border:1px solid rgba(216,224,234,.95); overflow:hidden; }
+    .app-modal-header { display:flex; justify-content:space-between; gap:12px; align-items:center; padding:18px 18px 12px; border-bottom:1px solid rgba(216,224,234,.72); }
+    .app-modal-title { margin:0; color:var(--blue-dark); font-size:1.1rem; font-weight:950; }
+    .app-modal-close { border:0; background:transparent; color:var(--muted); font-size:1.35rem; line-height:1; cursor:pointer; }
+    .app-modal-body { padding:16px 18px 18px; color:var(--muted); font-size:.92rem; line-height:1.45; font-weight:700; }
+    .app-modal-actions { display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap; padding:0 18px 18px; }
+    .app-modal-actions .small-button { min-width:86px; }
 
-    .hr-section, .crew-section { position:relative; padding-left:22px; }
-    .hr-section::before, .crew-section::before { content:""; position:absolute; left:0; top:24px; bottom:12px; width:3px; border-radius:999px; background:linear-gradient(180deg, transparent, rgba(0,157,255,.72), transparent); }
-    .footer { margin:30px 0 8px; padding:18px 4px 20px; color:var(--muted); font-size:.82rem; text-align:center; border-top:1px solid rgba(216,224,234,.9); }
-    .footer-brand { margin:0; color:var(--blue-dark); font-weight:800; }
-    .footer-disclaimer { max-width:820px; margin:8px auto 0; font-size:.76rem; line-height:1.45; }
-    .site-version { margin:6px 0 0; font-size:.72rem; color:var(--muted); }
+    .footer { margin:24px 0 10px; padding:18px 0 8px; border-top:1px solid rgba(216,224,234,.95); color:var(--muted); font-size:.82rem; line-height:1.45; }
+    .footer-brand { margin:0 0 5px; color:var(--blue-dark); font-weight:900; }
+    .footer-disclaimer { margin:0 0 8px; }
+    .site-version { margin:0; font-size:.72rem; font-weight:800; letter-spacing:.04em; }
 
-    .modal-backdrop { display:none; position:fixed; inset:0; z-index:10000; padding:18px; background:rgba(5,16,34,.64); align-items:center; justify-content:center; }
-    .modal-backdrop.is-open { display:flex; }
-    .modal-card { width:min(560px, 100%); max-height:80vh; overflow:auto; border-radius:24px; border:1px solid rgba(0,157,255,.24); background:rgba(255,255,255,.97); box-shadow:0 28px 70px rgba(0,0,0,.30); padding:20px; }
-    .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:12px; }
-    .modal-head h2 { margin:0; color:var(--blue-dark); font-size:1.25rem; }
-    .modal-close { border:0; background:var(--blue-soft); color:var(--blue-dark); border-radius:999px; width:34px; height:34px; font-weight:950; cursor:pointer; }
-    .modal-body { color:var(--text); font-weight:700; line-height:1.5; white-space:pre-wrap; }
-    .modal-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
-
-    @media (max-width: 900px) {
-      .page-shell { width:min(100%, calc(100% - 24px)); }
-      .hub-layout { grid-template-columns:1fr; gap:26px; }
-      .hr-section, .crew-section { padding-left:0; }
-      .hr-section::before, .crew-section::before { display:none; }
-      .hub-layout > .hub-column + .hub-column { border-top:1px solid rgba(18,63,115,.16); padding-top:24px; box-shadow:inset 0 1px 0 rgba(255,255,255,.68); }
+    @media (max-width: 1040px) {
+      .hub-layout { grid-template-columns:minmax(0, 1fr) minmax(0, 1fr); }
+      .safety-section { grid-column:1 / -1; }
+      .quicklinks-menu { grid-template-columns:repeat(3, 74px); right:70px; }
     }
 
     @media (max-width: 700px) {
-      .page-shell { padding:0 12px 12px; }
-      .hero { overflow:hidden; border-radius:0 0 28px 28px; aspect-ratio:16 / 6.3; min-height:0; margin:0 -12px 14px; background:linear-gradient(135deg, #061226 0%, #081a35 56%, #061226 100%); border:1px solid rgba(0,157,255,.18); border-top:0; }
-      .hero-media { border-radius:0 0 28px 28px; }
-      .hero-bg { object-fit:cover; object-position:center center; opacity:1; filter:none; }
-      .hero::before { background:linear-gradient(90deg, rgba(2,10,24,.08), rgba(2,10,24,.28) 46%, rgba(2,10,24,.10)); }
-      .hero-inner { min-height:0; height:100%; padding:14px 26px 14px 33%; grid-template-columns:minmax(0, 1fr); align-items:center; justify-items:center; text-align:left; gap:10px; }
-      .hero-copy { width:min(100%, 305px); max-width:305px; margin:0; padding:0; border-radius:0; background:transparent; box-shadow:none; backdrop-filter:none; text-shadow:0 2px 12px rgba(0,0,0,.60); transform:none; }
-      .site-title { font-size:clamp(1.54rem, 7.85vw, 1.96rem); }
-      .site-title::after { width:96px; margin:.24rem 0 0; }
-      .eyebrow { font-size:.43rem; letter-spacing:.085em; margin-bottom:5px; white-space:nowrap; }
+      body { background-attachment:scroll; }
+      .page-shell { width:100%; padding:0 12px 16px; }
+      .hero { min-height:132px; border-radius:0 0 24px 24px; margin:0 -12px 14px; overflow:visible; }
+      .hero-media { border-radius:0 0 24px 24px; }
+      .hero-bg { content:url("assets/banner_the_hub_mobile_v1.png?v=3.0.16"); object-position:center center; }
+      .hero-inner { padding:18px 12px 16px 120px; min-height:132px; align-content:center; }
+      .hero-copy { transform:translateX(0); max-width:220px; }
+      .eyebrow { font-size:.46rem; letter-spacing:.055em; margin-bottom:4px; white-space:nowrap; }
+      .site-title { font-size:2.18rem; letter-spacing:-.05em; }
+      .site-title::after { width:88px; height:2px; margin-top:.34rem; }
       .site-subtitle { font-size:.54rem; letter-spacing:.045em; margin-top:.38rem; white-space:nowrap; }
 
       .announcement-row { grid-template-columns:minmax(0, 1fr) auto; gap:8px; margin-bottom:12px; }
@@ -191,34 +185,38 @@
 
       .hero-quicklinks { justify-self:end; align-self:center; width:60px; min-width:60px; margin-left:auto; }
       .quicklinks-trigger, .quicklinks-trigger > img { width:60px; height:60px; }
-      .quicklinks-menu { position:fixed; left:12px; right:12px; top:auto; bottom:18px; transform:none; width:auto; max-width:none; min-width:0; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; padding:14px; border-radius:24px; background:linear-gradient(135deg, rgba(5,16,34,.86), rgba(10,38,72,.82)); }
+      .quicklinks-menu { right:0; top:66px; transform:none; grid-template-columns:repeat(3, minmax(62px, 1fr)); width:min(292px, calc(100vw - 20px)); gap:8px; padding:10px; border-radius:22px; }
       .quicklinks-menu::after { display:none; }
-      .hero-quicklinks[open] .quicklinks-menu { display:grid; animation:quickSheetIn .18s ease-out both; }
-      @keyframes quickSheetIn { from { opacity:0; transform:translateY(16px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
-      .quicklink-action { min-height:82px; padding:8px 4px; }
-      .quicklink-action-icon { width:58px; height:58px; font-size:.68rem; }
-      .quicklink-label { font-size:.66rem; }
-      .section-title { margin-top:14px; }
-      .snapshot-header { margin-top:18px; }
-    }
+      .hero-quicklinks[open] .quicklinks-menu { animation:mobileQuickIn .16s ease-out both; }
+      @keyframes mobileQuickIn { from { opacity:0; transform:translateY(-8px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+      .quicklink-action { min-height:78px; gap:5px; padding:4px 2px; }
+      .quicklink-action-icon { width:52px; height:52px; }
+      .quicklink-label { font-size:.58rem; }
 
-    @media (max-width: 430px) {
-      .hero { aspect-ratio:16 / 6.3; }
-      .hero-inner { height:100%; padding:12px 18px 12px 32%; justify-items:center; }
-      .hero-copy { width:min(100%, 260px); max-width:260px; padding:0; }
-      .site-title { font-size:clamp(1.42rem, 7.45vw, 1.78rem); }
-      .eyebrow { font-size:.37rem; letter-spacing:.07em; margin-bottom:5px; }
-      .site-subtitle { font-size:.48rem; letter-spacing:.035em; margin-top:.38rem; }
-      .site-title::after { width:82px; margin-top:.22rem; }
+      .hub-layout { grid-template-columns:1fr; gap:4px; }
+      .section-title { margin:18px 2px 10px; }
+      .section-title h2, .snapshot-header h2 { font-size:1.06rem; }
+      .section-title p, .snapshot-note { font-size:.8rem; }
+      .resource-card, .snapshot-card { border-radius:20px; padding:16px; }
+      .snapshot-title-row { align-items:flex-start; }
+      .snapshot-stat-stack { justify-items:end; }
+      .inline-stat-value { font-size:1.05rem; }
+      .inline-stat-label { font-size:.58rem; }
+      .snapshot-stat-stack.has-overdue { padding:3px 7px; }
+      .snapshot-stat-stack.has-overdue .inline-stat-value { font-size:.92rem; }
+      .snapshot-stat-stack.has-overdue .inline-stat-label { font-size:.56rem; }
+      .last-update-line { font-size:.7rem; }
+      .mini-row { align-items:flex-start; flex-direction:column; gap:2px; }
+      .app-modal-actions { justify-content:stretch; }
+      .app-modal-actions .small-button { flex:1 1 auto; }
     }
   </style>
 </head>
 <body>
   <main class="page-shell">
-    <header class="hero">
+    <header class="hero" aria-label="CBPS PowerHub header">
       <picture class="hero-media" aria-hidden="true">
-        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png?v=3.0.16">
-        <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="">
+        <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="" />
       </picture>
       <div class="hero-inner">
         <div class="hero-copy">
@@ -237,69 +235,55 @@
       <details class="hero-quicklinks">
         <summary class="quicklinks-trigger" aria-label="Open Quick Links"><img src="assets/button_MAIN Quick Links_v2.png" alt="Quick Links"></summary>
         <nav class="quicklinks-menu" aria-label="Quick Links">
-          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">SHQ</span><img src="assets/icon_SafetyHQ_300.png" alt="" onerror="this.style.display='none'"></span>
-            <span class="quicklink-label">SafetyHQ</span>
-          </a>
-          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" aria-label="Open Procedure Center">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">PROC</span><img src="assets/button_Procedures_round_300.png" alt="" onerror="this.style.display='none'"></span>
-            <span class="quicklink-label">Procedures</span>
-          </a>
-          <a class="quicklink-action" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer" aria-label="Open HSI">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">HSI</span><img src="assets/button_HSI_Login_round_300.png" alt="" onerror="this.style.display='none'"></span>
-            <span class="quicklink-label">HSI</span>
-          </a>
-          <a class="quicklink-action" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer" aria-label="Open ShareSync">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">SS</span><img src="assets/icon_ShareSync_300.png" alt="" onerror="this.style.display='none'"></span>
-            <span class="quicklink-label">ShareSync</span>
-          </a>
-          <a class="quicklink-action" href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer" aria-label="Open CBPS company website">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">CBPS</span><img src="assets/icon_CBPS_Website_300.png" alt="" onerror="this.style.display='none'"></span>
-            <span class="quicklink-label">CBPS Site</span>
-          </a>
-          <button class="quicklink-action" type="button" id="powerHubAppButton" aria-label="PowerHub app options">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">APP</span>
-              <img src="assets/button_CBPS_Site_round_300.png" alt="" onerror="this.style.display='none'">
-            </span>
-            <span class="quicklink-label">App</span>
-          </button>
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ"><span class="quicklink-action-icon"><span class="quicklink-fallback">SHQ</span><img src="assets/button_SafetyHQ_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">SafetyHQ</span></a>
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/Procedures/" aria-label="Open Procedure Center"><span class="quicklink-action-icon"><span class="quicklink-fallback">PROC</span><img src="assets/button_Procedures_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">Procedures</span></a>
+          <a class="quicklink-action" href="https://app.hsi.com/" target="_blank" rel="noopener" aria-label="Open HSI"><span class="quicklink-action-icon"><span class="quicklink-fallback">HSI</span><img src="assets/button_HSI_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">HSI</span></a>
+          <a class="quicklink-action" href="https://login.sharesync.com/" target="_blank" rel="noopener" aria-label="Open ShareSync"><span class="quicklink-action-icon"><span class="quicklink-fallback">SYNC</span><img src="assets/button_ShareSync_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">ShareSync</span></a>
+          <a class="quicklink-action" href="https://coastalbendpower.com/" target="_blank" rel="noopener" aria-label="Open CBPS website"><span class="quicklink-action-icon"><span class="quicklink-fallback">CBPS</span><img src="assets/button_CBPS_Site_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">CBPS Site</span></a>
+          <button class="quicklink-action" type="button" id="powerHubAppButton" aria-label="PowerHub app options"><span class="quicklink-action-icon"><span class="quicklink-fallback">APP</span><img src="assets/button_CBPS_Site_round_300.png" alt="" onerror="this.style.display='none'"></span><span class="quicklink-label">App</span></button>
         </nav>
       </details>
     </section>
 
-    <section class="hub-layout">
+    <section class="hub-layout" aria-label="PowerHub sections">
       <section class="hub-column safety-section" aria-labelledby="safety-title">
-        <div class="snapshot-section" id="safetySnapshotLink">
+        <a class="snapshot-section" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ dashboard">
           <div class="snapshot-header">
             <div class="snapshot-title-row">
-              <h2 id="safety-title">Safety Snapshot</h2>
-              <div class="snapshot-stat-stack" id="overdueCountRow" aria-label="Safety Snapshot overdue count">
-                <div class="snapshot-stat-row"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Overdue</span></div>
+              <div>
+                <h2 id="safety-title">Safety Snapshot</h2>
+                <p class="snapshot-note" id="snapshotNote">Checking latest safety status...</p>
+              </div>
+              <div class="snapshot-stat-stack" id="snapshotSummaryPill" aria-label="Open safety item count">
+                <div class="snapshot-stat-row"><span class="inline-stat-value" id="openItemCount">--</span><span class="inline-stat-label">Open</span></div>
               </div>
             </div>
-            <div class="last-update">Last Update: <strong id="lastUpdate"><span class="power-loader power-loader--inline" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></strong></div>
+            <div class="last-update-line" id="snapshotUpdated">Updating latest upload...</div>
           </div>
-          <div class="followup-panel">
-            <a class="followup-box" id="checklistFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#monthly" aria-label="Open Monthly Safety Equipment Checklist Status in SafetyHQ">
-              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount"></span></div>
-              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading checklist status</span></span></div>
-            </a>
-            <a class="followup-box" id="trainingFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#training" aria-label="Open Training Status in SafetyHQ">
-              <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount"></span></div>
-              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading training status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading training status</span></span></div>
-            </a>
-          </div>
-        </div>
+        </a>
+
+        <a class="snapshot-section" href="https://coastalbendpower.github.io/SafetyHQ/#monthly" aria-label="Open monthly checklist status in SafetyHQ">
+          <article class="snapshot-card" id="monthlySnapshotCard">
+            <div class="snapshot-card-title"><div><h3>Monthly Safety Equipment</h3><p>Overdue or missing checklist focus.</p></div><span class="status-pill" id="monthlyStatusPill">Loading</span></div>
+            <div class="snapshot-mini-list" id="monthlyMiniList"><div class="power-loader power-loader--section" role="status" aria-label="Loading monthly checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading monthly checklist status</span></div></div>
+            <div class="snapshot-footer" id="monthlyFooter">Use SafetyHQ for the full monthly roster.</div>
+          </article>
+        </a>
+
+        <a class="snapshot-section" href="https://coastalbendpower.github.io/SafetyHQ/#training" aria-label="Open training status in SafetyHQ">
+          <article class="snapshot-card" id="trainingSnapshotCard">
+            <div class="snapshot-card-title"><div><h3>Training Status</h3><p>Upcoming and overdue training reminders.</p></div><span class="status-pill" id="trainingStatusPill">Loading</span></div>
+            <div class="snapshot-mini-list" id="trainingMiniList"><div class="power-loader power-loader--section" role="status" aria-label="Loading training status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading training status</span></div></div>
+            <div class="snapshot-footer" id="trainingFooter">Use SafetyHQ for employee-level detail.</div>
+          </article>
+        </a>
       </section>
 
       <section class="hub-column hr-section" aria-labelledby="hr-title">
         <div class="section-title"><h2 id="hr-title">HR Hub</h2><p>Employee documents, policies, forms, and internal resources.</p></div>
         <div class="hub-card-grid">
           <div class="coming-soon-card" aria-label="HR Hub coming soon">
-            <div class="coming-soon-badge">Coming Soon</div>
-            <strong>HR resources are being organized.</strong>
-            <span>Secure HR document access and employee resources will be added here.</span>
+            <div class="coming-soon-sign">Coming Soon!</div>
           </div>
         </div>
       </section>
@@ -308,9 +292,7 @@
         <div class="section-title"><h2 id="team-tools-title">Team Tools</h2><p>Field shortcuts, team resources, and support tools.</p></div>
         <div class="hub-card-grid" id="team-tools">
           <div class="coming-soon-card" aria-label="Team Tools coming soon">
-            <div class="coming-soon-badge">Coming Soon</div>
-            <strong>Team tools are being built.</strong>
-            <span>Field shortcuts, input forms, and crew resources will be added here.</span>
+            <div class="coming-soon-sign">Coming Soon!</div>
           </div>
         </div>
       </section>
@@ -319,26 +301,32 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.17</p>
+      <p class="site-version">Version: PowerHub v3.0.18</p>
     </footer>
   </main>
 
-  <div class="modal-backdrop" id="announcementModal" role="dialog" aria-modal="true" aria-labelledby="announcementModalTitle">
-    <div class="modal-card">
-      <div class="modal-head"><h2 id="announcementModalTitle">Team Note</h2><button class="modal-close" id="closeAnnouncementModal" type="button" aria-label="Close Team Note">×</button></div>
-      <div class="modal-body" id="announcementModalBody">Loading announcement...</div>
+  <div class="app-modal" id="appOptionsModal" aria-hidden="true">
+    <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="appOptionsTitle">
+      <div class="app-modal-header">
+        <h2 class="app-modal-title" id="appOptionsTitle">PowerHub App</h2>
+        <button class="app-modal-close" type="button" id="closeAppOptions" aria-label="Close PowerHub app options">×</button>
+      </div>
+      <div class="app-modal-body" id="appOptionsBody">Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.</div>
+      <div class="app-modal-actions">
+        <button class="small-button primary" type="button" id="installPowerHubApp">Install</button>
+        <button class="small-button" type="button" id="sharePowerHubApp">Share</button>
+        <button class="small-button" type="button" id="closeAppOptionsSecondary">Close</button>
+      </div>
     </div>
   </div>
 
-  <div class="modal-backdrop" id="powerHubAppModal" role="dialog" aria-modal="true" aria-labelledby="powerHubAppModalTitle">
-    <div class="modal-card">
-      <div class="modal-head"><h2 id="powerHubAppModalTitle">PowerHub App</h2><button class="modal-close" id="closePowerHubAppModal" type="button" aria-label="Close PowerHub App options">×</button></div>
-      <div class="modal-body" id="powerHubAppModalBody">Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.</div>
-      <div class="modal-actions">
-        <button class="small-button primary" id="powerHubInstallButton" type="button">Install</button>
-        <button class="small-button" id="powerHubShareButton" type="button">Share</button>
-        <button class="small-button" id="powerHubCloseButton" type="button">Close</button>
+  <div class="app-modal" id="announcementModal" aria-hidden="true">
+    <div class="app-modal-card" role="dialog" aria-modal="true" aria-labelledby="announcementModalTitle">
+      <div class="app-modal-header">
+        <h2 class="app-modal-title" id="announcementModalTitle">Team Note</h2>
+        <button class="app-modal-close" type="button" id="closeAnnouncementModal" aria-label="Close Team Note">×</button>
       </div>
+      <div class="app-modal-body" id="announcementModalBody">Loading announcement...</div>
     </div>
   </div>
 
@@ -346,316 +334,224 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.17";
+    const POWERHUB_VERSION = "PowerHub v3.0.18";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
+      openItemCount: document.getElementById("openItemCount"),
+      snapshotSummaryPill: document.getElementById("snapshotSummaryPill"),
+      snapshotNote: document.getElementById("snapshotNote"),
+      snapshotUpdated: document.getElementById("snapshotUpdated"),
+      monthlyStatusPill: document.getElementById("monthlyStatusPill"),
+      monthlyMiniList: document.getElementById("monthlyMiniList"),
+      monthlyFooter: document.getElementById("monthlyFooter"),
+      trainingStatusPill: document.getElementById("trainingStatusPill"),
+      trainingMiniList: document.getElementById("trainingMiniList"),
+      trainingFooter: document.getElementById("trainingFooter"),
+      appOptionsModal: document.getElementById("appOptionsModal"),
+      appOptionsBody: document.getElementById("appOptionsBody"),
       announcementModal: document.getElementById("announcementModal"),
-      announcementModalBody: document.getElementById("announcementModalBody"),
-      lastUpdate: document.getElementById("lastUpdate"),
-      openItemsCount: document.getElementById("openItemsCount"),
-      checklistBox: document.getElementById("checklistFollowupBox"),
-      trainingBox: document.getElementById("trainingFollowupBox"),
-      checklistCount: document.getElementById("checklistCount"),
-      trainingCount: document.getElementById("trainingCount"),
-      overdueCountRow: document.getElementById("overdueCountRow"),
-      powerHubAppButton: document.getElementById("powerHubAppButton"),
-      powerHubAppModal: document.getElementById("powerHubAppModal"),
-      powerHubAppModalBody: document.getElementById("powerHubAppModalBody"),
-      powerHubInstallButton: document.getElementById("powerHubInstallButton"),
-      powerHubShareButton: document.getElementById("powerHubShareButton"),
-      powerHubCloseButton: document.getElementById("powerHubCloseButton")
+      announcementModalBody: document.getElementById("announcementModalBody")
     };
 
     let deferredInstallPrompt = null;
-    let latestAnnouncement = "Please complete all assigned requirements by their due dates.";
+    let latestAnnouncement = "Loading announcement...";
 
-    function escapeHtml(value) {
-      return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    window.addEventListener("beforeinstallprompt", event => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+    });
+
+    function showLoading(target, label) {
+      if (!target) return;
+      target.innerHTML = `<div class="power-loader power-loader--section" role="status" aria-label="${label}"><img src="${POWER_LOADER_SRC}" alt="" aria-hidden="true"><span class="sr-only">${label}</span></div>`;
     }
 
-    function escapeAttr(value) {
-      return escapeHtml(value || "Loading");
-    }
-
-    function loaderMarkup(label, variant = "inline") {
-      const safeLabel = escapeAttr(label || "Loading");
-      return `<span class="power-loader power-loader--${variant}" role="status" aria-label="${safeLabel}"><img src="${POWER_LOADER_SRC}" alt="" aria-hidden="true"><span class="sr-only">${safeLabel}</span></span>`;
-    }
-
-    function setLoader(el, label, variant = "inline") {
+    function setPill(el, text, status) {
       if (!el) return;
-      el.innerHTML = loaderMarkup(label, variant);
+      el.textContent = text;
+      el.className = `status-pill ${status}`;
     }
 
-    function setBoxLoading(box, label) {
-      if (!box) return;
-      const oldBody = box.querySelector(".followup-empty, .followup-list");
-      if (oldBody) oldBody.remove();
-      const empty = document.createElement("div");
-      empty.className = "followup-empty";
-      empty.innerHTML = loaderMarkup(label, "section");
-      box.appendChild(empty);
+    function normalizeSnapshotPayload(data) {
+      const snapshot = data?.powerHubSnapshot || data?.snapshot || data || {};
+      const rawMonthly = snapshot.monthly || snapshot.monthlySafetyEquipment || snapshot.checklists || data?.monthly || data?.monthlySafetyEquipment || [];
+      const rawTraining = snapshot.training || snapshot.trainingStatus || data?.training || data?.trainingStatus || [];
+      return {
+        monthly: Array.isArray(rawMonthly) ? rawMonthly : [],
+        training: Array.isArray(rawTraining) ? rawTraining : [],
+        lastUpdate: snapshot.lastUpdate || snapshot.lastUpdated || data?.lastUpdate || data?.lastUpdated || "",
+        note: snapshot.note || snapshot.summary || data?.note || ""
+      };
     }
 
-    function text(value) {
-      let out = String(value ?? "").trim();
-      while (out.includes("  ")) out = out.replaceAll("  ", " ");
-      return out;
+    function isBadChecklist(item) {
+      const status = String(item.status || item.complianceStatus || item.displayStatus || "").toLowerCase();
+      return status.includes("overdue") || status.includes("missing") || status.includes("due");
     }
 
-    function key(value) {
-      const source = text(value).toLowerCase();
-      let out = "";
-      for (const ch of source) {
-        if ((ch >= "a" && ch <= "z") || (ch >= "0" && ch <= "9")) out += ch;
-      }
-      return out;
+    function isBadTraining(item) {
+      const status = String(item.status || item.displayStatus || "").toLowerCase();
+      const daysOverdue = Number(item.daysOverdue || 0);
+      const daysUntilDue = Number(item.daysUntilDue ?? item.daysUntil ?? 9999);
+      return daysOverdue > 0 || status.includes("overdue") || daysUntilDue <= 7 || status.includes("due soon") || status.includes("due");
     }
 
-    function num(value) {
-      const source = String(value ?? "");
-      let out = "";
-      for (const ch of source) {
-        if ((ch >= "0" && ch <= "9") || ch === "." || ch === "-") out += ch;
-      }
-      const parsed = Number(out);
-      return Number.isFinite(parsed) ? parsed : 0;
+    function itemName(item) {
+      return item.employee || item.name || item.employeeName || item.driver || "Employee";
     }
 
-    function get(obj, names) {
-      const map = {};
-      Object.keys(obj || {}).forEach(k => { map[key(k)] = k; });
-      for (const name of names) {
-        const found = map[key(name)];
-        if (found) return text(obj[found]);
-      }
-      return "";
+    function itemDetail(item) {
+      return item.requirementName || item.training || item.checklistName || item.title || item.requirement || item.status || "Status item";
     }
 
-    function normalizeRows(source) {
-      if (!source) return [];
-      if (Array.isArray(source)) return source;
-      if (Array.isArray(source.rows)) return source.rows;
-      if (Array.isArray(source.items)) return source.items;
-      if (Array.isArray(source.values)) return source.values;
-      if (Array.isArray(source.data)) return source.data;
-      return [];
+    function itemMeta(item) {
+      const due = item.dueDate || item.due || item.completedAt || "";
+      if (item.daysOverdue) return `${item.daysOverdue}d overdue`;
+      if (item.daysUntilDue !== undefined) return `${item.daysUntilDue}d until due`;
+      if (due) return due;
+      return item.status || "Review";
     }
 
-    function cell(row, names, index) {
-      if (Array.isArray(row)) return text(row[index]);
-      return get(row, names);
-    }
-
-    function includeOnSite(row, index) {
-      const include = Array.isArray(row) ? text(row[index] || "Yes") : (get(row, ["includeOnSite", "Include On Site?", "Include On Site", "showOnSite", "siteInclude"]) || "Yes");
-      const lower = include.toLowerCase();
-      return lower !== "no" && lower !== "false" && lower !== "0";
-    }
-
-    function formatDate(value) {
-      const s = text(value);
-      if (!s) return "";
-      if (s.length >= 10 && s[4] === "-" && s[7] === "-") return `${s.slice(5,7)}/${s.slice(8,10)}/${s.slice(0,4)}`;
-      return s;
-    }
-
-    function findMetric(data, names) {
-      const wanted = names.map(key);
-      const sources = [data && data.summary, data && data.powerHubSnapshot, data && data.dashboardMetrics, data && data.metrics, data];
-      for (const src of sources) {
-        if (!src) continue;
-        if (Array.isArray(src)) {
-          for (const row of src) {
-            if (Array.isArray(row) && wanted.includes(key(row[0]))) return text(row[1]);
-            if (row && typeof row === "object") {
-              const label = get(row, ["field", "Field", "metric", "Metric", "label", "Label", "name", "Name"]);
-              const value = get(row, ["value", "Value", "amount", "Amount", "metricValue", "Metric Value"]);
-              if (wanted.includes(key(label))) return value;
-            }
-          }
-        } else if (typeof src === "object") {
-          for (const name of names) {
-            const value = get(src, [name]);
-            if (value) return value;
-          }
-        }
-      }
-      return "";
-    }
-
-    function findUpdate(data) {
-      return findMetric(data, ["lastUpdate", "Last Update", "lastUpdated", "Updated", "timestamp", "Dashboard Last Update", "Last Upload", "Latest Upload"]) || "Latest SafetyHQ update loaded";
-    }
-
-    function getChecklistItems(data) {
-      const rows = normalizeRows(data.monthlyStatus || data.monthlyItems || data.checklistStatus || data.monthly || data.checklists || data["Monthly Status"]);
-      const items = [];
-      rows.forEach(row => {
-        const employee = cell(row, ["employee", "Employee"], 0);
-        const eq = cell(row, ["eq", "eqNumber", "EQ #", "vehicle", "Vehicle", "Vehicle #"], 1);
-        const status = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
-        const completed = cell(row, ["completionDate", "Completion Date", "Completed Date", "completedAt"], 3);
-        const days = cell(row, ["daysOverdue", "Days Overdue"], 5);
-        const notes = cell(row, ["notes", "Notes"], 6);
-        if (!employee || employee === "Employee" || !eq || !includeOnSite(row, 7)) return;
-        const lower = (status + " " + completed).toLowerCase();
-        if (lower.includes("complete") || completed) return;
-        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: status || "Overdue / Missing", daysOverdue: days, notes });
-      });
-      items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
-      return items;
-    }
-
-    function getTrainingItems(data) {
-      const rows = normalizeRows(data.trainingStatus || data.training || data.trainingItems || data.inTrainingWindowItems || data["Training Status"]);
-      const items = [];
-      rows.forEach(row => {
-        const employee = cell(row, ["employee", "Employee"], 0);
-        const requirementName = cell(row, ["requirementName", "requirement", "training", "Requirement"], 1);
-        const complianceStatus = cell(row, ["complianceStatus", "Compliance Status"], 2);
-        const dueDate = cell(row, ["dueDate", "Due Date"], 3);
-        const daysUntilDue = cell(row, ["daysUntilDue", "Days Until Due"], 4);
-        const dashboardStatus = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 5) || complianceStatus;
-        if (!employee || employee === "Employee" || !requirementName || !dueDate || !includeOnSite(row, 6)) return;
-        const lower = dashboardStatus.toLowerCase();
-        const overdue = lower.includes("overdue") || lower.includes("delinquent") || num(daysUntilDue) < 0;
-        if (!overdue) return;
-        items.push({ employee, requirementName, dueDate, status: dashboardStatus || "Overdue", daysOverdue: Math.abs(num(daysUntilDue)) });
-      });
-      items.sort((a, b) => {
-        const dueSort = text(a.dueDate).localeCompare(text(b.dueDate));
-        if (dueSort !== 0) return dueSort;
-        return a.employee.localeCompare(b.employee);
-      });
-      return items;
-    }
-
-    function overdueLabel(item) {
-      if (item.daysOverdue) return `${Math.abs(num(item.daysOverdue))}d overdue`;
-      const raw = text(item.status);
-      if (raw.toLowerCase().includes("overdue")) return raw;
-      return "Overdue";
-    }
-
-    function appendFollowupItem(parent, item, fallbackTitle, fallbackDetail) {
-      const row = document.createElement("div");
-      row.className = "followup-item";
-
-      const main = document.createElement("div");
-      main.className = "followup-item-main";
-
-      const title = document.createElement("strong");
-      title.textContent = item.eq ? `${item.employee || fallbackTitle} — ${item.eq}` : (item.employee || fallbackTitle);
-
-      const overdue = document.createElement("span");
-      overdue.className = "overdue-pill";
-      overdue.textContent = overdueLabel(item);
-
-      main.appendChild(title);
-      main.appendChild(overdue);
-      row.appendChild(main);
-
-      const detailText = item.requirementName || fallbackDetail;
-      if (detailText) {
-        const detail = document.createElement("span");
-        detail.textContent = item.dueDate ? `${detailText} — Due ${formatDate(item.dueDate)}` : detailText;
-        row.appendChild(detail);
-      }
-
-      parent.appendChild(row);
-    }
-
-    function renderBox(box, countEl, items, emptyText, fallbackTitle, fallbackDetail) {
-      countEl.textContent = String(items.length);
-      box.classList.toggle("has-open", items.length > 0);
-      const oldBody = box.querySelector(".followup-empty, .followup-list");
-      if (oldBody) oldBody.remove();
-
+    function renderMiniList(target, items, emptyText) {
+      if (!target) return;
+      target.innerHTML = "";
       if (!items.length) {
-        const empty = document.createElement("div");
-        empty.className = "followup-empty";
-        empty.textContent = emptyText;
-        box.appendChild(empty);
+        const row = document.createElement("div");
+        row.className = "mini-row";
+        row.innerHTML = `<strong>${emptyText}</strong><span>Good</span>`;
+        target.appendChild(row);
         return;
       }
-
-      const list = document.createElement("div");
-      list.className = "followup-list";
-      items.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
-      box.appendChild(list);
+      items.slice(0, 3).forEach(item => {
+        const row = document.createElement("div");
+        row.className = "mini-row";
+        row.innerHTML = `<strong>${itemName(item)}</strong><span>${itemMeta(item)}</span>`;
+        target.appendChild(row);
+      });
+      if (items.length > 3) {
+        const row = document.createElement("div");
+        row.className = "mini-row";
+        row.innerHTML = `<strong>+${items.length - 3} more</strong><span>Open SafetyHQ</span>`;
+        target.appendChild(row);
+      }
     }
 
-    function pickAnnouncementMessage(data) {
-      const fallback = "Please complete all assigned requirements by their due dates.";
-      const direct = text(data && (data.message || data.announcementMessage || data.primaryAnnouncementMessage));
-      if (direct) return direct;
-      const primary = data && (data.primaryAnnouncement || data.announcement || data.activeAnnouncement);
-      if (primary) {
-        const msg = text(primary.message || primary.Message || primary.text || primary.announcement);
-        if (msg) return msg;
-      }
-      const announcements = Array.isArray(data && data.announcements) ? data.announcements : [];
-      for (const item of announcements) {
-        const msg = text(item.message || item.Message || item.text || item.announcement);
-        if (msg) return msg;
-      }
-      return fallback;
-    }
+    function updateSnapshot(data) {
+      const payload = normalizeSnapshotPayload(data);
+      const badMonthly = payload.monthly.filter(isBadChecklist);
+      const badTraining = payload.training.filter(isBadTraining);
+      const totalOpen = badMonthly.length + badTraining.length;
 
-    async function loadPowerHubAnnouncement() {
-      const fallback = "Please complete all assigned requirements by their due dates.";
-      if (!els.announcementText) return;
-      setLoader(els.announcementText, "Loading announcement", "inline");
-      try {
-        const response = await fetch(`${UC_ANNOUNCEMENT_FEED_URL}&t=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
-        if (!response.ok) throw new Error("UC announcement feed returned " + response.status);
-        const data = await response.json();
-        latestAnnouncement = pickAnnouncementMessage(data);
-      } catch (error) {
-        console.error("PowerHub announcement load failed:", error);
-        latestAnnouncement = fallback;
-      }
-      els.announcementText.textContent = latestAnnouncement;
-      if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
+      if (els.openItemCount) els.openItemCount.textContent = String(totalOpen);
+      els.snapshotSummaryPill?.classList.toggle("has-overdue", totalOpen > 0);
+      if (els.snapshotNote) els.snapshotNote.textContent = totalOpen ? "Items need attention in SafetyHQ." : "No overdue safety items showing.";
+      if (els.snapshotUpdated) els.snapshotUpdated.textContent = payload.lastUpdate ? `Updated: ${payload.lastUpdate}` : `Updated: ${POWERHUB_VERSION}`;
+
+      setPill(els.monthlyStatusPill, badMonthly.length ? `${badMonthly.length} Open` : "Good", badMonthly.length ? "danger" : "ok");
+      renderMiniList(els.monthlyMiniList, badMonthly, "No overdue monthly checklist items");
+      if (els.monthlyFooter) els.monthlyFooter.textContent = badMonthly.length ? "Tap for the full monthly roster in SafetyHQ." : "Monthly checklist status looks good.";
+
+      setPill(els.trainingStatusPill, badTraining.length ? `${badTraining.length} Due` : "Good", badTraining.length ? "warn" : "ok");
+      renderMiniList(els.trainingMiniList, badTraining, "No urgent training items");
+      if (els.trainingFooter) els.trainingFooter.textContent = badTraining.length ? "Tap for employee-level training detail in SafetyHQ." : "No urgent training reminders showing.";
     }
 
     async function loadSafetySnapshot() {
-      setLoader(els.lastUpdate, "Loading latest update", "inline");
-      els.openItemsCount.textContent = "-";
-      els.checklistCount.textContent = "";
-      els.trainingCount.textContent = "";
-      els.overdueCountRow.hidden = true;
-      els.overdueCountRow.classList.remove("has-overdue");
-      setBoxLoading(els.checklistBox, "Loading checklist status");
-      setBoxLoading(els.trainingBox, "Loading training status");
-
       try {
-        const response = await fetch(`${SAFETYHQ_FEED_URL}?hub=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
-        if (!response.ok) throw new Error("SafetyHQ feed returned " + response.status);
+        showLoading(els.monthlyMiniList, "Loading monthly checklist status");
+        showLoading(els.trainingMiniList, "Loading training status");
+        const response = await fetch(`${SAFETYHQ_FEED_URL}?cb=${Date.now()}`, { cache:"no-store" });
+        if (!response.ok) throw new Error("SafetyHQ feed failed");
         const data = await response.json();
-        console.log("PowerHub SafetyHQ feed", data);
-
-        const checklistItems = getChecklistItems(data);
-        const trainingItems = getTrainingItems(data);
-        const overdueCount = checklistItems.length + trainingItems.length;
-
-        els.lastUpdate.textContent = findUpdate(data);
-        els.openItemsCount.textContent = String(overdueCount);
-        els.overdueCountRow.hidden = overdueCount <= 0;
-        els.overdueCountRow.classList.toggle("has-overdue", overdueCount > 0);
-        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
-        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training", "Training Item", "Training Requirement");
+        updateSnapshot(data);
       } catch (error) {
-        console.error("PowerHub Safety Snapshot load failed:", error);
-        els.lastUpdate.textContent = "Unable to load latest update";
-        els.openItemsCount.textContent = "!";
-        els.checklistCount.textContent = "!";
-        els.trainingCount.textContent = "!";
-        renderBox(els.checklistBox, els.checklistCount, [], "Unable to load checklist status. Open SafetyHQ for full details.", "Checklist Item", "Monthly Safety Equipment Checklist");
-        renderBox(els.trainingBox, els.trainingCount, [], "Unable to load training status. Open SafetyHQ for full details.", "Training Item", "Training Requirement");
+        console.warn(error);
+        if (els.snapshotNote) els.snapshotNote.textContent = "Safety Snapshot could not refresh. Open SafetyHQ for details.";
+        if (els.snapshotUpdated) els.snapshotUpdated.textContent = "Refresh needed";
+        setPill(els.monthlyStatusPill, "Open", "warn");
+        setPill(els.trainingStatusPill, "Open", "warn");
+        renderMiniList(els.monthlyMiniList, [], "Open SafetyHQ for checklist status");
+        renderMiniList(els.trainingMiniList, [], "Open SafetyHQ for training status");
       }
+    }
+
+    function extractAnnouncement(data) {
+      if (!data) return "Please complete all required items in a timely manner.";
+      if (typeof data === "string") return data;
+      if (data.announcement) return data.announcement;
+      if (data.message) return data.message;
+      if (data.note) return data.note;
+      if (data.text) return data.text;
+      if (data.powerHubAnnouncement?.message) return data.powerHubAnnouncement.message;
+      return "Please complete all required items in a timely manner.";
+    }
+
+    async function loadAnnouncement() {
+      try {
+        const response = await fetch(`${UC_ANNOUNCEMENT_FEED_URL}&cb=${Date.now()}`, { cache:"no-store" });
+        if (!response.ok) throw new Error("Announcement feed failed");
+        const data = await response.json();
+        latestAnnouncement = extractAnnouncement(data);
+      } catch (error) {
+        console.warn(error);
+        latestAnnouncement = "Please complete all required items in a timely manner.";
+      }
+      if (els.announcementText) els.announcementText.textContent = latestAnnouncement;
+    }
+
+    function closeAppOptions() {
+      els.appOptionsModal?.classList.remove("is-open");
+      els.appOptionsModal?.setAttribute("aria-hidden", "true");
+    }
+
+    function openAppOptions() {
+      if (els.appOptionsBody) els.appOptionsBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
+      els.appOptionsModal?.classList.add("is-open");
+      els.appOptionsModal?.setAttribute("aria-hidden", "false");
+    }
+
+    async function installPowerHub() {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn(error); }
+        deferredInstallPrompt = null;
+        closeAppOptions();
+        return;
+      }
+      if (els.appOptionsBody) {
+        els.appOptionsBody.textContent = "Install instructions:\n\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
+      }
+    }
+
+    async function sharePowerHub() {
+      const shareData = { title:"CBPS PowerHub", text:"Open CBPS PowerHub", url:"https://coastalbendpower.github.io/Hub/" };
+      try {
+        if (navigator.share) {
+          await navigator.share(shareData);
+          closeAppOptions();
+        } else if (navigator.clipboard) {
+          await navigator.clipboard.writeText(shareData.url);
+          if (els.appOptionsBody) els.appOptionsBody.textContent = "PowerHub link copied to clipboard.";
+        } else {
+          window.prompt("Copy PowerHub link:", shareData.url);
+        }
+      } catch (error) {
+        console.warn(error);
+      }
+    }
+
+    function setupAppOptions() {
+      document.getElementById("powerHubAppButton")?.addEventListener("click", event => {
+        event.preventDefault();
+        openAppOptions();
+      });
+      document.getElementById("closeAppOptions")?.addEventListener("click", closeAppOptions);
+      document.getElementById("closeAppOptionsSecondary")?.addEventListener("click", closeAppOptions);
+      document.getElementById("installPowerHubApp")?.addEventListener("click", installPowerHub);
+      document.getElementById("sharePowerHubApp")?.addEventListener("click", sharePowerHub);
+      els.appOptionsModal?.addEventListener("click", event => { if (event.target === els.appOptionsModal) closeAppOptions(); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppOptions(); });
     }
 
     function setupAnnouncementModal() {
@@ -678,72 +574,14 @@
       document.addEventListener("keydown", event => { if (event.key === "Escape") els.announcementModal?.classList.remove("is-open"); });
     }
 
-    function setupQuickLinks() {
-      document.addEventListener("click", event => {
-        const launcher = document.querySelector(".hero-quicklinks");
-        if (!launcher || !launcher.open) return;
-        if (!launcher.contains(event.target)) launcher.removeAttribute("open");
-      });
-      document.addEventListener("keydown", event => {
-        if (event.key !== "Escape") return;
-        const launcher = document.querySelector(".hero-quicklinks");
-        if (launcher) launcher.removeAttribute("open");
-      });
-    }
+    document.addEventListener("click", event => {
+      const quickLinks = document.querySelector(".hero-quicklinks");
+      if (quickLinks && quickLinks.open && !quickLinks.contains(event.target)) quickLinks.open = false;
+    });
 
-    function setupPowerHubAppModal() {
-      window.addEventListener("beforeinstallprompt", event => {
-        event.preventDefault();
-        deferredInstallPrompt = event;
-      });
-
-      const closeAppModal = () => els.powerHubAppModal?.classList.remove("is-open");
-      const installInstructions = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.\n\nInstall instructions:\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
-
-      els.powerHubAppButton?.addEventListener("click", () => {
-        if (els.powerHubAppModalBody) {
-          els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
-        }
-        els.powerHubAppModal?.classList.add("is-open");
-      });
-
-      els.powerHubInstallButton?.addEventListener("click", async () => {
-        if (deferredInstallPrompt) {
-          deferredInstallPrompt.prompt();
-          try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
-          deferredInstallPrompt = null;
-          return;
-        }
-        if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = installInstructions;
-      });
-
-      els.powerHubShareButton?.addEventListener("click", async () => {
-        const shareUrl = "https://coastalbendpower.github.io/Hub/";
-        const payload = { title: "CBPS PowerHub", text: "CBPS PowerHub employee app", url: shareUrl };
-        try {
-          if (navigator.share) {
-            await navigator.share(payload);
-          } else if (navigator.clipboard) {
-            await navigator.clipboard.writeText(shareUrl);
-            alert("PowerHub link copied.");
-          } else {
-            window.prompt("Copy PowerHub link:", shareUrl);
-          }
-        } catch (error) {
-          console.warn("Share cancelled or failed", error);
-        }
-      });
-
-      els.powerHubCloseButton?.addEventListener("click", closeAppModal);
-      document.getElementById("closePowerHubAppModal")?.addEventListener("click", closeAppModal);
-      els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) closeAppModal(); });
-      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
-    }
-
+    setupAppOptions();
     setupAnnouncementModal();
-    setupQuickLinks();
-    setupPowerHubAppModal();
-    loadPowerHubAnnouncement();
+    loadAnnouncement();
     loadSafetySnapshot();
   </script>
 </body>
