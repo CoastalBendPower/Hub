@@ -1,8 +1,11 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>CBPS PowerHub</title>
   <meta name="theme-color" content="#123f73" />
   <meta name="application-name" content="CBPS PowerHub" />
@@ -27,19 +30,12 @@
     }
 
     * { box-sizing: border-box; }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        linear-gradient(
-          90deg,
-          rgba(247,249,252,.08) 0%,
-          rgba(247,249,252,.38) 22%,
-          rgba(247,249,252,.55) 50%,
-          rgba(247,249,252,.38) 78%,
-          rgba(247,249,252,.08) 100%
-        ),
+        linear-gradient(90deg, rgba(247,249,252,.08) 0%, rgba(247,249,252,.38) 22%, rgba(247,249,252,.55) 50%, rgba(247,249,252,.38) 78%, rgba(247,249,252,.08) 100%),
         radial-gradient(circle at 18% 18%, rgba(0,157,255,.16), transparent 28%),
         radial-gradient(circle at 82% 18%, rgba(18,63,115,.16), transparent 30%),
         url("assets/background_hub_v2.png") center top / cover fixed no-repeat,
@@ -48,482 +44,173 @@
     }
 
     a { color: inherit; }
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
+    .power-loader { display:inline-flex; align-items:center; justify-content:center; gap:8px; color:var(--muted); font-size:.82rem; font-weight:850; line-height:1; vertical-align:middle; }
+    .power-loader img { display:block; width:24px; height:24px; object-fit:contain; }
+    .power-loader--inline img { width:22px; height:22px; }
+    .power-loader--section { width:100%; min-height:38px; padding:2px 0; }
+    .power-loader--section img { width:38px; height:38px; }
+    .followup-empty .power-loader { justify-content:flex-start; }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
+    .page-shell { width:min(1180px, calc(100% - 96px)); margin:0 auto; padding:0 16px 16px; background:transparent; box-shadow:none; min-height:100vh; }
 
-    .power-loader {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: var(--muted);
-      font-size: .82rem;
-      font-weight: 850;
-      line-height: 1;
-      vertical-align: middle;
-    }
+    .hero { position:relative; overflow:visible; background:transparent; color:#fff; border-radius:0 0 34px 34px; min-height:230px; display:flex; align-items:center; margin:0 -16px 18px; box-shadow:var(--shadow); }
+    .hero-media { position:absolute; inset:0; border-radius:0 0 34px 34px; z-index:0; overflow:hidden; }
+    .hero-bg { display:block; width:100%; height:100%; object-fit:cover; object-position:center center; }
+    .hero::before { content:""; position:absolute; inset:0; z-index:1; border-radius:0 0 34px 34px; background:transparent; pointer-events:none; }
+    .hero-inner { position:relative; z-index:20; padding:32px 18px 32px clamp(185px, 20vw, 343px); width:100%; display:grid; grid-template-columns:minmax(0, 1fr); align-items:center; gap:22px; }
+    .hero-copy { max-width:760px; transform:translateX(10%); text-shadow:0 2px 12px rgba(0,0,0,.55); }
+    .eyebrow { margin:0 0 10px; font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; font-weight:850; opacity:.9; }
+    .site-title { margin:0; font-size:clamp(2.65rem, 5.35vw, 5.05rem); line-height:.95; font-weight:950; letter-spacing:-.055em; }
+    .title-hub { color:#009dff; text-shadow:0 0 14px rgba(0,157,255,.48); }
+    .site-title::after { content:""; display:block; width:170px; height:3px; margin-top:.45rem; border-radius:999px; background:linear-gradient(90deg, transparent, #009dff, transparent); }
+    .site-subtitle { margin:.7rem 0 0; font-size:clamp(.86rem, 1.14vw, 1.05rem); font-weight:750; letter-spacing:.08em; color:rgba(255,255,255,.88); }
 
-    .power-loader img {
-      display: block;
-      width: 24px;
-      height: 24px;
-      object-fit: contain;
-    }
+    .announcement-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:12px; align-items:center; margin:4px 0 18px; overflow:visible; position:relative; z-index:80; }
+    .announcement-main { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; gap:12px; align-items:center; padding:10px 0; border-top:1px solid rgba(216,224,234,.92); border-bottom:1px solid rgba(216,224,234,.92); min-width:0; }
+    .announcement-title h2 { margin:0; font-size:1.18rem; color:var(--blue-dark); white-space:nowrap; }
+    .announcement-text { color:var(--blue-dark); font-size:.92rem; font-weight:750; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-width:0; }
+    .announcement-open { border:1px solid rgba(18,63,115,.18); background:rgba(255,255,255,.76); color:var(--blue-dark); border-radius:999px; padding:7px 11px; font-size:.76rem; font-weight:950; cursor:pointer; }
+    .announcement-open:hover { border-color:rgba(0,157,255,.45); box-shadow:0 8px 18px rgba(15,23,42,.08); }
 
-    .power-loader--inline img {
-      width: 22px;
-      height: 22px;
-    }
+    .hero-quicklinks { justify-self:end; align-self:center; width:64px; min-width:64px; position:relative; z-index:140; margin-right:0; }
+    .hero-quicklinks summary { list-style:none; cursor:pointer; }
+    .hero-quicklinks summary::-webkit-details-marker { display:none; }
+    .quicklinks-trigger { width:64px; height:64px; display:grid; place-items:center; border-radius:50%; outline:none; }
+    .quicklinks-trigger > img { display:block; width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 16px 26px rgba(0,0,0,.35)); transition:transform .18s ease, filter .18s ease; }
+    .quicklinks-trigger:hover > img, .hero-quicklinks[open] .quicklinks-trigger > img { transform:translateY(-1px) scale(1.03); filter:drop-shadow(0 18px 30px rgba(0,157,255,.36)); }
+    .quicklinks-menu { display:none; position:absolute; right:74px; top:50%; transform:translateY(-50%); z-index:9999; grid-template-columns:repeat(6, 78px); gap:10px; padding:12px 14px; border:1px solid rgba(0,157,255,.30); border-radius:26px; background:radial-gradient(circle at 100% 50%, rgba(0,157,255,.32), transparent 34%), linear-gradient(135deg, rgba(5,16,34,.97), rgba(10,38,72,.94)); box-shadow:0 22px 48px rgba(15,23,42,.32), inset 0 1px 0 rgba(255,255,255,.10); backdrop-filter:blur(10px); }
+    .quicklinks-menu::after { content:""; position:absolute; right:-12px; top:50%; width:18px; height:3px; transform:translateY(-50%); border-radius:999px; background:linear-gradient(90deg, rgba(0,157,255,.75), rgba(255,255,255,.84)); box-shadow:0 0 16px rgba(0,157,255,.62); }
+    .hero-quicklinks[open] .quicklinks-menu { display:grid; animation:quickLauncherIn .16s ease-out both; }
+    @keyframes quickLauncherIn { from { opacity:0; transform:translateY(-50%) translateX(14px) scale(.98); } to { opacity:1; transform:translateY(-50%) translateX(0) scale(1); } }
+    .quicklink-action { min-width:0; min-height:88px; padding:4px 4px 2px; border-radius:0; border:0; background:transparent; color:#fff; text-decoration:none; display:grid; justify-items:center; align-content:center; gap:7px; text-align:center; box-shadow:none; transition:transform .16s ease, filter .16s ease; font:inherit; cursor:pointer; }
+    .quicklink-action:hover, .quicklink-action:focus-visible { transform:translateY(-3px); background:transparent; border-color:transparent; box-shadow:none; outline:none; filter:drop-shadow(0 12px 20px rgba(0,157,255,.28)); }
+    .quicklink-action-icon { width:54px; height:54px; border-radius:50%; display:grid; place-items:center; position:relative; overflow:visible; background:transparent; border:0; box-shadow:none; color:#fff; font-size:.74rem; font-weight:950; line-height:1; letter-spacing:-.02em; }
+    .quicklink-action-icon img { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; display:block; border-radius:50%; z-index:2; filter:drop-shadow(0 10px 18px rgba(0,0,0,.30)); }
+    .quicklink-fallback { position:relative; z-index:1; }
+    .quicklink-label { display:block; color:rgba(255,255,255,.92); font-size:.64rem; font-weight:900; line-height:1.12; letter-spacing:.02em; }
 
-    .power-loader--section {
-      width: 100%;
-      min-height: 38px;
-      padding: 2px 0;
-    }
+    .install-banner { display:none; align-items:center; justify-content:space-between; gap:12px; margin:0 0 18px; padding:12px 14px; border-radius:18px; border:1px solid rgba(0,157,255,.25); background:rgba(255,255,255,.86); box-shadow:0 8px 22px rgba(15,23,42,.07); backdrop-filter:blur(8px); }
+    .install-banner.is-visible { display:flex; }
+    .install-banner strong { display:block; color:var(--blue-dark); font-size:.95rem; }
+    .install-banner span { display:block; color:var(--muted); font-size:.78rem; font-weight:700; margin-top:2px; }
+    .install-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
+    .small-button { border:1px solid rgba(18,63,115,.18); background:#fff; color:var(--blue-dark); border-radius:999px; padding:8px 12px; font-size:.76rem; font-weight:950; cursor:pointer; }
+    .small-button.primary { background:var(--blue); color:#fff; border-color:var(--blue); }
 
-    .power-loader--section img {
-      width: 38px;
-      height: 38px;
-    }
+    .hub-layout { display:grid; grid-template-columns:minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); gap:22px; align-items:start; }
+    .section-title { margin:22px 2px 12px; }
+    .hub-column { min-width:0; }
+    .hub-card-grid { display:grid; grid-template-columns:1fr; gap:12px; }
+    .resource-card { display:flex; min-height:112px; flex-direction:column; justify-content:space-between; gap:10px; padding:18px; background:rgba(255,255,255,.78); border:1px solid rgba(216,224,234,.72); border-radius:22px; box-shadow:0 8px 22px rgba(15,23,42,.07); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; backdrop-filter:blur(8px); text-decoration:none; }
+    .resource-card:hover { transform:translateY(-2px); border-color:#b6c7da; box-shadow:0 12px 28px rgba(15,23,42,.10); }
+    .resource-card strong { font-size:1.05rem; color:var(--blue-dark); }
+    .resource-card span { color:var(--muted); font-size:.9rem; line-height:1.35; font-weight:700; }
+    .crew-card { min-height:82px; padding:14px; gap:6px; }
+    .crew-card strong { font-size:.94rem; }
+    .crew-card span { font-size:.78rem; line-height:1.28; }
+    .section-title h2, .snapshot-header h2 { margin:0; font-size:1.28rem; color:var(--blue-dark); font-weight:850; letter-spacing:.055em; text-transform:uppercase; display:inline-block; padding-bottom:10px; }
+    .section-title h2::after, .snapshot-header h2::after { content:""; display:block; width:90px; height:3px; margin-top:8px; border-radius:999px; background:linear-gradient(90deg, transparent, #009dff, transparent); }
+    .section-title p { margin:5px 0 0; color:var(--muted); font-size:.9rem; line-height:1.35; }
 
-    .followup-empty .power-loader {
-      justify-content: flex-start;
-    }
+    .snapshot-section { display:block; color:inherit; text-decoration:none; }
+    .snapshot-section * { text-decoration:none; }
+    .snapshot-header { margin:22px 2px 12px; display:flex; flex-direction:column; gap:5px; }
+    .snapshot-title-row { display:flex; justify-content:space-between; gap:12px; align-items:flex-start; }
+    .snapshot-stat-stack { display:grid; gap:4px; justify-items:end; color:var(--muted); white-space:nowrap; text-decoration:none; }
+    .snapshot-stat-row { display:inline-flex; align-items:baseline; gap:5px; text-decoration:none; }
+    .snapshot-stat-row * { text-decoration:none; }
+    .inline-stat-value { font-size:1.28rem; font-weight:950; color:var(--blue-dark); }
+    .inline-stat-label { font-size:.7rem; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
+    .snapshot-stat-stack.has-overdue { border:1px solid rgba(180,35,24,.34); background:rgba(253,232,232,.72); color:var(--red); border-radius:999px; padding:4px 8px; box-shadow:none; }
+    .snapshot-stat-stack.has-overdue .snapshot-stat-row { align-items:center; gap:4px; }
+    .snapshot-stat-stack.has-overdue .inline-stat-value { color:var(--red); font-size:1.05rem; font-weight:950; }
+    .snapshot-stat-stack.has-overdue .inline-stat-label { color:var(--red); font-size:.62rem; font-weight:950; }
+    .last-update { font-size:.82rem; color:var(--muted); }
 
-    .page-shell {
-      width: min(1180px, calc(100% - 96px));
-      margin: 0 auto;
-      padding: 0 16px 16px;
-      background: transparent;
-      box-shadow: none;
-      min-height: 100vh;
-    }
+    .followup-panel { display:grid; gap:10px; }
+    .followup-box { display:block; border:1px solid rgba(216,224,234,.72); border-left:5px solid var(--green); border-radius:16px; overflow:hidden; background:rgba(255,255,255,.86); box-shadow:0 8px 22px rgba(15,23,42,.07); backdrop-filter:blur(8px); color:inherit; }
+    .followup-box-header { display:flex; justify-content:space-between; gap:10px; align-items:center; padding:10px 14px; border-bottom:1px solid rgba(182,199,218,.82); background:linear-gradient(90deg, rgba(234,242,251,.96), rgba(255,255,255,.98)); }
+    .followup-box-header h3 { margin:0; font-size:.8rem; color:var(--blue-dark); font-weight:950; letter-spacing:.075em; text-transform:uppercase; }
+    .box-count { display:none; }
+    .followup-list { display:grid; gap:0; background:#fff; }
+    .followup-item { display:grid; gap:4px; padding:11px 14px; border-top:1px solid rgba(216,224,234,.78); }
+    .followup-item:first-child { border-top:0; }
+    .followup-item-main { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+    .followup-item strong { color:var(--blue-dark); font-size:.88rem; min-width:0; }
+    .followup-item span { color:var(--muted); font-size:.76rem; font-weight:750; line-height:1.25; }
+    .overdue-pill { color:var(--red) !important; font-size:.76rem !important; font-weight:950 !important; white-space:nowrap; text-align:right; }
+    .followup-box.has-open { border-left-color:var(--red); }
+    .followup-box.has-open .followup-box-header { background:linear-gradient(90deg, #fff1f0, #fff); border-bottom-color:rgba(180,35,24,.16); }
+    .followup-empty { padding:13px 14px; font-size:.88rem; line-height:1.4; color:var(--green); background:#f0fdf4; }
 
-    .hero {
-      position: relative;
-      overflow: visible;
-      background: transparent;
-      color: #fff;
-      border-radius: 0 0 34px 34px;
-      min-height: 230px;
-      display: flex;
-      align-items: center;
-      margin: 0 -16px 18px;
-      box-shadow: var(--shadow);
-    }
+    .hr-section, .crew-section { position:relative; padding-left:22px; }
+    .hr-section::before, .crew-section::before { content:""; position:absolute; left:0; top:24px; bottom:12px; width:3px; border-radius:999px; background:linear-gradient(180deg, transparent, rgba(0,157,255,.72), transparent); }
+    .footer { margin:30px 0 8px; padding:18px 4px 20px; color:var(--muted); font-size:.82rem; text-align:center; border-top:1px solid rgba(216,224,234,.9); }
+    .footer-brand { margin:0; color:var(--blue-dark); font-weight:800; }
+    .footer-disclaimer { max-width:820px; margin:8px auto 0; font-size:.76rem; line-height:1.45; }
+    .site-version { margin:6px 0 0; font-size:.72rem; color:var(--muted); }
 
-    .hero-media {
-      position: absolute;
-      inset: 0;
-      border-radius: 0 0 34px 34px;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .hero-bg {
-      display: block;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center center;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      border-radius: 0 0 34px 34px;
-      background: transparent;
-      pointer-events: none;
-    }
-
-    .hero-inner { position: relative; z-index: 20; padding: 32px 18px 32px clamp(185px, 20vw, 343px); width: 100%; display: grid; grid-template-columns: minmax(0, 1fr); align-items: center; gap: 22px; }
-    .hero-copy { max-width: 760px; transform: translateX(10%); }
-
-    .hero-quicklinks {
-      justify-self: end;
-      align-self: center;
-      width: 64px;
-      min-width: 64px;
-      position: relative;
-      z-index: 140;
-      margin-right: 0;
-    }
-
-    .hero-quicklinks summary {
-      list-style: none;
-      cursor: pointer;
-    }
-
-    .hero-quicklinks summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .quicklinks-trigger {
-      width: 64px;
-      height: 64px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      outline: none;
-    }
-
-    .quicklinks-trigger > img {
-      display: block;
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
-      filter: drop-shadow(0 16px 26px rgba(0,0,0,.35));
-      transition: transform .18s ease, filter .18s ease;
-    }
-
-    .quicklinks-trigger:hover > img,
-    .hero-quicklinks[open] .quicklinks-trigger > img {
-      transform: translateY(-1px) scale(1.03);
-      filter: drop-shadow(0 18px 30px rgba(0,157,255,.36));
-    }
-
-    .quicklinks-menu {
-      display: none;
-      position: absolute;
-      right: 74px;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 9999;
-      grid-template-columns: repeat(5, 78px);
-      gap: 10px;
-      padding: 12px 14px;
-      border: 1px solid rgba(0,157,255,.30);
-      border-radius: 26px;
-      background:
-        radial-gradient(circle at 100% 50%, rgba(0,157,255,.32), transparent 34%),
-        linear-gradient(135deg, rgba(5,16,34,.97), rgba(10,38,72,.94));
-      box-shadow: 0 22px 48px rgba(15,23,42,.32), inset 0 1px 0 rgba(255,255,255,.10);
-      backdrop-filter: blur(10px);
-    }
-
-    .quicklinks-menu::after {
-      content: "";
-      position: absolute;
-      right: -12px;
-      top: 50%;
-      width: 18px;
-      height: 3px;
-      transform: translateY(-50%);
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(0,157,255,.75), rgba(255,255,255,.84));
-      box-shadow: 0 0 16px rgba(0,157,255,.62);
-    }
-
-    .hero-quicklinks[open] .quicklinks-menu {
-      display: grid;
-      animation: quickLauncherIn .16s ease-out both;
-    }
-
-    @keyframes quickLauncherIn {
-      from { opacity: 0; transform: translateY(-50%) translateX(14px) scale(.98); }
-      to { opacity: 1; transform: translateY(-50%) translateX(0) scale(1); }
-    }
-
-    .quicklink-action {
-      min-width: 0;
-      min-height: 88px;
-      padding: 4px 4px 2px;
-      border-radius: 0;
-      border: 0;
-      background: transparent;
-      color: #fff;
-      text-decoration: none;
-      display: grid;
-      justify-items: center;
-      align-content: center;
-      gap: 7px;
-      text-align: center;
-      box-shadow: none;
-      transition: transform .16s ease, filter .16s ease;
-    }
-
-    .quicklink-action:hover,
-    .quicklink-action:focus-visible {
-      transform: translateY(-3px);
-      background: transparent;
-      border-color: transparent;
-      box-shadow: none;
-      outline: none;
-      filter: drop-shadow(0 12px 20px rgba(0,157,255,.28));
-    }
-
-    .quicklink-action-icon {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: visible;
-      background: transparent;
-      border: 0;
-      box-shadow: none;
-      color: #fff;
-      font-size: .74rem;
-      font-weight: 950;
-      line-height: 1;
-      letter-spacing: -.02em;
-    }
-
-    .quicklink-action-icon img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      border-radius: 50%;
-      z-index: 2;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.30));
-    }
-
-    .quicklink-fallback {
-      position: relative;
-      z-index: 1;
-    }
-
-    .quicklink-label {
-      display: block;
-      color: rgba(255,255,255,.92);
-      font-size: .64rem;
-      font-weight: 900;
-      line-height: 1.12;
-      letter-spacing: .02em;
-    }
-    .eyebrow { margin: 0 0 10px; font-size: .76rem; letter-spacing: .14em; text-transform: uppercase; font-weight: 850; opacity: .9; }
-    .site-title { margin: 0; font-size: clamp(2.65rem, 5.35vw, 5.05rem); line-height: .95; font-weight: 950; letter-spacing: -.055em; }
-    .title-hub { color: #009dff; text-shadow: 0 0 14px rgba(0,157,255,.48); }
-    .site-title::after { content: ""; display: block; width: 170px; height: 3px; margin-top: .45rem; border-radius: 999px; background: linear-gradient(90deg, transparent, #009dff, transparent); }
-    .site-subtitle { margin: .7rem 0 0; font-size: clamp(.86rem, 1.14vw, 1.05rem); font-weight: 750; letter-spacing: .08em; color: rgba(255,255,255,.88); }
-
-    .announcement-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px; align-items: center; margin: 4px 0 18px; overflow: visible; position: relative; z-index: 80; }
-    .announcement-main { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid rgba(216,224,234,.92); border-bottom: 1px solid rgba(216,224,234,.92); min-width: 0; }
-    .announcement-title h2 { margin: 0; font-size: 1.18rem; color: var(--blue-dark); white-space: nowrap; }
-    .announcement-text { color: var(--blue-dark); font-size: .92rem; font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-
-    .hub-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) minmax(0, 1fr); gap: 22px; align-items: start; }
-    .section-title { margin: 22px 2px 12px; }
-    .hub-column { min-width: 0; }
-    .hub-card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    .resource-card { display: flex; min-height: 112px; flex-direction: column; justify-content: space-between; gap: 10px; padding: 18px; background: rgba(255,255,255,.78); border: 1px solid rgba(216,224,234,.72); border-radius: 22px; box-shadow: 0 8px 22px rgba(15,23,42,.07); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; backdrop-filter: blur(8px); }
-    .resource-card:hover { transform: translateY(-2px); border-color: #b6c7da; box-shadow: 0 12px 28px rgba(15,23,42,.10); }
-    .resource-card strong { font-size: 1.05rem; color: var(--blue-dark); }
-    .resource-card span { color: var(--muted); font-size: .9rem; line-height: 1.35; font-weight: 700; }
-    .crew-card { min-height: 82px; padding: 14px; gap: 6px; }
-    .crew-card strong { font-size: .94rem; }
-    .crew-card span { font-size: .78rem; line-height: 1.28; }
-    .tbd-card { min-height: 168px; display: grid; place-items: center; text-align: center; padding: 18px; border: 1px solid rgba(216,224,234,.72); border-radius: 22px; background: rgba(255,255,255,.78); box-shadow: 0 8px 22px rgba(15,23,42,.05); backdrop-filter: blur(8px); }
-    .tbd-card strong { display: block; font-size: 1.15rem; color: var(--blue-dark); margin-bottom: 6px; }
-    .tbd-card span { display: block; color: var(--muted); font-size: .88rem; font-weight: 700; line-height: 1.4; }
-    .section-title h2, .snapshot-header h2 { margin: 0; font-size: 1.28rem; color: var(--blue-dark); font-weight: 850; letter-spacing: .055em; text-transform: uppercase; display: inline-block; padding-bottom: 10px; }
-    .section-title h2::after, .snapshot-header h2::after { content: ""; display: block; width: 90px; height: 3px; margin-top: 8px; border-radius: 999px; background: linear-gradient(90deg, transparent, #009dff, transparent); }
-    .section-title p { margin: 5px 0 0; color: var(--muted); font-size: .9rem; line-height: 1.35; }
-
-    .snapshot-section { display: block; color: inherit; text-decoration: none; }
-    .snapshot-section * { text-decoration: none; }
-    .snapshot-header { margin: 22px 2px 12px; display: flex; flex-direction: column; gap: 5px; }
-    .snapshot-title-row { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
-    .snapshot-stat-stack { display: grid; gap: 4px; justify-items: end; color: var(--muted); white-space: nowrap; text-decoration: none; }
-.snapshot-stat-row { display: inline-flex; align-items: baseline; gap: 5px; text-decoration: none; }
-.snapshot-stat-row * { text-decoration: none; }
-.inline-stat-value { font-size: 1.28rem; font-weight: 950; color: var(--blue-dark); }
-.inline-stat-label { font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
-
-.snapshot-stat-stack.has-overdue {
-  border: 1px solid rgba(180,35,24,.34);
-  background: rgba(253,232,232,.72);
-  color: var(--red);
-  border-radius: 999px;
-  padding: 4px 8px;
-  box-shadow: none;
-}
-
-.snapshot-stat-stack.has-overdue .snapshot-stat-row {
-  align-items: center;
-  gap: 4px;
-}
-
-.snapshot-stat-stack.has-overdue .inline-stat-value {
-  color: var(--red);
-  font-size: 1.05rem;
-  font-weight: 950;
-}
-
-.snapshot-stat-stack.has-overdue .inline-stat-label {
-  color: var(--red);
-  font-size: .62rem;
-  font-weight: 950;
-}
-
-.snapshot-stat-stack.has-overdue .inline-stat-value,
-.snapshot-stat-stack.has-overdue .inline-stat-label {
-  color: var(--red);
-}
-    .last-update { font-size: .82rem; color: var(--muted); }
-    .snapshot-link { display: inline-flex; margin-top: 10px; color: var(--blue-dark); font-size: .8rem; font-weight: 950; text-decoration: none; }
-    .snapshot-link:hover { text-decoration: underline; }
-
-    .followup-panel { display: grid; gap: 10px; }
-    .followup-box { border: 1px solid rgba(216,224,234,.72); border-left: 5px solid var(--green); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.86); box-shadow: 0 8px 22px rgba(15,23,42,.07); backdrop-filter: blur(8px); }
-    .followup-box-header { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 10px 14px; border-bottom: 1px solid rgba(182,199,218,.82); background: linear-gradient(90deg, rgba(234,242,251,.96), rgba(255,255,255,.98)); }
-    .followup-box-header h3 { margin: 0; font-size: .8rem; color: var(--blue-dark); font-weight: 950; letter-spacing: .075em; text-transform: uppercase; }
-    .box-count {
-        display: none;
-    }
-    .followup-list { display: grid; gap: 0; background: #fff; }
-    .followup-item { display: grid; gap: 4px; padding: 11px 14px; border-top: 1px solid rgba(216,224,234,.78); }
-    .followup-item:first-child { border-top: 0; }
-    .followup-item-main { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-    .followup-item strong { color: var(--blue-dark); font-size: .88rem; min-width: 0; }
-    .followup-item span { color: var(--muted); font-size: .76rem; font-weight: 750; line-height: 1.25; }
-    .overdue-pill { color: var(--red) !important; font-size: .76rem !important; font-weight: 950 !important; white-space: nowrap; text-align: right; }
-    .followup-box.has-open { border-left-color: var(--red); }
-    .followup-box.has-open .followup-box-header { background: linear-gradient(90deg, #fff1f0, #fff); border-bottom-color: rgba(180,35,24,.16); }
-    .followup-box.has-open .box-count { background: #fff; color: var(--red); border: 1px solid rgba(180,35,24,.18); }
-    .followup-empty { padding: 13px 14px; font-size: .88rem; line-height: 1.4; color: var(--green); background: #f0fdf4; }
-
-    .hr-section, .crew-section { position: relative; padding-left: 22px; }
-    .hr-section::before, .crew-section::before { content: ""; position: absolute; left: 0; top: 24px; bottom: 12px; width: 3px; border-radius: 999px; background: linear-gradient(180deg, transparent, rgba(0,157,255,.72), transparent); }
-
-    .footer { margin: 30px 0 8px; padding: 18px 4px 20px; color: var(--muted); font-size: .82rem; text-align: center; border-top: 1px solid rgba(216,224,234,.9); }
-    .footer-brand { margin: 0; color: var(--blue-dark); font-weight: 800; }
-    .footer-disclaimer { max-width: 820px; margin: 8px auto 0; font-size: .76rem; line-height: 1.45; }
-    .site-version { margin: 6px 0 0; font-size: .72rem; color: var(--muted); }
+    .modal-backdrop { display:none; position:fixed; inset:0; z-index:10000; padding:18px; background:rgba(5,16,34,.64); align-items:center; justify-content:center; }
+    .modal-backdrop.is-open { display:flex; }
+    .modal-card { width:min(560px, 100%); max-height:80vh; overflow:auto; border-radius:24px; border:1px solid rgba(0,157,255,.24); background:rgba(255,255,255,.97); box-shadow:0 28px 70px rgba(0,0,0,.30); padding:20px; }
+    .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:14px; margin-bottom:12px; }
+    .modal-head h2 { margin:0; color:var(--blue-dark); font-size:1.25rem; }
+    .modal-close { border:0; background:var(--blue-soft); color:var(--blue-dark); border-radius:999px; width:34px; height:34px; font-weight:950; cursor:pointer; }
+    .modal-body { color:var(--text); font-weight:700; line-height:1.5; white-space:pre-wrap; }
 
     @media (max-width: 900px) {
-      .page-shell { width: min(100%, calc(100% - 24px)); }
-      .hub-layout { grid-template-columns: 1fr; gap: 26px; }
-      .hr-section, .crew-section { padding-left: 0; }
-      .hr-section::before, .crew-section::before { display: none; }
-      .hub-layout > .hub-column + .hub-column {
-        border-top: 1px solid rgba(18,63,115,.16);
-        padding-top: 24px;
-        box-shadow: inset 0 1px 0 rgba(255,255,255,.68);
-      }
+      .page-shell { width:min(100%, calc(100% - 24px)); }
+      .hub-layout { grid-template-columns:1fr; gap:26px; }
+      .hr-section, .crew-section { padding-left:0; }
+      .hr-section::before, .crew-section::before { display:none; }
+      .hub-layout > .hub-column + .hub-column { border-top:1px solid rgba(18,63,115,.16); padding-top:24px; box-shadow:inset 0 1px 0 rgba(255,255,255,.68); }
     }
 
     @media (max-width: 700px) {
-      .page-shell { padding: 0 12px 12px; }
-      .hero {
-        min-height: 214px;
-        overflow: hidden;
-        border-radius: 0 0 28px 28px;
-        aspect-ratio: 16 / 6.3;
-        min-height: 0;
-        margin: 0 -12px 18px;
-        background:
-          radial-gradient(circle at 18% 50%, rgba(0,157,255,.28), transparent 42%),
-          linear-gradient(135deg, #061226 0%, #081a35 56%, #061226 100%);
-        border: 1px solid rgba(0,157,255,.18);
-        border-top: 0;
-      }
-      .hero-media { border-radius: 0 0 28px 28px; }
-      .hero-bg {
-        object-fit: cover;
-        object-position: center center;
-        opacity: .98;
-        filter: saturate(1.06) contrast(1.04) brightness(1.02);
-      }
-      .hero::before {
-        background:
-          linear-gradient(90deg, rgba(2,10,24,.10), rgba(2,10,24,.30) 46%, rgba(2,10,24,.12)),
-          radial-gradient(circle at 20% 48%, rgba(0,157,255,.22), transparent 34%);
-      }
-      .hero-inner {
-        min-height: 0;
-        height: 100%;
-        padding: 14px 26px 14px 33%;
-        grid-template-columns: minmax(0, 1fr);
-        align-items: center;
-        justify-items: center;
-        text-align: left;
-        gap: 10px;
-      }
-      .hero-copy {
-        width: min(100%, 305px);
-        max-width: 305px;
-        margin: 0;
-        padding: 0;
-        border-radius: 0;
-        background: transparent;
-        box-shadow: none;
-        backdrop-filter: none;
-        text-shadow: 0 2px 12px rgba(0,0,0,.60);
-        transform: none;
-      }
-      .site-title::after { width: 96px; margin: .24rem 0 0; }
-      .hero-quicklinks { justify-self: end; align-self: center; width: 54px; min-width: 54px; margin-left: auto; }
-      .quicklinks-trigger,
-      .quicklinks-trigger > img { width: 54px; height: 54px; }
+      .page-shell { padding:0 12px 12px; }
+      .hero { overflow:hidden; border-radius:0 0 28px 28px; aspect-ratio:16 / 6.3; min-height:0; margin:0 -12px 14px; background:linear-gradient(135deg, #061226 0%, #081a35 56%, #061226 100%); border:1px solid rgba(0,157,255,.18); border-top:0; }
+      .hero-media { border-radius:0 0 28px 28px; }
+      .hero-bg { object-fit:cover; object-position:center center; opacity:1; filter:none; }
+      .hero::before { background:linear-gradient(90deg, rgba(2,10,24,.08), rgba(2,10,24,.28) 46%, rgba(2,10,24,.10)); }
+      .hero-inner { min-height:0; height:100%; padding:14px 26px 14px 33%; grid-template-columns:minmax(0, 1fr); align-items:center; justify-items:center; text-align:left; gap:10px; }
+      .hero-copy { width:min(100%, 305px); max-width:305px; margin:0; padding:0; border-radius:0; background:transparent; box-shadow:none; backdrop-filter:none; text-shadow:0 2px 12px rgba(0,0,0,.60); transform:none; }
+      .site-title { font-size:clamp(1.54rem, 7.85vw, 1.96rem); }
+      .site-title::after { width:96px; margin:.24rem 0 0; }
+      .eyebrow { font-size:.43rem; letter-spacing:.085em; margin-bottom:5px; white-space:nowrap; }
+      .site-subtitle { font-size:.54rem; letter-spacing:.045em; margin-top:.38rem; white-space:nowrap; }
 
-      .quicklinks-menu {
-        position: fixed;
-        left: 12px;
-        right: 12px;
-        top: auto;
-        bottom: 18px;
-        transform: none;
-        width: auto;
-        max-width: none;
-        min-width: 0;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        padding: 12px;
-        border-radius: 24px;
-      }
+      .announcement-row { grid-template-columns:minmax(0, 1fr) auto; gap:8px; margin-bottom:12px; }
+      .announcement-main { grid-template-columns:1fr auto; gap:8px; padding:10px 0; }
+      .announcement-title { grid-column:1 / -1; }
+      .announcement-title h2 { font-size:.95rem; }
+      .announcement-text { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.8rem; line-height:1.28; }
+      .announcement-open { padding:7px 10px; font-size:.72rem; }
 
-      .quicklinks-menu::after { display: none; }
-
-      .hero-quicklinks[open] .quicklinks-menu {
-        display: grid;
-        animation: quickSheetIn .18s ease-out both;
-      }
-
-      @keyframes quickSheetIn {
-        from { opacity: 0; transform: translateY(16px) scale(.98); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
-      }
-
-      .quicklink-action { min-height: 78px; padding: 8px 6px; }
-      .quicklink-action-icon { width: 42px; height: 42px; font-size: .68rem; }
-      .quicklink-label { font-size: .66rem; }
-      .site-title { font-size: clamp(1.54rem, 7.85vw, 1.96rem); }
-      .eyebrow { font-size: .43rem; letter-spacing: .085em; margin-bottom: 5px; white-space: nowrap; }
-      .site-subtitle { font-size: .54rem; letter-spacing: .045em; margin-top: .38rem; white-space: nowrap; }
-      .announcement-row { grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
-      .announcement-main { grid-template-columns: auto minmax(0, 1fr); gap: 8px; padding: 8px 0; }
-      .announcement-title h2 { font-size: .95rem; }
-      .announcement-text { font-size: .78rem; }
-      .section-title { margin-top: 14px; }
-      .snapshot-header { margin-top: 18px; }
+      .hero-quicklinks { justify-self:end; align-self:center; width:60px; min-width:60px; margin-left:auto; }
+      .quicklinks-trigger, .quicklinks-trigger > img { width:60px; height:60px; }
+      .quicklinks-menu { position:fixed; left:12px; right:12px; top:auto; bottom:18px; transform:none; width:auto; max-width:none; min-width:0; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; padding:14px; border-radius:24px; background:linear-gradient(135deg, rgba(5,16,34,.86), rgba(10,38,72,.82)); }
+      .quicklinks-menu::after { display:none; }
+      .hero-quicklinks[open] .quicklinks-menu { display:grid; animation:quickSheetIn .18s ease-out both; }
+      @keyframes quickSheetIn { from { opacity:0; transform:translateY(16px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+      .quicklink-action { min-height:82px; padding:8px 4px; }
+      .quicklink-action-icon { width:58px; height:58px; font-size:.68rem; }
+      .quicklink-label { font-size:.66rem; }
+      .section-title { margin-top:14px; }
+      .snapshot-header { margin-top:18px; }
+      .install-banner { align-items:flex-start; }
+      .install-actions { justify-content:flex-start; }
     }
 
     @media (max-width: 430px) {
-      .hero { min-height: 0; aspect-ratio: 16 / 6.3; }
-      .hero-inner { min-height: 0; height: 100%; padding: 12px 18px 12px 32%; justify-items: center; }
-      .hero-copy { width: min(100%, 260px); max-width: 260px; padding: 0; }
-      .site-title { font-size: clamp(1.42rem, 7.45vw, 1.78rem); }
-      .eyebrow { font-size: .37rem; letter-spacing: .07em; margin-bottom: 5px; }
-      .site-subtitle { font-size: .48rem; letter-spacing: .035em; margin-top: .38rem; }
-      .site-title::after { width: 82px; margin-top: .22rem; }
+      .hero { aspect-ratio:16 / 6.3; }
+      .hero-inner { height:100%; padding:12px 18px 12px 32%; justify-items:center; }
+      .hero-copy { width:min(100%, 260px); max-width:260px; padding:0; }
+      .site-title { font-size:clamp(1.42rem, 7.45vw, 1.78rem); }
+      .eyebrow { font-size:.37rem; letter-spacing:.07em; margin-bottom:5px; }
+      .site-subtitle { font-size:.48rem; letter-spacing:.035em; margin-top:.38rem; }
+      .site-title::after { width:82px; margin-top:.22rem; }
     }
   </style>
 </head>
@@ -537,68 +224,52 @@
       <div class="hero-inner">
         <div class="hero-copy">
           <p class="eyebrow">Coastal Bend Power Services, LLC</p>
-          <h1 class="site-title"><span class="title-power">Power</span><span class="title-hub">Hub</span></h1>
+          <h1 class="site-title">Power<span class="title-hub">Hub</span></h1>
           <p class="site-subtitle">Plan. Communicate. Deliver.</p>
         </div>
       </div>
     </header>
 
-    <section class="announcement-row" aria-label="Announcements">
+    <section class="announcement-row" aria-label="Team Note">
       <div class="announcement-main">
-        <div class="announcement-title"><h2>Announcements:</h2></div>
-        <div class="announcement-text" id="powerhubAnnouncementText" aria-live="polite">
-          <span class="power-loader power-loader--inline" role="status" aria-label="Loading announcement">
-            <img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true">
-            <span class="sr-only">Loading announcement</span>
-          </span>
-        </div>
+        <div class="announcement-title"><h2>Team Note:</h2></div>
+        <div class="announcement-text" id="powerhubAnnouncementText" aria-live="polite"><span class="power-loader power-loader--inline" role="status" aria-label="Loading announcement"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading announcement</span></span></div>
+        <button class="announcement-open" id="openAnnouncementModal" type="button">Open</button>
       </div>
       <details class="hero-quicklinks">
-        <summary class="quicklinks-trigger" aria-label="Open Quick Links">
-          <img src="assets/button_MAIN Quick Links_v2.png" alt="Quick Links">
-        </summary>
+        <summary class="quicklinks-trigger" aria-label="Open Quick Links"><img src="assets/button_MAIN Quick Links_v2.png" alt="Quick Links"></summary>
         <nav class="quicklinks-menu" aria-label="Quick Links">
-          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">SHQ</span>
-              <img src="assets/icon_SafetyHQ_300.png" alt="" onerror="this.style.display='none'">
-            </span>
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/" aria-label="Open SafetyHQ">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">SHQ</span><img src="assets/icon_SafetyHQ_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">SafetyHQ</span>
           </a>
-
-          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/procedures.html">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">PROC</span>
-              <img src="assets/button_Procedures_round_300.png" alt="" onerror="this.style.display='none'">
-            </span>
+          <a class="quicklink-action" href="https://coastalbendpower.github.io/SafetyHQ/procedures.html" aria-label="Open Procedure Center">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">PROC</span><img src="assets/button_Procedures_round_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">Procedures</span>
           </a>
-
-          <a class="quicklink-action" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">HSI</span>
-              <img src="assets/button_HSI_Login_round_300.png" alt="" onerror="this.style.display='none'">
-            </span>
+          <a class="quicklink-action" href="https://coastalbendpower.na.hsiplatform.com/users/sign_in" target="_blank" rel="noopener noreferrer" aria-label="Open HSI">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">HSI</span><img src="assets/button_HSI_Login_round_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">HSI</span>
           </a>
-
-          <a class="quicklink-action" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">SS</span>
-              <img src="assets/icon_ShareSync_300.png" alt="" onerror="this.style.display='none'">
-            </span>
+          <a class="quicklink-action" href="https://account.sharesync.serverdata.net/login/v1.2/?client_id=sharesync_web_app_sts&amp;client_type=Sync-WebApp&amp;client_version=3.48.1&amp;application_client_id=5d5c5f78-10b2-0f0b-a925-606d43526abe&amp;redirect_uri=https%3A%2F%2Fsharesync.serverdata.net%2Fus4%2F&amp;locale=en-us" target="_blank" rel="noopener noreferrer" aria-label="Open ShareSync">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">SS</span><img src="assets/icon_ShareSync_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">ShareSync</span>
           </a>
-
-          <a class="quicklink-action" href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer">
-            <span class="quicklink-action-icon">
-              <span class="quicklink-fallback">CBPS</span>
-              <img src="assets/icon_CBPS_Website_300.png" alt="" onerror="this.style.display='none'">
-            </span>
+          <a class="quicklink-action" href="https://coastalbendpower.com/" target="_blank" rel="noopener noreferrer" aria-label="Open CBPS company website">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">CBPS</span><img src="assets/icon_CBPS_Website_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">CBPS Site</span>
           </a>
+          <button class="quicklink-action" type="button" id="shareAppButton" aria-label="Share PowerHub app link">
+            <span class="quicklink-action-icon"><span class="quicklink-fallback">SHARE</span></span>
+            <span class="quicklink-label">Share App</span>
+          </button>
         </nav>
       </details>
+    </section>
+
+    <section class="install-banner" id="installBanner" aria-label="Install PowerHub app">
+      <div><strong>Install PowerHub</strong><span>Add this app to your home screen for faster field access.</span></div>
+      <div class="install-actions"><button class="small-button primary" id="installAppButton" type="button">Install</button><button class="small-button" id="dismissInstallButton" type="button">Not now</button></div>
     </section>
 
     <section class="hub-layout">
@@ -614,16 +285,15 @@
             <div class="last-update">Last Update: <strong id="lastUpdate"><span class="power-loader power-loader--inline" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></strong></div>
           </div>
           <div class="followup-panel">
-            <div class="followup-box" id="checklistFollowupBox">
+            <a class="followup-box" id="checklistFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#monthly" aria-label="Open Monthly Safety Equipment Checklist Status in SafetyHQ">
               <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount"></span></div>
-              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></div>
-            </div>
-            <div class="followup-box" id="trainingFollowupBox">
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading checklist status</span></span></div>
+            </a>
+            <a class="followup-box" id="trainingFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#training" aria-label="Open Training Status in SafetyHQ">
               <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount"></span></div>
-              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></div>
-            </div>
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading training status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading training status</span></span></div>
+            </a>
           </div>
-          <a class="snapshot-link" href="https://coastalbendpower.github.io/SafetyHQ/">View SafetyHQ</a>
         </div>
       </section>
 
@@ -650,28 +320,49 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.11</p>
+      <p class="site-version">Version: PowerHub v3.0.12_PWA</p>
     </footer>
   </main>
+
+  <div class="modal-backdrop" id="announcementModal" role="dialog" aria-modal="true" aria-labelledby="announcementModalTitle">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="announcementModalTitle">Team Note</h2><button class="modal-close" id="closeAnnouncementModal" type="button" aria-label="Close Team Note">×</button></div>
+      <div class="modal-body" id="announcementModalBody">Loading announcement...</div>
+    </div>
+  </div>
 
   <script>
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
+    const POWERHUB_VERSION = "PowerHub v3.0.12_PWA";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
+      announcementModal: document.getElementById("announcementModal"),
+      announcementModalBody: document.getElementById("announcementModalBody"),
       lastUpdate: document.getElementById("lastUpdate"),
       openItemsCount: document.getElementById("openItemsCount"),
       checklistBox: document.getElementById("checklistFollowupBox"),
       trainingBox: document.getElementById("trainingFollowupBox"),
       checklistCount: document.getElementById("checklistCount"),
       trainingCount: document.getElementById("trainingCount"),
-      overdueCountRow: document.getElementById("overdueCountRow")
+      overdueCountRow: document.getElementById("overdueCountRow"),
+      installBanner: document.getElementById("installBanner"),
+      installAppButton: document.getElementById("installAppButton"),
+      dismissInstallButton: document.getElementById("dismissInstallButton"),
+      shareAppButton: document.getElementById("shareAppButton")
     };
 
+    let deferredInstallPrompt = null;
+    let latestAnnouncement = "Please complete all assigned requirements by their due dates.";
+
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+    }
+
     function escapeAttr(value) {
-      return String(value || "Loading").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      return escapeHtml(value || "Loading");
     }
 
     function loaderMarkup(label, variant = "inline") {
@@ -695,7 +386,7 @@
     }
 
     function text(value) {
-      let out = String(value || "").trim();
+      let out = String(value ?? "").trim();
       while (out.includes("  ")) out = out.replaceAll("  ", " ");
       return out;
     }
@@ -710,7 +401,7 @@
     }
 
     function num(value) {
-      const source = String(value || "");
+      const source = String(value ?? "");
       let out = "";
       for (const ch of source) {
         if ((ch >= "0" && ch <= "9") || ch === "." || ch === "-") out += ch;
@@ -729,180 +420,110 @@
       return "";
     }
 
-    function collectObjects(value, output) {
-      if (Array.isArray(value)) {
-        value.forEach(item => collectObjects(item, output));
-      } else if (value && typeof value === "object") {
-        output.push(value);
-        Object.values(value).forEach(item => collectObjects(item, output));
-      }
+    function normalizeRows(source) {
+      if (!source) return [];
+      if (Array.isArray(source)) return source;
+      if (Array.isArray(source.rows)) return source.rows;
+      if (Array.isArray(source.items)) return source.items;
+      if (Array.isArray(source.values)) return source.values;
+      if (Array.isArray(source.data)) return source.data;
+      return [];
     }
 
-    function collectRows(value, path, output) {
-      if (Array.isArray(value)) {
-        const primitive = value.length && value.every(item => item === null || typeof item !== "object");
-        if (primitive) {
-          output.push({ path: path, row: value.map(text), line: value.map(text).filter(Boolean).join(" ") });
-        } else {
-          value.forEach(item => collectRows(item, path, output));
-        }
-      } else if (value && typeof value === "object") {
-        Object.keys(value).forEach(k => collectRows(value[k], path + " " + k, output));
-      }
+    function cell(row, names, index) {
+      if (Array.isArray(row)) return text(row[index]);
+      return get(row, names);
     }
 
-    function objectLine(obj) {
-      return Object.values(obj || {}).map(text).filter(Boolean).join(" ");
+    function includeOnSite(row, index) {
+      const include = Array.isArray(row) ? text(row[index] || "Yes") : (get(row, ["includeOnSite", "Include On Site?", "Include On Site", "showOnSite", "siteInclude"]) || "Yes");
+      const lower = include.toLowerCase();
+      return lower !== "no" && lower !== "false" && lower !== "0";
     }
 
-    function isOpen(line) {
-      const lower = text(line).toLowerCase();
-      return lower.includes("overdue") || lower.includes("missing") || lower.includes("delinquent") || lower.includes("past due");
-    }
-
-    function isComplete(line) {
-      const lower = text(line).toLowerCase();
-      return (lower.includes("complete") || lower.includes("completed") || lower.includes("closed")) && !isOpen(lower);
-    }
-
-    function isChecklistText(line) {
-      const lower = text(line).toLowerCase();
-      return lower.includes("checklist") || lower.includes("monthly safety equipment") || lower.includes("equipment inspection") || lower.includes("vehicle inspection") || lower.includes(" eq ") || lower.includes(" v0") || lower.includes(" v1") || lower.includes(" v2") || lower.includes(" v3") || lower.includes(" v4") || lower.includes(" v5") || lower.includes(" v6") || lower.includes(" v7") || lower.includes(" v8") || lower.includes(" v9");
-    }
-
-    function isTrainingText(line) {
-      const lower = text(line).toLowerCase();
-      return !isChecklistText(lower) && (lower.includes("training") || lower.includes("course") || lower.includes("curriculum") || lower.includes("requirement") || lower.includes("lms"));
-    }
-
-    function normalizeObjectItem(obj, fallbackPath) {
-      const line = objectLine(obj) + " " + fallbackPath;
-      return {
-        employee: get(obj, ["employee", "employee name", "name", "assignee", "asset assignee"]),
-        requirementName: get(obj, ["requirementName", "requirement", "training", "training name", "checklistName", "checklist", "item", "title", "course"]),
-        status: get(obj, ["status", "current status", "state"]),
-        dueDate: get(obj, ["dueDate", "due date", "date due", "deadline"]),
-        eq: get(obj, ["eq", "eq #", "eq number", "equipment", "vehicle", "asset", "asset name"]),
-        daysOverdue: get(obj, ["daysOverdue", "days overdue", "overdue days", "days"]),
-        fullText: line
-      };
-    }
-
-    function normalizeRowItem(entry, fallbackType) {
-      const words = entry.line.split(" ").filter(Boolean);
-      let eqIndex = -1;
-      words.forEach((word, index) => {
-        const w = word.toUpperCase();
-        if (eqIndex < 0 && w.length >= 3 && w.length <= 5 && w.charAt(0) === "V") eqIndex = index;
-      });
-      if (fallbackType === "checklist" && eqIndex > 0) {
-        return { employee: words.slice(0, eqIndex).join(" "), requirementName: "Monthly Safety Equipment Checklist", eq: words[eqIndex], status: words.slice(eqIndex + 1).join(" "), fullText: entry.line };
-      }
-      return { employee: words.slice(0, 2).join(" "), requirementName: words.slice(2).join(" ") || fallbackType, status: isOpen(entry.line) ? "Open" : "", fullText: entry.line };
+    function formatDate(value) {
+      const s = text(value);
+      if (!s) return "";
+      if (s.length >= 10 && s[4] === "-" && s[7] === "-") return `${s.slice(5,7)}/${s.slice(8,10)}/${s.slice(0,4)}`;
+      return s;
     }
 
     function findMetric(data, names) {
-      const objects = [];
-      collectObjects(data, objects);
-      for (const obj of objects) {
-        for (const name of names) {
-          const value = get(obj, [name]);
-          if (value !== "") return num(value);
+      const wanted = names.map(key);
+      const sources = [data && data.summary, data && data.powerHubSnapshot, data && data.dashboardMetrics, data && data.metrics, data];
+      for (const src of sources) {
+        if (!src) continue;
+        if (Array.isArray(src)) {
+          for (const row of src) {
+            if (Array.isArray(row) && wanted.includes(key(row[0]))) return text(row[1]);
+            if (row && typeof row === "object") {
+              const label = get(row, ["field", "Field", "metric", "Metric", "label", "Label", "name", "Name"]);
+              const value = get(row, ["value", "Value", "amount", "Amount", "metricValue", "Metric Value"]);
+              if (wanted.includes(key(label))) return value;
+            }
+          }
+        } else if (typeof src === "object") {
+          for (const name of names) {
+            const value = get(src, [name]);
+            if (value) return value;
+          }
         }
       }
-      const rows = [];
-      collectRows(data, "", rows);
-      for (const row of rows) {
-        const first = key(row.row[0] || "");
-        for (const name of names) {
-          if (first === key(name) || first.includes(key(name))) return num(row.row[1] || row.line);
-        }
-      }
-      return 0;
+      return "";
     }
 
     function findUpdate(data) {
-      const objects = [];
-      collectObjects(data, objects);
-      for (const obj of objects) {
-        const value = get(obj, ["lastUpdate", "updated", "timestamp", "last updated", "data updated"]);
-        if (value && (value.includes("/") || value.includes("202"))) return value;
-      }
-      const rows = [];
-      collectRows(data, "", rows);
-      for (const row of rows) {
-        const line = row.line;
-        if (line.toLowerCase().startsWith("updated:")) return line.replace("Updated:", "").trim();
-        if (key(row.row[0] || "").includes("lastupdate")) return text(row.row[1]);
-      }
-      return "Latest SafetyHQ update loaded";
+      return findMetric(data, ["lastUpdate", "Last Update", "lastUpdated", "Updated", "timestamp", "Dashboard Last Update", "Last Upload", "Latest Upload"]) || "Latest SafetyHQ update loaded";
     }
 
-    function extractItems(data) {
-      const checklist = [];
-      const training = [];
-      const dueSoon = [];
-      const objects = [];
-      collectObjects(data, objects);
-      objects.forEach(obj => {
-        const item = normalizeObjectItem(obj, "");
-        const line = item.fullText;
-        const lower = text(line).toLowerCase();
-        const daysUntilDue = num(get(obj, ["daysUntilDue", "days until due", "due in", "days remaining"]));
-        const dueSoonText = lower.includes("due soon") || lower.includes("due within") || lower.includes("in window") || lower.includes("upcoming") || (daysUntilDue > 0 && daysUntilDue <= 7);
-
-        if (dueSoonText && !isOpen(line) && !isComplete(line)) dueSoon.push(item);
-        if (!isOpen(item.fullText) || isComplete(item.fullText)) return;
-        if (isChecklistText(item.fullText) && (item.employee || item.eq || item.requirementName)) checklist.push(item);
-        if (isTrainingText(item.fullText) && (item.employee || item.requirementName)) training.push(item);
+    function getChecklistItems(data) {
+      const rows = normalizeRows(data.monthlyStatus || data.monthlyItems || data.checklistStatus || data.monthly || data.checklists || data["Monthly Status"]);
+      const items = [];
+      rows.forEach(row => {
+        const employee = cell(row, ["employee", "Employee"], 0);
+        const eq = cell(row, ["eq", "eqNumber", "EQ #", "vehicle", "Vehicle", "Vehicle #"], 1);
+        const status = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
+        const completed = cell(row, ["completionDate", "Completion Date", "Completed Date", "completedAt"], 3);
+        const days = cell(row, ["daysOverdue", "Days Overdue"], 5);
+        const notes = cell(row, ["notes", "Notes"], 6);
+        if (!employee || employee === "Employee" || !eq || !includeOnSite(row, 7)) return;
+        const lower = (status + " " + completed).toLowerCase();
+        if (lower.includes("complete") || completed) return;
+        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: status || "Overdue / Missing", daysOverdue: days, notes });
       });
-
-      const rows = [];
-      collectRows(data, "", rows);
-      rows.forEach(entry => {
-        const lower = text(entry.line).toLowerCase();
-        const dueSoonText = lower.includes("due soon") || lower.includes("due within") || lower.includes("in window") || lower.includes("upcoming");
-        if (dueSoonText && !isOpen(entry.line) && !isComplete(entry.line)) dueSoon.push(normalizeRowItem(entry, "due soon"));
-        if (!isOpen(entry.line) || isComplete(entry.line)) return;
-        const path = entry.path.toLowerCase();
-        if (path.includes("checklist") || path.includes("monthly") || isChecklistText(entry.line)) checklist.push(normalizeRowItem(entry, "checklist"));
-        if (path.includes("training") || isTrainingText(entry.line)) training.push(normalizeRowItem(entry, "training"));
-      });
-
-      return { checklistItems: dedupe(checklist), trainingItems: dedupe(training), dueSoonItems: dedupe(dueSoon) };
+      items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
+      return items;
     }
 
-    function dedupe(items) {
-      const seen = new Set();
-      const out = [];
-      items.forEach(item => {
-        const id = key(item.employee + item.requirementName + item.eq + item.status + item.fullText);
-        if (!seen.has(id)) {
-          seen.add(id);
-          out.push(item);
-        }
+    function getTrainingItems(data) {
+      const rows = normalizeRows(data.trainingStatus || data.training || data.trainingItems || data.inTrainingWindowItems || data["Training Status"]);
+      const items = [];
+      rows.forEach(row => {
+        const employee = cell(row, ["employee", "Employee"], 0);
+        const requirementName = cell(row, ["requirementName", "requirement", "training", "Requirement"], 1);
+        const complianceStatus = cell(row, ["complianceStatus", "Compliance Status"], 2);
+        const dueDate = cell(row, ["dueDate", "Due Date"], 3);
+        const daysUntilDue = cell(row, ["daysUntilDue", "Days Until Due"], 4);
+        const dashboardStatus = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 5) || complianceStatus;
+        if (!employee || employee === "Employee" || !requirementName || !dueDate || !includeOnSite(row, 6)) return;
+        const lower = dashboardStatus.toLowerCase();
+        const overdue = lower.includes("overdue") || lower.includes("delinquent") || num(daysUntilDue) < 0;
+        if (!overdue) return;
+        items.push({ employee, requirementName, dueDate, status: dashboardStatus || "Overdue", daysOverdue: Math.abs(num(daysUntilDue)) });
       });
-      return out;
+      items.sort((a, b) => {
+        const dueSort = text(a.dueDate).localeCompare(text(b.dueDate));
+        if (dueSort !== 0) return dueSort;
+        return a.employee.localeCompare(b.employee);
+      });
+      return items;
     }
 
     function overdueLabel(item) {
-      const raw = item.daysOverdue || item.status || item.fullText || "";
-      const lower = text(raw).toLowerCase();
-      const n = num(raw);
-      if (n) return n + "d overdue";
-      if (lower.includes("overdue")) return text(raw).replace(/overdue/i, "overdue");
+      if (item.daysOverdue) return `${Math.abs(num(item.daysOverdue))}d overdue`;
+      const raw = text(item.status);
+      if (raw.toLowerCase().includes("overdue")) return raw;
       return "Overdue";
-    }
-
-    function compactTitle(item, fallback) {
-      const name = item.employee || fallback;
-      return item.eq ? name + " — " + item.eq : name;
-    }
-
-    function compactDetail(item, fallback) {
-      const name = item.requirementName || fallback;
-      if (isChecklistText(name)) return "";
-      return name;
     }
 
     function appendFollowupItem(parent, item, fallbackTitle, fallbackDetail) {
@@ -913,7 +534,7 @@
       main.className = "followup-item-main";
 
       const title = document.createElement("strong");
-      title.textContent = compactTitle(item, fallbackTitle);
+      title.textContent = item.eq ? `${item.employee || fallbackTitle} — ${item.eq}` : (item.employee || fallbackTitle);
 
       const overdue = document.createElement("span");
       overdue.className = "overdue-pill";
@@ -923,23 +544,23 @@
       main.appendChild(overdue);
       row.appendChild(main);
 
-      const detailText = compactDetail(item, fallbackDetail);
+      const detailText = item.requirementName || fallbackDetail;
       if (detailText) {
         const detail = document.createElement("span");
-        detail.textContent = detailText;
+        detail.textContent = item.dueDate ? `${detailText} — Due ${formatDate(item.dueDate)}` : detailText;
         row.appendChild(detail);
       }
 
       parent.appendChild(row);
     }
 
-    function renderBox(box, countEl, items, count, emptyText, fallbackTitle, fallbackDetail) {
-      countEl.textContent = String(count);
-      box.classList.toggle("has-open", count > 0);
+    function renderBox(box, countEl, items, emptyText, fallbackTitle, fallbackDetail) {
+      countEl.textContent = String(items.length);
+      box.classList.toggle("has-open", items.length > 0);
       const oldBody = box.querySelector(".followup-empty, .followup-list");
       if (oldBody) oldBody.remove();
 
-      if (!count) {
+      if (!items.length) {
         const empty = document.createElement("div");
         empty.className = "followup-empty";
         empty.textContent = emptyText;
@@ -949,48 +570,44 @@
 
       const list = document.createElement("div");
       list.className = "followup-list";
-      const safeItems = items.length ? items : [{ employee: count + " item(s)", requirementName: fallbackDetail, status: "Overdue" }];
-      safeItems.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
+      items.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
       box.appendChild(list);
     }
+
     function pickAnnouncementMessage(data) {
-  const fallback = "Please complete all assigned requirements by their due dates.";
+      const fallback = "Please complete all assigned requirements by their due dates.";
+      const direct = text(data && (data.message || data.announcementMessage || data.primaryAnnouncementMessage));
+      if (direct) return direct;
+      const primary = data && (data.primaryAnnouncement || data.announcement || data.activeAnnouncement);
+      if (primary) {
+        const msg = text(primary.message || primary.Message || primary.text || primary.announcement);
+        if (msg) return msg;
+      }
+      const announcements = Array.isArray(data && data.announcements) ? data.announcements : [];
+      for (const item of announcements) {
+        const msg = text(item.message || item.Message || item.text || item.announcement);
+        if (msg) return msg;
+      }
+      return fallback;
+    }
 
-  const direct = text(data && (data.message || data.announcementMessage || data.primaryAnnouncementMessage));
-  if (direct) return direct;
+    async function loadPowerHubAnnouncement() {
+      const fallback = "Please complete all assigned requirements by their due dates.";
+      if (!els.announcementText) return;
+      setLoader(els.announcementText, "Loading announcement", "inline");
+      try {
+        const response = await fetch(`${UC_ANNOUNCEMENT_FEED_URL}&t=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
+        if (!response.ok) throw new Error("UC announcement feed returned " + response.status);
+        const data = await response.json();
+        latestAnnouncement = pickAnnouncementMessage(data);
+      } catch (error) {
+        console.error("PowerHub announcement load failed:", error);
+        latestAnnouncement = fallback;
+      }
+      els.announcementText.textContent = latestAnnouncement;
+      if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
+    }
 
-  const primary = data && (data.primaryAnnouncement || data.announcement || data.activeAnnouncement);
-  if (primary) {
-    const msg = text(primary.message || primary.Message || primary.text || primary.announcement);
-    if (msg) return msg;
-  }
-
-  const announcements = Array.isArray(data && data.announcements) ? data.announcements : [];
-  for (const item of announcements) {
-    const msg = text(item.message || item.Message || item.text || item.announcement);
-    if (msg) return msg;
-  }
-
-  return fallback;
-}
-
-async function loadPowerHubAnnouncement() {
-  const fallback = "Please complete all assigned requirements by their due dates.";
-  if (!els.announcementText) return;
-
-    setLoader(els.announcementText, "Loading announcement", "inline");
-
-  try {
-    const response = await fetch(UC_ANNOUNCEMENT_FEED_URL + "&t=" + Date.now(), { cache: "no-store" });
-    if (!response.ok) throw new Error("UC announcement feed returned " + response.status);
-
-    const data = await response.json();
-    els.announcementText.textContent = pickAnnouncementMessage(data);
-  } catch (error) {
-    console.error("PowerHub announcement load failed:", error);
-    els.announcementText.textContent = fallback;
-  }
-}
     async function loadSafetySnapshot() {
       setLoader(els.lastUpdate, "Loading latest update", "inline");
       els.openItemsCount.textContent = "-";
@@ -1002,50 +619,105 @@ async function loadPowerHubAnnouncement() {
       setBoxLoading(els.trainingBox, "Loading training status");
 
       try {
-        const response = await fetch(SAFETYHQ_FEED_URL + "?hub=" + Date.now(), { cache: "no-store" });
+        const response = await fetch(`${SAFETYHQ_FEED_URL}?hub=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
         if (!response.ok) throw new Error("SafetyHQ feed returned " + response.status);
         const data = await response.json();
         console.log("PowerHub SafetyHQ feed", data);
 
-        const found = extractItems(data);
-        const summaryChecklist = findMetric(data, ["overdueChecklists", "missingChecklists", "checklistsOpen", "openChecklists", "overdue checklist", "missing checklist"]);
-        const summaryTraining = findMetric(data, ["overdueTraining", "trainingOpen", "openTraining", "overdue training"]);
-        const summaryOpen = findMetric(data, ["totalOpenItems", "openItems", "total open items", "open item count"]);
-        const checklistCount = found.checklistItems.length;
-        const trainingCount = found.trainingItems.length;
-        const overdueCount = checklistCount + trainingCount;
+        const checklistItems = getChecklistItems(data);
+        const trainingItems = getTrainingItems(data);
+        const overdueCount = checklistItems.length + trainingItems.length;
 
         els.lastUpdate.textContent = findUpdate(data);
         els.openItemsCount.textContent = String(overdueCount);
         els.overdueCountRow.hidden = overdueCount <= 0;
         els.overdueCountRow.classList.toggle("has-overdue", overdueCount > 0);
-        renderBox(els.checklistBox, els.checklistCount, found.checklistItems, checklistCount, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
-        renderBox(els.trainingBox, els.trainingCount, found.trainingItems, trainingCount, "No overdue training", "Training Item", "Training Requirement");
+        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
+        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training", "Training Item", "Training Requirement");
       } catch (error) {
         console.error("PowerHub Safety Snapshot load failed:", error);
         els.lastUpdate.textContent = "Unable to load latest update";
         els.openItemsCount.textContent = "!";
         els.checklistCount.textContent = "!";
         els.trainingCount.textContent = "!";
-        renderBox(els.checklistBox, els.checklistCount, [], 0, "Unable to load checklist status. Open SafetyHQ for full details.", "Checklist Item", "Monthly Safety Equipment Checklist");
-        renderBox(els.trainingBox, els.trainingCount, [], 0, "Unable to load training status. Open SafetyHQ for full details.", "Training Item", "Training Requirement");
+        renderBox(els.checklistBox, els.checklistCount, [], "Unable to load checklist status. Open SafetyHQ for full details.", "Checklist Item", "Monthly Safety Equipment Checklist");
+        renderBox(els.trainingBox, els.trainingCount, [], "Unable to load training status. Open SafetyHQ for full details.", "Training Item", "Training Requirement");
       }
     }
 
+    function setupAnnouncementModal() {
+      document.getElementById("openAnnouncementModal")?.addEventListener("click", () => {
+        if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
+        els.announcementModal?.classList.add("is-open");
+      });
+      document.getElementById("closeAnnouncementModal")?.addEventListener("click", () => els.announcementModal?.classList.remove("is-open"));
+      els.announcementModal?.addEventListener("click", event => { if (event.target === els.announcementModal) els.announcementModal.classList.remove("is-open"); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") els.announcementModal?.classList.remove("is-open"); });
+    }
+
+    function setupQuickLinks() {
       document.addEventListener("click", event => {
         const launcher = document.querySelector(".hero-quicklinks");
         if (!launcher || !launcher.open) return;
         if (!launcher.contains(event.target)) launcher.removeAttribute("open");
       });
-
       document.addEventListener("keydown", event => {
         if (event.key !== "Escape") return;
         const launcher = document.querySelector(".hero-quicklinks");
         if (launcher) launcher.removeAttribute("open");
       });
+    }
 
-      loadPowerHubAnnouncement();
-      loadSafetySnapshot();
+    function setupInstallPrompt() {
+      const dismissed = localStorage.getItem("powerhubInstallDismissed") === "true";
+      const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      if (standalone || dismissed) return;
+
+      window.addEventListener("beforeinstallprompt", event => {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+        els.installBanner?.classList.add("is-visible");
+      });
+
+      els.installAppButton?.addEventListener("click", async () => {
+        if (!deferredInstallPrompt) return;
+        deferredInstallPrompt.prompt();
+        try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
+        deferredInstallPrompt = null;
+        els.installBanner?.classList.remove("is-visible");
+      });
+
+      els.dismissInstallButton?.addEventListener("click", () => {
+        localStorage.setItem("powerhubInstallDismissed", "true");
+        els.installBanner?.classList.remove("is-visible");
+      });
+    }
+
+    function setupShareButton() {
+      els.shareAppButton?.addEventListener("click", async () => {
+        const shareUrl = "https://coastalbendpower.github.io/Hub/";
+        const payload = { title: "CBPS PowerHub", text: "CBPS PowerHub employee app", url: shareUrl };
+        try {
+          if (navigator.share) {
+            await navigator.share(payload);
+          } else if (navigator.clipboard) {
+            await navigator.clipboard.writeText(shareUrl);
+            alert("PowerHub link copied.");
+          } else {
+            window.prompt("Copy PowerHub link:", shareUrl);
+          }
+        } catch (error) {
+          console.warn("Share cancelled or failed", error);
+        }
+      });
+    }
+
+    setupAnnouncementModal();
+    setupQuickLinks();
+    setupInstallPrompt();
+    setupShareButton();
+    loadPowerHubAnnouncement();
+    loadSafetySnapshot();
   </script>
 </body>
 </html>
