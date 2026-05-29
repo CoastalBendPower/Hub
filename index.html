@@ -91,11 +91,6 @@
     .quicklink-fallback { position:relative; z-index:1; }
     .quicklink-label { display:block; color:rgba(255,255,255,.92); font-size:.64rem; font-weight:900; line-height:1.12; letter-spacing:.02em; }
 
-    .install-banner { display:none; align-items:center; justify-content:space-between; gap:12px; margin:0 0 18px; padding:12px 14px; border-radius:18px; border:1px solid rgba(0,157,255,.25); background:rgba(255,255,255,.86); box-shadow:0 8px 22px rgba(15,23,42,.07); backdrop-filter:blur(8px); }
-    .install-banner.is-visible { display:flex; }
-    .install-banner strong { display:block; color:var(--blue-dark); font-size:.95rem; }
-    .install-banner span { display:block; color:var(--muted); font-size:.78rem; font-weight:700; margin-top:2px; }
-    .install-actions { display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end; }
     .small-button { border:1px solid rgba(18,63,115,.18); background:#fff; color:var(--blue-dark); border-radius:999px; padding:8px 12px; font-size:.76rem; font-weight:950; cursor:pointer; }
     .small-button.primary { background:var(--blue); color:#fff; border-color:var(--blue); }
 
@@ -159,6 +154,7 @@
     .modal-head h2 { margin:0; color:var(--blue-dark); font-size:1.25rem; }
     .modal-close { border:0; background:var(--blue-soft); color:var(--blue-dark); border-radius:999px; width:34px; height:34px; font-weight:950; cursor:pointer; }
     .modal-body { color:var(--text); font-weight:700; line-height:1.5; white-space:pre-wrap; }
+    .modal-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
 
     @media (max-width: 900px) {
       .page-shell { width:min(100%, calc(100% - 24px)); }
@@ -199,8 +195,6 @@
       .quicklink-label { font-size:.66rem; }
       .section-title { margin-top:14px; }
       .snapshot-header { margin-top:18px; }
-      .install-banner { align-items:flex-start; }
-      .install-actions { justify-content:flex-start; }
     }
 
     @media (max-width: 430px) {
@@ -218,7 +212,7 @@
   <main class="page-shell">
     <header class="hero">
       <picture class="hero-media" aria-hidden="true">
-        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png?v=3.0.15">
+        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png?v=3.0.16">
         <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="">
       </picture>
       <div class="hero-inner">
@@ -259,17 +253,15 @@
             <span class="quicklink-action-icon"><span class="quicklink-fallback">CBPS</span><img src="assets/icon_CBPS_Website_300.png" alt="" onerror="this.style.display='none'"></span>
             <span class="quicklink-label">CBPS Site</span>
           </a>
-          <button class="quicklink-action" type="button" id="shareAppButton" aria-label="Share PowerHub app link">
-            <span class="quicklink-action-icon"><span class="quicklink-fallback">SHARE</span></span>
-            <span class="quicklink-label">Share App</span>
+          <button class="quicklink-action" type="button" id="powerHubAppButton" aria-label="PowerHub app options">
+            <span class="quicklink-action-icon">
+              <span class="quicklink-fallback">APP</span>
+              <img src="assets/button_CBPS_Site_round_300.png" alt="" onerror="this.style.display='none'">
+            </span>
+            <span class="quicklink-label">App</span>
           </button>
         </nav>
       </details>
-    </section>
-
-    <section class="install-banner" id="installBanner" aria-label="Install PowerHub app">
-      <div><strong>Install PowerHub</strong><span>Add this app to your home screen for faster field access.</span></div>
-      <div class="install-actions"><button class="small-button primary" id="installAppButton" type="button">Install</button><button class="small-button" id="dismissInstallButton" type="button">Not now</button></div>
     </section>
 
     <section class="hub-layout">
@@ -320,7 +312,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.15</p>
+      <p class="site-version">Version: PowerHub v3.0.16</p>
     </footer>
   </main>
 
@@ -331,11 +323,23 @@
     </div>
   </div>
 
+  <div class="modal-backdrop" id="powerHubAppModal" role="dialog" aria-modal="true" aria-labelledby="powerHubAppModalTitle">
+    <div class="modal-card">
+      <div class="modal-head"><h2 id="powerHubAppModalTitle">PowerHub App</h2><button class="modal-close" id="closePowerHubAppModal" type="button" aria-label="Close PowerHub App options">×</button></div>
+      <div class="modal-body" id="powerHubAppModalBody">Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.</div>
+      <div class="modal-actions">
+        <button class="small-button primary" id="powerHubInstallButton" type="button">Install</button>
+        <button class="small-button" id="powerHubShareButton" type="button">Share</button>
+        <button class="small-button" id="powerHubCloseButton" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.15";
+    const POWERHUB_VERSION = "PowerHub v3.0.16";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -348,10 +352,12 @@
       checklistCount: document.getElementById("checklistCount"),
       trainingCount: document.getElementById("trainingCount"),
       overdueCountRow: document.getElementById("overdueCountRow"),
-      installBanner: document.getElementById("installBanner"),
-      installAppButton: document.getElementById("installAppButton"),
-      dismissInstallButton: document.getElementById("dismissInstallButton"),
-      shareAppButton: document.getElementById("shareAppButton")
+      powerHubAppButton: document.getElementById("powerHubAppButton"),
+      powerHubAppModal: document.getElementById("powerHubAppModal"),
+      powerHubAppModalBody: document.getElementById("powerHubAppModalBody"),
+      powerHubInstallButton: document.getElementById("powerHubInstallButton"),
+      powerHubShareButton: document.getElementById("powerHubShareButton"),
+      powerHubCloseButton: document.getElementById("powerHubCloseButton")
     };
 
     let deferredInstallPrompt = null;
@@ -668,33 +674,33 @@
       });
     }
 
-    function setupInstallPrompt() {
-      const dismissed = localStorage.getItem("powerhubInstallDismissed") === "true";
-      const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-      if (standalone || dismissed) return;
-
+    function setupPowerHubAppModal() {
       window.addEventListener("beforeinstallprompt", event => {
         event.preventDefault();
         deferredInstallPrompt = event;
-        els.installBanner?.classList.add("is-visible");
       });
 
-      els.installAppButton?.addEventListener("click", async () => {
-        if (!deferredInstallPrompt) return;
-        deferredInstallPrompt.prompt();
-        try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
-        deferredInstallPrompt = null;
-        els.installBanner?.classList.remove("is-visible");
+      const closeAppModal = () => els.powerHubAppModal?.classList.remove("is-open");
+      const installInstructions = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.\n\nInstall instructions:\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
+
+      els.powerHubAppButton?.addEventListener("click", () => {
+        if (els.powerHubAppModalBody) {
+          els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
+        }
+        els.powerHubAppModal?.classList.add("is-open");
       });
 
-      els.dismissInstallButton?.addEventListener("click", () => {
-        localStorage.setItem("powerhubInstallDismissed", "true");
-        els.installBanner?.classList.remove("is-visible");
+      els.powerHubInstallButton?.addEventListener("click", async () => {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
+          deferredInstallPrompt = null;
+          return;
+        }
+        if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = installInstructions;
       });
-    }
 
-    function setupShareButton() {
-      els.shareAppButton?.addEventListener("click", async () => {
+      els.powerHubShareButton?.addEventListener("click", async () => {
         const shareUrl = "https://coastalbendpower.github.io/Hub/";
         const payload = { title: "CBPS PowerHub", text: "CBPS PowerHub employee app", url: shareUrl };
         try {
@@ -710,12 +716,16 @@
           console.warn("Share cancelled or failed", error);
         }
       });
+
+      els.powerHubCloseButton?.addEventListener("click", closeAppModal);
+      document.getElementById("closePowerHubAppModal")?.addEventListener("click", closeAppModal);
+      els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) closeAppModal(); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
     }
 
     setupAnnouncementModal();
     setupQuickLinks();
-    setupInstallPrompt();
-    setupShareButton();
+    setupPowerHubAppModal();
     loadPowerHubAnnouncement();
     loadSafetySnapshot();
   </script>
