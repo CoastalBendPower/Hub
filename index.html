@@ -180,23 +180,36 @@
       .site-title { font-size:clamp(1.54rem, 7.85vw, 1.96rem); }
       .site-title::after { width:96px; margin:.24rem 0 0; }
       .eyebrow { font-size:.43rem; letter-spacing:.085em; margin-bottom:5px; white-space:nowrap; }
-      .site-subtitle { font-size:.53rem; margin-top:.28rem; letter-spacing:.05em; white-space:nowrap; }
-      .announcement-row { grid-template-columns:minmax(0, 1fr) 58px; gap:10px; margin:6px 0 16px; }
-      .announcement-main { grid-template-columns:1fr; gap:5px; padding:9px 8px; border-radius:14px; }
-      .announcement-title h2 { font-size:.96rem; }
-      .announcement-text { font-size:.82rem; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; }
-      .announcement-text::after { display:inline; margin-left:7px; font-size:.58rem; }
-      .hero-quicklinks { width:58px; min-width:58px; justify-self:end; }
-      .quicklinks-trigger, .quicklinks-trigger > img { width:58px; height:58px; }
+      .site-subtitle { font-size:.54rem; letter-spacing:.045em; margin-top:.38rem; white-space:nowrap; }
+
+      .announcement-row { grid-template-columns:minmax(0, 1fr) auto; gap:8px; margin-bottom:12px; }
+      .announcement-main { grid-template-columns:1fr; gap:8px; padding:10px 0; }
+      .announcement-title { grid-column:1 / -1; }
+      .announcement-title h2 { font-size:.95rem; }
+      .announcement-text { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.8rem; line-height:1.28; }
+      .announcement-text::after { display:block; margin:4px 0 0; font-size:.62rem; }
+
+      .hero-quicklinks { justify-self:end; align-self:center; width:60px; min-width:60px; margin-left:auto; }
+      .quicklinks-trigger, .quicklinks-trigger > img { width:60px; height:60px; }
       .quicklinks-menu { position:fixed; left:12px; right:12px; top:auto; bottom:18px; transform:none; width:auto; max-width:none; min-width:0; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:10px; padding:14px; border-radius:24px; background:linear-gradient(135deg, rgba(5,16,34,.86), rgba(10,38,72,.82)); }
       .quicklinks-menu::after { display:none; }
       .hero-quicklinks[open] .quicklinks-menu { display:grid; animation:quickSheetIn .18s ease-out both; }
-      @keyframes quickSheetIn { from { opacity:0; transform:translateY(14px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
-      .quicklink-action { min-height:82px; }
-      .quicklink-action-icon { width:56px; height:56px; }
+      @keyframes quickSheetIn { from { opacity:0; transform:translateY(16px) scale(.98); } to { opacity:1; transform:translateY(0) scale(1); } }
+      .quicklink-action { min-height:82px; padding:8px 4px; }
+      .quicklink-action-icon { width:58px; height:58px; font-size:.68rem; }
       .quicklink-label { font-size:.66rem; }
-      .modal-backdrop { padding:14px; }
-      .modal-card { max-height:82vh; padding:18px; border-radius:22px; }
+      .section-title { margin-top:14px; }
+      .snapshot-header { margin-top:18px; }
+    }
+
+    @media (max-width: 430px) {
+      .hero { aspect-ratio:16 / 6.3; }
+      .hero-inner { height:100%; padding:12px 18px 12px 32%; justify-items:center; }
+      .hero-copy { width:min(100%, 260px); max-width:260px; padding:0; }
+      .site-title { font-size:clamp(1.42rem, 7.45vw, 1.78rem); }
+      .eyebrow { font-size:.37rem; letter-spacing:.07em; margin-bottom:5px; }
+      .site-subtitle { font-size:.48rem; letter-spacing:.035em; margin-top:.38rem; }
+      .site-title::after { width:82px; margin-top:.22rem; }
     }
   </style>
 </head>
@@ -261,41 +274,39 @@
                 <div class="snapshot-stat-row"><span class="inline-stat-value" id="openItemsCount">-</span><span class="inline-stat-label">Overdue</span></div>
               </div>
             </div>
-            <div class="last-update" id="lastUpdate">Latest upload pending</div>
+            <div class="last-update">Last Update: <strong id="lastUpdate"><span class="power-loader power-loader--inline" role="status" aria-label="Loading latest update"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading latest update</span></span></strong></div>
           </div>
-
           <div class="followup-panel">
-            <div class="followup-box" id="checklistFollowupBox" role="link" tabindex="0" aria-label="Open SafetyHQ Monthly Safety Equipment Checklist Status">
-              <div class="followup-box-header"><h3>Monthly Safety Equipment</h3><span class="box-count" id="checklistCount">0 Open</span></div>
-              <div class="followup-list" id="checklistFollowupList"><div class="followup-empty"><span class="power-loader power-loader--inline" role="status" aria-label="Loading checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span>Loading status</span></span></div></div>
-            </div>
-
-            <div class="followup-box" id="trainingFollowupBox" role="link" tabindex="0" aria-label="Open SafetyHQ Training Status">
-              <div class="followup-box-header"><h3>Training Status</h3><span class="box-count" id="trainingCount">0 Open</span></div>
-              <div class="followup-list" id="trainingFollowupList"><div class="followup-empty"><span class="power-loader power-loader--inline" role="status" aria-label="Loading training status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span>Loading status</span></span></div></div>
-            </div>
+            <a class="followup-box" id="checklistFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#monthly" aria-label="Open Monthly Safety Equipment Checklist Status in SafetyHQ">
+              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount"></span></div>
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading checklist status</span></span></div>
+            </a>
+            <a class="followup-box" id="trainingFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#training" aria-label="Open Training Status in SafetyHQ">
+              <div class="followup-box-header"><h3>Overdue Training</h3><span class="box-count" id="trainingCount"></span></div>
+              <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading training status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading training status</span></span></div>
+            </a>
           </div>
         </div>
       </section>
 
       <section class="hub-column hr-section" aria-labelledby="hr-title">
-        <div class="section-title"><h2 id="hr-title">HR Hub</h2><p>People resources will be added here as they are approved for PowerHub access.</p></div>
+        <div class="section-title"><h2 id="hr-title">HR Hub</h2><p>Employee documents, policies, forms, and internal resources.</p></div>
         <div class="hub-card-grid">
           <div class="coming-soon-card" aria-label="HR Hub coming soon">
-            <span class="coming-soon-badge">Coming Soon</span>
-            <strong>HR resources are being staged.</strong>
-            <span>Use HSI or ShareSync for controlled HR documents until this section is opened.</span>
+            <div class="coming-soon-badge">Coming Soon</div>
+            <strong>HR resources are being organized.</strong>
+            <span>Secure HR document access and employee resources will be added here.</span>
           </div>
         </div>
       </section>
 
-      <section class="hub-column crew-section" aria-labelledby="crew-title">
-        <div class="section-title"><h2 id="crew-title">Team Tools</h2><p>Crew lead and field tools will be added here once the approved links are ready.</p></div>
-        <div class="hub-card-grid">
+      <section class="hub-column crew-section" aria-labelledby="team-tools-title">
+        <div class="section-title"><h2 id="team-tools-title">Team Tools</h2><p>Field shortcuts, team resources, and support tools.</p></div>
+        <div class="hub-card-grid" id="team-tools">
           <div class="coming-soon-card" aria-label="Team Tools coming soon">
-            <span class="coming-soon-badge">Coming Soon</span>
-            <strong>Team tools are being staged.</strong>
-            <span>JSO/JSA shortcuts and field forms will be added after the approved workflow is confirmed.</span>
+            <div class="coming-soon-badge">Coming Soon</div>
+            <strong>Team tools are being built.</strong>
+            <span>Field shortcuts, input forms, and crew resources will be added here.</span>
           </div>
         </div>
       </section>
@@ -303,8 +314,8 @@
 
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
-      <p class="footer-disclaimer">Internal company resource hub for CBPS employees. Some links may open external company systems that require separate login credentials.</p>
-      <p class="site-version">Version: PowerHub v3.0.20</p>
+      <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
+      <p class="site-version">Version: PowerHub v3.0.19</p>
     </footer>
   </main>
 
@@ -331,7 +342,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.20";
+    const POWERHUB_VERSION = "PowerHub v3.0.19";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -346,7 +357,6 @@
       overdueCountRow: document.getElementById("overdueCountRow"),
       powerHubAppButton: document.getElementById("powerHubAppButton"),
       powerHubAppModal: document.getElementById("powerHubAppModal"),
-      powerHubAppModalTitle: document.getElementById("powerHubAppModalTitle"),
       powerHubAppModalBody: document.getElementById("powerHubAppModalBody"),
       powerHubInstallButton: document.getElementById("powerHubInstallButton"),
       powerHubShareButton: document.getElementById("powerHubShareButton"),
@@ -354,134 +364,314 @@
     };
 
     let deferredInstallPrompt = null;
+    let latestAnnouncement = "Please complete all assigned requirements by their due dates.";
 
-    function setText(id, value, fallback = "-") {
-      const element = document.getElementById(id);
-      if (!element) return;
-      element.textContent = value ?? fallback;
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    function setBoxState(box, countElement, count) {
-      if (!box || !countElement) return;
-      const numberCount = Number(count) || 0;
-      box.classList.toggle("has-open", numberCount > 0);
-      countElement.textContent = numberCount > 0 ? `${numberCount} Open` : "0 Open";
+    function escapeAttr(value) {
+      return escapeHtml(value || "Loading");
     }
 
-    function renderFollowupList(listElement, items, emptyText, type) {
-      if (!listElement) return;
-      const safeItems = Array.isArray(items) ? items.filter(item => item && item.employee) : [];
-      if (!safeItems.length) {
-        listElement.innerHTML = `<div class="followup-empty">${emptyText}</div>`;
-        return;
+    function loaderMarkup(label, variant = "inline") {
+      const safeLabel = escapeAttr(label || "Loading");
+      return `<span class="power-loader power-loader--${variant}" role="status" aria-label="${safeLabel}"><img src="${POWER_LOADER_SRC}" alt="" aria-hidden="true"><span class="sr-only">${safeLabel}</span></span>`;
+    }
+
+    function setLoader(el, label, variant = "inline") {
+      if (!el) return;
+      el.innerHTML = loaderMarkup(label, variant);
+    }
+
+    function setBoxLoading(box, label) {
+      if (!box) return;
+      const oldBody = box.querySelector(".followup-empty, .followup-list");
+      if (oldBody) oldBody.remove();
+      const empty = document.createElement("div");
+      empty.className = "followup-empty";
+      empty.innerHTML = loaderMarkup(label, "section");
+      box.appendChild(empty);
+    }
+
+    function text(value) {
+      let out = String(value ?? "").trim();
+      while (out.includes("  ")) out = out.replaceAll("  ", " ");
+      return out;
+    }
+
+    function key(value) {
+      const source = text(value).toLowerCase();
+      let out = "";
+      for (const ch of source) {
+        if ((ch >= "a" && ch <= "z") || (ch >= "0" && ch <= "9")) out += ch;
       }
-      listElement.innerHTML = safeItems.slice(0, 4).map(item => {
-        const name = item.employee || "Employee";
-        const label = item.requirementName || item.checklistName || item.title || type;
-        const due = item.dueDate ? `Due: ${item.dueDate}` : "Due date not listed";
-        const days = Number(item.daysOverdue) || 0;
-        const vehicle = item.eq || item.vehicle || item.equipment || "";
-        const meta = vehicle ? `${vehicle} • ${due}` : due;
-        return `<div class="followup-item"><div class="followup-item-main"><strong>${name}</strong><span class="overdue-pill">${days}d overdue</span></div><span>${label}</span><span>${meta}</span></div>`;
-      }).join("");
+      return out;
     }
 
-    function getOpenTrainingItems(snapshot) {
-      const overdue = Array.isArray(snapshot.overdueTrainingItems) ? snapshot.overdueTrainingItems : [];
-      const dueSoon = Array.isArray(snapshot.trainingDueSoonItems) ? snapshot.trainingDueSoonItems : [];
-      return [...overdue, ...dueSoon];
+    function num(value) {
+      const source = String(value ?? "");
+      let out = "";
+      for (const ch of source) {
+        if ((ch >= "0" && ch <= "9") || ch === "." || ch === "-") out += ch;
+      }
+      const parsed = Number(out);
+      return Number.isFinite(parsed) ? parsed : 0;
     }
 
-    function openSafetyHq(section) {
-      const base = "https://coastalbendpower.github.io/SafetyHQ/";
-      window.location.href = section ? `${base}${section}` : base;
-    }
-
-    function openAnnouncement() {
-      const text = els.announcementText?.dataset.fullText || els.announcementText?.textContent || "No Team Note available.";
-      if (els.announcementModalBody) els.announcementModalBody.textContent = text;
-      els.announcementModal?.classList.add("is-open");
-    }
-
-    function closeAnnouncement() {
-      els.announcementModal?.classList.remove("is-open");
-    }
-
-    function setupAnnouncementModal() {
-      document.getElementById("closeAnnouncementModal")?.addEventListener("click", closeAnnouncement);
-      els.announcementModal?.addEventListener("click", event => { if (event.target === els.announcementModal) closeAnnouncement(); });
-      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAnnouncement(); });
-    }
-
-    function normalizeAnnouncement(data) {
-      if (!data) return "";
-      if (typeof data === "string") return data;
-      const direct = data.powerHubAnnouncement || data.announcement || data.message || data.note || data.text;
-      if (typeof direct === "string") return direct;
-      if (Array.isArray(data.announcements) && data.announcements.length) {
-        const first = data.announcements.find(item => item && (item.active !== false));
-        return first?.message || first?.note || first?.text || "";
+    function get(obj, names) {
+      const map = {};
+      Object.keys(obj || {}).forEach(k => { map[key(k)] = k; });
+      for (const name of names) {
+        const found = map[key(name)];
+        if (found) return text(obj[found]);
       }
       return "";
     }
 
-    async function loadPowerHubAnnouncement() {
-      try {
-        const response = await fetch(`${UC_ANNOUNCEMENT_FEED_URL}&t=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Announcement feed failed: ${response.status}`);
-        const data = await response.json();
-        const message = normalizeAnnouncement(data) || "No active Team Note posted.";
-        if (els.announcementText) {
-          els.announcementText.textContent = message;
-          els.announcementText.dataset.fullText = message;
-        }
-      } catch (error) {
-        console.warn(error);
-        if (els.announcementText) {
-          els.announcementText.textContent = "No active Team Note posted.";
-          els.announcementText.dataset.fullText = "No active Team Note posted.";
+    function normalizeRows(source) {
+      if (!source) return [];
+      if (Array.isArray(source)) return source;
+      if (Array.isArray(source.rows)) return source.rows;
+      if (Array.isArray(source.items)) return source.items;
+      if (Array.isArray(source.values)) return source.values;
+      if (Array.isArray(source.data)) return source.data;
+      return [];
+    }
+
+    function cell(row, names, index) {
+      if (Array.isArray(row)) return text(row[index]);
+      return get(row, names);
+    }
+
+    function includeOnSite(row, index) {
+      const include = Array.isArray(row) ? text(row[index] || "Yes") : (get(row, ["includeOnSite", "Include On Site?", "Include On Site", "showOnSite", "siteInclude"]) || "Yes");
+      const lower = include.toLowerCase();
+      return lower !== "no" && lower !== "false" && lower !== "0";
+    }
+
+    function formatDate(value) {
+      const s = text(value);
+      if (!s) return "";
+      if (s.length >= 10 && s[4] === "-" && s[7] === "-") return `${s.slice(5,7)}/${s.slice(8,10)}/${s.slice(0,4)}`;
+      return s;
+    }
+
+    function findMetric(data, names) {
+      const wanted = names.map(key);
+      const sources = [data && data.summary, data && data.powerHubSnapshot, data && data.dashboardMetrics, data && data.metrics, data];
+      for (const src of sources) {
+        if (!src) continue;
+        if (Array.isArray(src)) {
+          for (const row of src) {
+            if (Array.isArray(row) && wanted.includes(key(row[0]))) return text(row[1]);
+            if (row && typeof row === "object") {
+              const label = get(row, ["field", "Field", "metric", "Metric", "label", "Label", "name", "Name"]);
+              const value = get(row, ["value", "Value", "amount", "Amount", "metricValue", "Metric Value"]);
+              if (wanted.includes(key(label))) return value;
+            }
+          }
+        } else if (typeof src === "object") {
+          for (const name of names) {
+            const value = get(src, [name]);
+            if (value) return value;
+          }
         }
       }
+      return "";
+    }
+
+    function findUpdate(data) {
+      return findMetric(data, ["lastUpdate", "Last Update", "lastUpdated", "Updated", "timestamp", "Dashboard Last Update", "Last Upload", "Latest Upload"]) || "Latest SafetyHQ update loaded";
+    }
+
+    function getChecklistItems(data) {
+      const rows = normalizeRows(data.monthlyStatus || data.monthlyItems || data.checklistStatus || data.monthly || data.checklists || data["Monthly Status"]);
+      const items = [];
+      rows.forEach(row => {
+        const employee = cell(row, ["employee", "Employee"], 0);
+        const eq = cell(row, ["eq", "eqNumber", "EQ #", "vehicle", "Vehicle", "Vehicle #"], 1);
+        const status = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
+        const completed = cell(row, ["completionDate", "Completion Date", "Completed Date", "completedAt"], 3);
+        const days = cell(row, ["daysOverdue", "Days Overdue"], 5);
+        const notes = cell(row, ["notes", "Notes"], 6);
+        if (!employee || employee === "Employee" || !eq || !includeOnSite(row, 7)) return;
+        const lower = (status + " " + completed).toLowerCase();
+        if (lower.includes("complete") || completed) return;
+        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: status || "Overdue / Missing", daysOverdue: days, notes });
+      });
+      items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
+      return items;
+    }
+
+    function getTrainingItems(data) {
+      const rows = normalizeRows(data.trainingStatus || data.training || data.trainingItems || data.inTrainingWindowItems || data["Training Status"]);
+      const items = [];
+      rows.forEach(row => {
+        const employee = cell(row, ["employee", "Employee"], 0);
+        const requirementName = cell(row, ["requirementName", "requirement", "training", "Requirement"], 1);
+        const complianceStatus = cell(row, ["complianceStatus", "Compliance Status"], 2);
+        const dueDate = cell(row, ["dueDate", "Due Date"], 3);
+        const daysUntilDue = cell(row, ["daysUntilDue", "Days Until Due"], 4);
+        const dashboardStatus = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 5) || complianceStatus;
+        if (!employee || employee === "Employee" || !requirementName || !dueDate || !includeOnSite(row, 6)) return;
+        const lower = dashboardStatus.toLowerCase();
+        const overdue = lower.includes("overdue") || lower.includes("delinquent") || num(daysUntilDue) < 0;
+        if (!overdue) return;
+        items.push({ employee, requirementName, dueDate, status: dashboardStatus || "Overdue", daysOverdue: Math.abs(num(daysUntilDue)) });
+      });
+      items.sort((a, b) => {
+        const dueSort = text(a.dueDate).localeCompare(text(b.dueDate));
+        if (dueSort !== 0) return dueSort;
+        return a.employee.localeCompare(b.employee);
+      });
+      return items;
+    }
+
+    function overdueLabel(item) {
+      if (item.daysOverdue) return `${Math.abs(num(item.daysOverdue))}d overdue`;
+      const raw = text(item.status);
+      if (raw.toLowerCase().includes("overdue")) return raw;
+      return "Overdue";
+    }
+
+    function appendFollowupItem(parent, item, fallbackTitle, fallbackDetail) {
+      const row = document.createElement("div");
+      row.className = "followup-item";
+
+      const main = document.createElement("div");
+      main.className = "followup-item-main";
+
+      const title = document.createElement("strong");
+      title.textContent = item.eq ? `${item.employee || fallbackTitle} — ${item.eq}` : (item.employee || fallbackTitle);
+
+      const overdue = document.createElement("span");
+      overdue.className = "overdue-pill";
+      overdue.textContent = overdueLabel(item);
+
+      main.appendChild(title);
+      main.appendChild(overdue);
+      row.appendChild(main);
+
+      const detailText = item.requirementName || fallbackDetail;
+      if (detailText) {
+        const detail = document.createElement("span");
+        detail.textContent = item.dueDate ? `${detailText} — Due ${formatDate(item.dueDate)}` : detailText;
+        row.appendChild(detail);
+      }
+
+      parent.appendChild(row);
+    }
+
+    function renderBox(box, countEl, items, emptyText, fallbackTitle, fallbackDetail) {
+      countEl.textContent = String(items.length);
+      box.classList.toggle("has-open", items.length > 0);
+      const oldBody = box.querySelector(".followup-empty, .followup-list");
+      if (oldBody) oldBody.remove();
+
+      if (!items.length) {
+        const empty = document.createElement("div");
+        empty.className = "followup-empty";
+        empty.textContent = emptyText;
+        box.appendChild(empty);
+        return;
+      }
+
+      const list = document.createElement("div");
+      list.className = "followup-list";
+      items.forEach(item => appendFollowupItem(list, item, fallbackTitle, fallbackDetail));
+      box.appendChild(list);
+    }
+
+    function pickAnnouncementMessage(data) {
+      const fallback = "Please complete all assigned requirements by their due dates.";
+      const direct = text(data && (data.message || data.announcementMessage || data.primaryAnnouncementMessage));
+      if (direct) return direct;
+      const primary = data && (data.primaryAnnouncement || data.announcement || data.activeAnnouncement);
+      if (primary) {
+        const msg = text(primary.message || primary.Message || primary.text || primary.announcement);
+        if (msg) return msg;
+      }
+      const announcements = Array.isArray(data && data.announcements) ? data.announcements : [];
+      for (const item of announcements) {
+        const msg = text(item.message || item.Message || item.text || item.announcement);
+        if (msg) return msg;
+      }
+      return fallback;
+    }
+
+    async function loadPowerHubAnnouncement() {
+      const fallback = "Please complete all assigned requirements by their due dates.";
+      if (!els.announcementText) return;
+      setLoader(els.announcementText, "Loading announcement", "inline");
+      try {
+        const response = await fetch(`${UC_ANNOUNCEMENT_FEED_URL}&t=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
+        if (!response.ok) throw new Error("UC announcement feed returned " + response.status);
+        const data = await response.json();
+        latestAnnouncement = pickAnnouncementMessage(data);
+      } catch (error) {
+        console.error("PowerHub announcement load failed:", error);
+        latestAnnouncement = fallback;
+      }
+      els.announcementText.textContent = latestAnnouncement;
+      if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
     }
 
     async function loadSafetySnapshot() {
+      setLoader(els.lastUpdate, "Loading latest update", "inline");
+      els.openItemsCount.textContent = "-";
+      els.checklistCount.textContent = "";
+      els.trainingCount.textContent = "";
+      els.overdueCountRow.hidden = true;
+      els.overdueCountRow.classList.remove("has-overdue");
+      setBoxLoading(els.checklistBox, "Loading checklist status");
+      setBoxLoading(els.trainingBox, "Loading training status");
+
       try {
         const response = await fetch(`${SAFETYHQ_FEED_URL}?hub=${Date.now()}&v=${encodeURIComponent(POWERHUB_VERSION)}`, { cache: "no-store" });
-        if (!response.ok) throw new Error(`Safety Snapshot feed failed: ${response.status}`);
+        if (!response.ok) throw new Error("SafetyHQ feed returned " + response.status);
         const data = await response.json();
-        const snapshot = data.powerHubSnapshot || data.snapshot || data || {};
-        const checklistItems = Array.isArray(snapshot.overdueMonthlyChecklists) ? snapshot.overdueMonthlyChecklists : [];
-        const trainingItems = getOpenTrainingItems(snapshot);
-        const checklistCount = Number(snapshot.overdueChecklists ?? snapshot.missingChecklists ?? checklistItems.length) || 0;
-        const trainingCount = Number(snapshot.overdueTraining ?? snapshot.trainingDueSoon ?? trainingItems.length) || 0;
-        const totalOpen = Number(snapshot.totalOpenItems ?? (checklistCount + trainingCount)) || 0;
-        setText("lastUpdate", snapshot.lastUpdate, "Latest upload pending");
-        setText("openItemsCount", totalOpen, "0");
-        setBoxState(els.checklistBox, els.checklistCount, checklistCount);
-        setBoxState(els.trainingBox, els.trainingCount, trainingCount);
-        els.overdueCountRow?.classList.toggle("has-overdue", totalOpen > 0);
-        renderFollowupList(els.checklistBox?.querySelector("#checklistFollowupList"), checklistItems, "No missing or overdue Safety Eq Checklists listed in the current update.", "Checklist");
-        renderFollowupList(els.trainingBox?.querySelector("#trainingFollowupList"), trainingItems, "No overdue or due-soon training listed in the current update.", "Training");
+        console.log("PowerHub SafetyHQ feed", data);
+
+        const checklistItems = getChecklistItems(data);
+        const trainingItems = getTrainingItems(data);
+        const overdueCount = checklistItems.length + trainingItems.length;
+
+        els.lastUpdate.textContent = findUpdate(data);
+        els.openItemsCount.textContent = String(overdueCount);
+        els.overdueCountRow.hidden = overdueCount <= 0;
+        els.overdueCountRow.classList.toggle("has-overdue", overdueCount > 0);
+        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
+        renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training", "Training Item", "Training Requirement");
       } catch (error) {
-        console.warn(error);
-        setText("lastUpdate", "Latest upload pending");
-        setText("openItemsCount", "-");
-        renderFollowupList(document.getElementById("checklistFollowupList"), [], "Safety Snapshot temporarily unavailable.", "Checklist");
-        renderFollowupList(document.getElementById("trainingFollowupList"), [], "Training Snapshot temporarily unavailable.", "Training");
+        console.error("PowerHub Safety Snapshot load failed:", error);
+        els.lastUpdate.textContent = "Unable to load latest update";
+        els.openItemsCount.textContent = "!";
+        els.checklistCount.textContent = "!";
+        els.trainingCount.textContent = "!";
+        renderBox(els.checklistBox, els.checklistCount, [], "Unable to load checklist status. Open SafetyHQ for full details.", "Checklist Item", "Monthly Safety Equipment Checklist");
+        renderBox(els.trainingBox, els.trainingCount, [], "Unable to load training status. Open SafetyHQ for full details.", "Training Item", "Training Requirement");
       }
     }
 
-    function setupSafetyLinks() {
-      els.checklistBox?.addEventListener("click", () => openSafetyHq("#monthly-status"));
-      els.trainingBox?.addEventListener("click", () => openSafetyHq("#training-status"));
-      [els.checklistBox, els.trainingBox].forEach((box, index) => {
-        box?.addEventListener("keydown", event => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            openSafetyHq(index === 0 ? "#monthly-status" : "#training-status");
-          }
-        });
+    function setupAnnouncementModal() {
+      const openAnnouncement = () => {
+        if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
+        els.announcementModal?.classList.add("is-open");
+      };
+
+      const teamNoteTrigger = document.getElementById("teamNoteTrigger");
+      teamNoteTrigger?.addEventListener("click", openAnnouncement);
+      teamNoteTrigger?.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openAnnouncement();
+        }
       });
+
+      document.getElementById("closeAnnouncementModal")?.addEventListener("click", () => els.announcementModal?.classList.remove("is-open"));
+      els.announcementModal?.addEventListener("click", event => { if (event.target === els.announcementModal) els.announcementModal.classList.remove("is-open"); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") els.announcementModal?.classList.remove("is-open"); });
     }
 
     function setupQuickLinks() {
@@ -504,33 +694,12 @@
       });
 
       const closeAppModal = () => els.powerHubAppModal?.classList.remove("is-open");
-      const setAppModalMode = mode => {
-        if (!els.powerHubAppModalTitle || !els.powerHubAppModalBody || !els.powerHubShareButton || !els.powerHubCloseButton || !els.powerHubInstallButton) return;
-        if (mode === "firstInstall") {
-          els.powerHubAppModalTitle.textContent = "Install PowerHub?";
-          els.powerHubAppModalBody.textContent = "Add PowerHub to your phone for quick access to SafetyHQ, Team Notes, and company tools.";
-          els.powerHubInstallButton.textContent = "Install PowerHub";
-          els.powerHubShareButton.style.display = "none";
-          els.powerHubCloseButton.textContent = "Not Now";
-          return;
-        }
-        els.powerHubAppModalTitle.textContent = "PowerHub App";
-        els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
-        els.powerHubInstallButton.textContent = "Install";
-        els.powerHubShareButton.style.display = "";
-        els.powerHubCloseButton.textContent = "Close";
-      };
-      const installInstructions = "Install PowerHub on your phone for faster field access.\n\nInstall instructions:\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
-      const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-      const isMobileViewport = () => window.matchMedia("(max-width: 900px)").matches;
-      const shouldShowFirstInstallPrompt = () => {
-        if (isStandalone() || !isMobileViewport()) return false;
-        const dismissedUntil = Number(localStorage.getItem("powerHubInstallDismissedUntil") || 0);
-        return Date.now() > dismissedUntil;
-      };
+      const installInstructions = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.\n\nInstall instructions:\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
 
       els.powerHubAppButton?.addEventListener("click", () => {
-        setAppModalMode("standard");
+        if (els.powerHubAppModalBody) {
+          els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
+        }
         els.powerHubAppModal?.classList.add("is-open");
       });
 
@@ -539,12 +708,9 @@
           deferredInstallPrompt.prompt();
           try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
           deferredInstallPrompt = null;
-          closeAppModal();
           return;
         }
         if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = installInstructions;
-        if (els.powerHubShareButton) els.powerHubShareButton.style.display = "";
-        if (els.powerHubCloseButton) els.powerHubCloseButton.textContent = "Close";
       });
 
       els.powerHubShareButton?.addEventListener("click", async () => {
@@ -564,34 +730,10 @@
         }
       });
 
-      els.powerHubCloseButton?.addEventListener("click", () => {
-        if (els.powerHubAppModalTitle?.textContent === "Install PowerHub?") {
-          localStorage.setItem("powerHubInstallDismissedUntil", String(Date.now() + 24 * 60 * 60 * 1000));
-        }
-        closeAppModal();
-      });
-      document.getElementById("closePowerHubAppModal")?.addEventListener("click", () => {
-        if (els.powerHubAppModalTitle?.textContent === "Install PowerHub?") {
-          localStorage.setItem("powerHubInstallDismissedUntil", String(Date.now() + 24 * 60 * 60 * 1000));
-        }
-        closeAppModal();
-      });
-      els.powerHubAppModal?.addEventListener("click", event => {
-        if (event.target === els.powerHubAppModal) {
-          if (els.powerHubAppModalTitle?.textContent === "Install PowerHub?") {
-            localStorage.setItem("powerHubInstallDismissedUntil", String(Date.now() + 24 * 60 * 60 * 1000));
-          }
-          closeAppModal();
-        }
-      });
+      els.powerHubCloseButton?.addEventListener("click", closeAppModal);
+      document.getElementById("closePowerHubAppModal")?.addEventListener("click", closeAppModal);
+      els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) closeAppModal(); });
       document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
-
-      setTimeout(() => {
-        if (shouldShowFirstInstallPrompt()) {
-          setAppModalMode("firstInstall");
-          els.powerHubAppModal?.classList.add("is-open");
-        }
-      }, 900);
     }
 
     setupAnnouncementModal();
@@ -599,7 +741,6 @@
     setupPowerHubAppModal();
     loadPowerHubAnnouncement();
     loadSafetySnapshot();
-    setupSafetyLinks();
   </script>
 </body>
 </html>
