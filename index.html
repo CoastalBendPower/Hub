@@ -6,14 +6,27 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>CBPS PowerHub</title>
-  <meta name="theme-color" content="#123f73" />
-  <meta name="application-name" content="CBPS PowerHub" />
-  <meta name="apple-mobile-web-app-title" content="PowerHub" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <title>CBPS PowerHub</title>
+      <meta name="theme-color" content="#123f73" />
+      <meta name="application-name" content="CBPS PowerHub" />
+      <meta name="apple-mobile-web-app-title" content="PowerHub" />
+      <meta name="apple-mobile-web-app-capable" content="yes" />
+      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+      <meta property="og:title" content="CBPS PowerHub" />
+      <meta property="og:description" content="Coastal Bend Power Services employee resource hub." />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="https://coastalbendpower.github.io/Hub/" />
+      <meta property="og:image" content="https://coastalbendpower.github.io/Hub/assets/icon-512.png?v=3.0.21" />
+      <meta property="og:image:width" content="512" />
+      <meta property="og:image:height" content="512" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content="CBPS PowerHub" />
+      <meta name="twitter:description" content="Coastal Bend Power Services employee resource hub." />
+      <meta name="twitter:image" content="https://coastalbendpower.github.io/Hub/assets/icon-512.png?v=3.0.21" />
+
+      <link rel="manifest" href="manifest.json" />
+      <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <style>
     :root {
       --blue: #123f73;
@@ -738,7 +751,7 @@
 els.powerHubCloseButton?.addEventListener("click", dismissInstallPrompt);
 document.getElementById("closePowerHubAppModal")?.addEventListener("click", dismissInstallPrompt);
 els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) dismissInstallPrompt(); });
-      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") dismissInstallPrompt(); });
       const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
       const isMobileViewport = () => window.matchMedia("(max-width: 900px)").matches;
       const shouldShowInstallPrompt = () => {
