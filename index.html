@@ -315,7 +315,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.19</p>
+      <p class="site-version">Version: PowerHub v3.0.20</p>
     </footer>
   </main>
 
@@ -342,7 +342,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.19";
+    const POWERHUB_VERSION = "PowerHub v3.0.20";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -730,10 +730,30 @@
         }
       });
 
-      els.powerHubCloseButton?.addEventListener("click", closeAppModal);
-      document.getElementById("closePowerHubAppModal")?.addEventListener("click", closeAppModal);
-      els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) closeAppModal(); });
+      const dismissInstallPrompt = () => {
+        localStorage.setItem("powerHubInstallDismissedUntil", String(Date.now() + 24 * 60 * 60 * 1000));
+        closeAppModal();
+      };
+
+els.powerHubCloseButton?.addEventListener("click", dismissInstallPrompt);
+document.getElementById("closePowerHubAppModal")?.addEventListener("click", dismissInstallPrompt);
+els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) dismissInstallPrompt(); });
       document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
+      const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      const isMobileViewport = () => window.matchMedia("(max-width: 900px)").matches;
+      const shouldShowInstallPrompt = () => {
+          if (isStandalone() || !isMobileViewport()) return false;
+          const dismissedUntil = Number(localStorage.getItem("powerHubInstallDismissedUntil") || 0);
+          return Date.now() > dismissedUntil;
+};
+
+setTimeout(() => {
+  if (!shouldShowInstallPrompt()) return;
+  if (els.powerHubAppModalBody) {
+    els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster access to SafetyHQ, Team Notes, and company tools.";
+  }
+  els.powerHubAppModal?.classList.add("is-open");
+}, 900);
     }
 
     setupAnnouncementModal();
