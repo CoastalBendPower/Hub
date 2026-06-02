@@ -291,7 +291,7 @@
           </div>
           <div class="followup-panel">
             <a class="followup-box" id="checklistFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#monthly" aria-label="Open Monthly Safety Equipment Checklist Status in SafetyHQ">
-              <div class="followup-box-header"><h3>Overdue Checklists</h3><span class="box-count" id="checklistCount"></span></div>
+              <div class="followup-box-header"><h3>Monthly Safety Equipment Checklist</h3><span class="box-count" id="checklistCount"></span></div>
               <div class="followup-empty"><span class="power-loader power-loader--section" role="status" aria-label="Loading checklist status"><img src="assets/loading_spinner_electric_ring.svg" alt="" aria-hidden="true"><span class="sr-only">Loading checklist status</span></span></div>
             </a>
             <a class="followup-box" id="trainingFollowupBox" href="https://coastalbendpower.github.io/SafetyHQ/#training" aria-label="Open Training Status in SafetyHQ">
@@ -328,7 +328,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.20</p>
+      <p class="site-version">Version: PowerHub v3.0.21</p>
     </footer>
   </main>
 
@@ -355,7 +355,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.20";
+    const POWERHUB_VERSION = "PowerHub v3.0.21";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -499,19 +499,24 @@
     }
 
     function getChecklistItems(data) {
-      const rows = normalizeRows(data.monthlyStatus || data.monthlyItems || data.checklistStatus || data.monthly || data.checklists || data["Monthly Status"]);
+      const snapshotData = (data && data.powerHubSnapshot) || data || {};
+      // UC/SafetyHQ remains the source of truth.
+      // PowerHub only filters which checklist rows appear in the overdue snapshot.
+      // Pending monthly rows must stay hidden until the feed marks them overdue.
+      const rows = normalizeRows(snapshotData.monthlyStatus || snapshotData.monthlyItems || snapshotData.checklistStatus || snapshotData.monthly || snapshotData.checklists || snapshotData["Monthly Status"]);
       const items = [];
       rows.forEach(row => {
         const employee = cell(row, ["employee", "Employee"], 0);
         const eq = cell(row, ["eq", "eqNumber", "EQ #", "vehicle", "Vehicle", "Vehicle #"], 1);
-        const status = cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
+        const status = Array.isArray(row) ? cell(row, ["status", "Status"], 2) : cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
         const completed = cell(row, ["completionDate", "Completion Date", "Completed Date", "completedAt"], 3);
         const days = cell(row, ["daysOverdue", "Days Overdue"], 5);
-        const notes = cell(row, ["notes", "Notes"], 6);
+        const notes = Array.isArray(row) ? cell(row, ["notes", "Notes"], 4) : cell(row, ["notes", "Notes"], 6);
         if (!employee || employee === "Employee" || !eq || !includeOnSite(row, 7)) return;
         const lower = (status + " " + completed).toLowerCase();
         if (lower.includes("complete") || completed) return;
-        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: status || "Overdue / Missing", daysOverdue: days, notes });
+        if (!lower.includes("overdue") && num(days) <= 0) return;
+        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: "Overdue", daysOverdue: days, notes, hideDetail: true, overdueText: "Overdue" });
       });
       items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
       return items;
@@ -542,6 +547,7 @@
     }
 
     function overdueLabel(item) {
+      if (item.overdueText) return item.overdueText;
       if (item.daysOverdue) return `${Math.abs(num(item.daysOverdue))}d overdue`;
       const raw = text(item.status);
       if (raw.toLowerCase().includes("overdue")) return raw;
@@ -566,7 +572,7 @@
       main.appendChild(overdue);
       row.appendChild(main);
 
-      const detailText = item.requirementName || fallbackDetail;
+      const detailText = item.hideDetail ? "" : (item.requirementName || fallbackDetail);
       if (detailText) {
         const detail = document.createElement("span");
         detail.textContent = item.dueDate ? `${detailText} — Due ${formatDate(item.dueDate)}` : detailText;
@@ -654,7 +660,7 @@
         els.openItemsCount.textContent = String(overdueCount);
         els.overdueCountRow.hidden = overdueCount <= 0;
         els.overdueCountRow.classList.toggle("has-overdue", overdueCount > 0);
-        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No overdue checklists", "Checklist Item", "Monthly Safety Equipment Checklist");
+        renderBox(els.checklistBox, els.checklistCount, checklistItems, "No overdue monthly checklists.", "Checklist Item", "Monthly Safety Equipment Checklist");
         renderBox(els.trainingBox, els.trainingCount, trainingItems, "No overdue training", "Training Item", "Training Requirement");
       } catch (error) {
         console.error("PowerHub Safety Snapshot load failed:", error);
