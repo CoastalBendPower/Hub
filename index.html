@@ -6,27 +6,14 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-    <title>CBPS PowerHub</title>
-      <meta name="theme-color" content="#123f73" />
-      <meta name="application-name" content="CBPS PowerHub" />
-      <meta name="apple-mobile-web-app-title" content="PowerHub" />
-      <meta name="apple-mobile-web-app-capable" content="yes" />
-      <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-
-      <meta property="og:title" content="CBPS PowerHub" />
-      <meta property="og:description" content="Coastal Bend Power Services employee resource hub." />
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content="https://coastalbendpower.github.io/Hub/" />
-      <meta property="og:image" content="https://coastalbendpower.github.io/Hub/assets/icon-512.png?v=3.0.21" />
-      <meta property="og:image:width" content="512" />
-      <meta property="og:image:height" content="512" />
-      <meta name="twitter:card" content="summary" />
-      <meta name="twitter:title" content="CBPS PowerHub" />
-      <meta name="twitter:description" content="Coastal Bend Power Services employee resource hub." />
-      <meta name="twitter:image" content="https://coastalbendpower.github.io/Hub/assets/icon-512.png?v=3.0.21" />
-
-      <link rel="manifest" href="manifest.json" />
-      <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <title>CBPS PowerHub</title>
+  <meta name="theme-color" content="#123f73" />
+  <meta name="application-name" content="CBPS PowerHub" />
+  <meta name="apple-mobile-web-app-title" content="PowerHub" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
   <style>
     :root {
       --blue: #123f73;
@@ -154,6 +141,13 @@
     .followup-item strong { color:var(--blue-dark); font-size:.88rem; min-width:0; }
     .followup-item span { color:var(--muted); font-size:.76rem; font-weight:750; line-height:1.25; }
     .overdue-pill { color:var(--red) !important; font-size:.76rem !important; font-weight:950 !important; white-space:nowrap; text-align:right; }
+    .followup-status-wrap { display:inline-flex; align-items:center; justify-content:flex-end; gap:6px; flex:0 0 auto; position:relative; }
+    .missed-history-trigger { position:relative; width:18px; height:18px; border:0; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; background:var(--red); color:#fff; font-size:.72rem; font-weight:950; line-height:1; cursor:pointer; box-shadow:0 4px 10px rgba(180,35,24,.24); }
+    .missed-history-trigger:focus-visible { outline:2px solid rgba(180,35,24,.38); outline-offset:2px; }
+    .missed-history-popover { display:none; position:absolute; right:0; top:calc(100% + 8px); z-index:120; width:max-content; max-width:235px; padding:10px 12px; border-radius:14px; border:1px solid rgba(180,35,24,.22); background:#fff; box-shadow:0 16px 34px rgba(15,23,42,.20); color:var(--text); text-align:left; white-space:normal; }
+    .missed-history-trigger:hover .missed-history-popover, .missed-history-trigger:focus .missed-history-popover, .missed-history-trigger:focus-within .missed-history-popover, .missed-history-trigger.is-open .missed-history-popover { display:block; }
+    .missed-history-popover strong { display:block; margin:0 0 6px; color:var(--red); font-size:.72rem; font-weight:950; letter-spacing:.04em; text-transform:uppercase; }
+    .missed-history-popover span { display:block; color:var(--text); font-size:.75rem; font-weight:800; line-height:1.32; }
     .followup-box.has-open { border-left-color:var(--red); }
     .followup-box.has-open .followup-box-header { background:linear-gradient(90deg, #fff1f0, #fff); border-bottom-color:rgba(180,35,24,.16); }
     .followup-empty { padding:13px 14px; font-size:.88rem; line-height:1.4; color:var(--green); background:#f0fdf4; }
@@ -211,6 +205,7 @@
       .quicklink-action { min-height:82px; padding:8px 4px; }
       .quicklink-action-icon { width:58px; height:58px; font-size:.68rem; }
       .quicklink-label { font-size:.66rem; }
+      .missed-history-popover { right:-8px; max-width:min(235px, 68vw); }
       .section-title { margin-top:14px; }
       .snapshot-header { margin-top:18px; }
     }
@@ -328,7 +323,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.21</p>
+      <p class="site-version">Version: PowerHub v3.0.22</p>
     </footer>
   </main>
 
@@ -355,7 +350,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.21";
+    const POWERHUB_VERSION = "PowerHub v3.0.22";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -370,6 +365,7 @@
       overdueCountRow: document.getElementById("overdueCountRow"),
       powerHubAppButton: document.getElementById("powerHubAppButton"),
       powerHubAppModal: document.getElementById("powerHubAppModal"),
+      powerHubAppModalTitle: document.getElementById("powerHubAppModalTitle"),
       powerHubAppModalBody: document.getElementById("powerHubAppModalBody"),
       powerHubInstallButton: document.getElementById("powerHubInstallButton"),
       powerHubShareButton: document.getElementById("powerHubShareButton"),
@@ -470,6 +466,73 @@
       return s;
     }
 
+    function rawField(row, names, arrayIndexes = []) {
+      if (Array.isArray(row)) {
+        for (const index of arrayIndexes) {
+          if (row[index] !== undefined && row[index] !== null && text(row[index])) return row[index];
+        }
+        return "";
+      }
+      const map = {};
+      Object.keys(row || {}).forEach(k => { map[key(k)] = k; });
+      for (const name of names) {
+        const found = map[key(name)];
+        if (found) return row[found];
+      }
+      return "";
+    }
+
+    function cleanMissedMonth(value) {
+      let s = text(value);
+      if (!s) return "";
+      const lower = s.toLowerCase();
+      if (["none", "n/a", "na", "no", "false", "0", "[]"].includes(lower)) return "";
+      s = s.replace(/^(missed|month|checklist month|period)\s*[:\-]\s*/i, "");
+      const iso = s.match(/^(20\d{2})[-/](\d{1,2})/);
+      if (iso) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthIndex = Number(iso[2]) - 1;
+        if (monthIndex >= 0 && monthIndex < 12) return `${monthNames[monthIndex]} ${iso[1]}`;
+      }
+      const shortMonths = { jan:"January", january:"January", feb:"February", february:"February", mar:"March", march:"March", apr:"April", april:"April", may:"May", jun:"June", june:"June", jul:"July", july:"July", aug:"August", august:"August", sep:"September", sept:"September", september:"September", oct:"October", october:"October", nov:"November", november:"November", dec:"December", december:"December" };
+      const monthMatch = s.match(/\b(jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|aug(?:ust)?|sep(?:t)?(?:ember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b\s*,?\s*(20\d{2})\b/i);
+      if (monthMatch) return `${shortMonths[monthMatch[1].toLowerCase()]} ${monthMatch[2]}`;
+      const numeric = s.match(/^(\d{1,2})[-/](20\d{2})$/);
+      if (numeric) {
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const monthIndex = Number(numeric[1]) - 1;
+        if (monthIndex >= 0 && monthIndex < 12) return `${monthNames[monthIndex]} ${numeric[2]}`;
+      }
+      return s;
+    }
+
+    function parseMissedInspections(value) {
+      const months = [];
+      const addMonth = item => {
+        const clean = cleanMissedMonth(item);
+        if (clean && !months.some(existing => existing.toLowerCase() === clean.toLowerCase())) months.push(clean);
+      };
+      const walk = item => {
+        if (item === undefined || item === null || item === "") return;
+        if (Array.isArray(item)) {
+          item.forEach(walk);
+          return;
+        }
+        if (typeof item === "object") {
+          const month = rawField(item, ["month", "Month", "checklistMonth", "Checklist Month", "period", "Period", "currentPeriod", "Current Period", "missedMonth", "Missed Month"]);
+          if (month) addMonth(month);
+          return;
+        }
+        String(item).split(/[\n;,|]+/).forEach(part => addMonth(part.replace(/[\[\]"]/g, "")));
+      };
+      walk(value);
+      return months;
+    }
+
+    function missedInspectionMonths(row) {
+      return parseMissedInspections(rawField(row, ["missedInspections12mo", "Missed Inspections 12mo", "missedInspections", "Missed Inspections", "missedInspectionHistory", "Missed Inspection History", "missedMonths", "Missed Months"], [8, 9, 10]));
+    }
+
     function findMetric(data, names) {
       const wanted = names.map(key);
       const sources = [data && data.summary, data && data.powerHubSnapshot, data && data.dashboardMetrics, data && data.metrics, data];
@@ -516,7 +579,8 @@
         const lower = (status + " " + completed).toLowerCase();
         if (lower.includes("complete") || completed) return;
         if (!lower.includes("overdue") && num(days) <= 0) return;
-        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: "Overdue", daysOverdue: days, notes, hideDetail: true, overdueText: "Overdue" });
+        const missedInspections12mo = missedInspectionMonths(row);
+        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: "Overdue", daysOverdue: days, notes, hideDetail: true, overdueText: "Overdue", missedInspections12mo });
       });
       items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
       return items;
@@ -564,12 +628,39 @@
       const title = document.createElement("strong");
       title.textContent = item.eq ? `${item.employee || fallbackTitle} — ${item.eq}` : (item.employee || fallbackTitle);
 
+      const statusWrap = document.createElement("span");
+      statusWrap.className = "followup-status-wrap";
+
       const overdue = document.createElement("span");
       overdue.className = "overdue-pill";
       overdue.textContent = overdueLabel(item);
+      statusWrap.appendChild(overdue);
+
+      const missedMonths = parseMissedInspections(item.missedInspections12mo || item.missedInspections);
+      if (missedMonths.length) {
+        const warning = document.createElement("span");
+        warning.className = "missed-history-trigger";
+        warning.setAttribute("aria-label", `Missed monthly checklist history: ${missedMonths.join(", ")}`);
+        warning.setAttribute("title", `Missed monthly checklist history: ${missedMonths.join(", ")}`);
+        warning.textContent = "!";
+
+        const popup = document.createElement("span");
+        popup.className = "missed-history-popover";
+
+        const heading = document.createElement("strong");
+        heading.textContent = "Missed in last 12 months";
+        popup.appendChild(heading);
+
+        const months = document.createElement("span");
+        months.textContent = missedMonths.join(", ");
+        popup.appendChild(months);
+
+        warning.appendChild(popup);
+        statusWrap.appendChild(warning);
+      }
 
       main.appendChild(title);
-      main.appendChild(overdue);
+      main.appendChild(statusWrap);
       row.appendChild(main);
 
       const detailText = item.hideDetail ? "" : (item.requirementName || fallbackDetail);
@@ -673,6 +764,23 @@
       }
     }
 
+    function setupMissedHistoryPopups() {
+      document.addEventListener("click", event => {
+        const trigger = event.target.closest(".missed-history-trigger");
+        document.querySelectorAll(".missed-history-trigger.is-open").forEach(openTrigger => {
+          if (openTrigger !== trigger) openTrigger.classList.remove("is-open");
+        });
+        if (!trigger) return;
+        event.preventDefault();
+        event.stopPropagation();
+        trigger.classList.toggle("is-open");
+      });
+      document.addEventListener("keydown", event => {
+        if (event.key !== "Escape") return;
+        document.querySelectorAll(".missed-history-trigger.is-open").forEach(trigger => trigger.classList.remove("is-open"));
+      });
+    }
+
     function setupAnnouncementModal() {
       const openAnnouncement = () => {
         if (els.announcementModalBody) els.announcementModalBody.textContent = latestAnnouncement;
@@ -712,24 +820,65 @@
         deferredInstallPrompt = event;
       });
 
-      const closeAppModal = () => els.powerHubAppModal?.classList.remove("is-open");
+      const installPromptStorageKey = "powerhubInstallPromptDismissedUntil";
+      const installPromptDismissMs = 24 * 60 * 60 * 1000;
       const installInstructions = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.\n\nInstall instructions:\niPhone: tap Share, then Add to Home Screen.\nAndroid/Chrome: open browser menu and choose Install app or Add to Home screen.";
 
-      els.powerHubAppButton?.addEventListener("click", () => {
-        if (els.powerHubAppModalBody) {
-          els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
-        }
+      const isStandaloneMode = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      const isMobileLike = () => window.matchMedia("(max-width: 900px)").matches || /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+      const isInitialPromptMode = () => els.powerHubAppModal?.dataset.mode === "initial-install";
+
+      const setDismissedUntilTomorrow = () => {
+        try { localStorage.setItem(installPromptStorageKey, String(Date.now() + installPromptDismissMs)); } catch (error) { console.warn("Install prompt dismissal could not be saved", error); }
+      };
+
+      const shouldShowInitialInstallPrompt = () => {
+        if (!isMobileLike() || isStandaloneMode()) return false;
+        try {
+          const dismissedUntil = Number(localStorage.getItem(installPromptStorageKey) || 0);
+          if (dismissedUntil && Date.now() < dismissedUntil) return false;
+        } catch (error) { console.warn("Install prompt dismissal could not be checked", error); }
+        return true;
+      };
+
+      const closeAppModal = () => {
+        if (isInitialPromptMode()) setDismissedUntilTomorrow();
+        els.powerHubAppModal?.classList.remove("is-open");
+        if (els.powerHubAppModal) els.powerHubAppModal.dataset.mode = "";
+      };
+
+      const openStandardAppModal = () => {
+        if (els.powerHubAppModalTitle) els.powerHubAppModalTitle.textContent = "PowerHub App";
+        if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster field access, or share the app link with another CBPS employee.";
+        if (els.powerHubShareButton) els.powerHubShareButton.hidden = false;
+        if (els.powerHubCloseButton) els.powerHubCloseButton.textContent = "Close";
+        if (els.powerHubAppModal) els.powerHubAppModal.dataset.mode = "standard";
         els.powerHubAppModal?.classList.add("is-open");
-      });
+      };
+
+      const openInitialInstallPrompt = () => {
+        if (!shouldShowInitialInstallPrompt()) return;
+        if (els.powerHubAppModalTitle) els.powerHubAppModalTitle.textContent = "Install PowerHub?";
+        if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = "Add PowerHub to your phone for quick access to SafetyHQ, Team Notes, and company tools.";
+        if (els.powerHubShareButton) els.powerHubShareButton.hidden = true;
+        if (els.powerHubCloseButton) els.powerHubCloseButton.textContent = "Not Now";
+        if (els.powerHubAppModal) els.powerHubAppModal.dataset.mode = "initial-install";
+        els.powerHubAppModal?.classList.add("is-open");
+      };
+
+      els.powerHubAppButton?.addEventListener("click", openStandardAppModal);
 
       els.powerHubInstallButton?.addEventListener("click", async () => {
         if (deferredInstallPrompt) {
           deferredInstallPrompt.prompt();
           try { await deferredInstallPrompt.userChoice; } catch (error) { console.warn("Install prompt closed", error); }
           deferredInstallPrompt = null;
+          els.powerHubAppModal?.classList.remove("is-open");
           return;
         }
         if (els.powerHubAppModalBody) els.powerHubAppModalBody.textContent = installInstructions;
+        if (els.powerHubShareButton && !isInitialPromptMode()) els.powerHubShareButton.hidden = false;
+        if (els.powerHubCloseButton) els.powerHubCloseButton.textContent = isInitialPromptMode() ? "Not Now" : "Close";
       });
 
       els.powerHubShareButton?.addEventListener("click", async () => {
@@ -749,33 +898,16 @@
         }
       });
 
-      const dismissInstallPrompt = () => {
-        localStorage.setItem("powerHubInstallDismissedUntil", String(Date.now() + 24 * 60 * 60 * 1000));
-        closeAppModal();
-      };
+      els.powerHubCloseButton?.addEventListener("click", closeAppModal);
+      document.getElementById("closePowerHubAppModal")?.addEventListener("click", closeAppModal);
+      els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) closeAppModal(); });
+      document.addEventListener("keydown", event => { if (event.key === "Escape") closeAppModal(); });
 
-els.powerHubCloseButton?.addEventListener("click", dismissInstallPrompt);
-document.getElementById("closePowerHubAppModal")?.addEventListener("click", dismissInstallPrompt);
-els.powerHubAppModal?.addEventListener("click", event => { if (event.target === els.powerHubAppModal) dismissInstallPrompt(); });
-      document.addEventListener("keydown", event => { if (event.key === "Escape") dismissInstallPrompt(); });
-      const isStandalone = () => window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-      const isMobileViewport = () => window.matchMedia("(max-width: 900px)").matches;
-      const shouldShowInstallPrompt = () => {
-          if (isStandalone() || !isMobileViewport()) return false;
-          const dismissedUntil = Number(localStorage.getItem("powerHubInstallDismissedUntil") || 0);
-          return Date.now() > dismissedUntil;
-};
-
-setTimeout(() => {
-  if (!shouldShowInstallPrompt()) return;
-  if (els.powerHubAppModalBody) {
-    els.powerHubAppModalBody.textContent = "Install PowerHub on your phone for faster access to SafetyHQ, Team Notes, and company tools.";
-  }
-  els.powerHubAppModal?.classList.add("is-open");
-}, 900);
+      window.setTimeout(openInitialInstallPrompt, 900);
     }
 
     setupAnnouncementModal();
+    setupMissedHistoryPopups();
     setupQuickLinks();
     setupPowerHubAppModal();
     loadPowerHubAnnouncement();
