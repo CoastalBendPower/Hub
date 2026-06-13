@@ -323,7 +323,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.24</p>
+      <p class="site-version">Version: PowerHub v3.0.25</p>
     </footer>
   </main>
 
@@ -350,7 +350,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.24";
+    const POWERHUB_VERSION = "PowerHub v3.0.25";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
@@ -561,27 +561,70 @@
       return findMetric(data, ["lastUpdate", "Last Update", "lastUpdated", "Updated", "timestamp", "Dashboard Last Update", "Last Upload", "Latest Upload"]) || "Latest SafetyHQ update loaded";
     }
 
-    function getChecklistItems(data) {
-      const snapshotData = (data && data.powerHubSnapshot) || data || {};
-      // UC/SafetyHQ remains the source of truth.
-      // PowerHub only filters which checklist rows appear in the overdue snapshot.
-      // Pending monthly rows must stay hidden until the feed marks them overdue.
-      const rows = normalizeRows(snapshotData.monthlyStatus || snapshotData.monthlyItems || snapshotData.checklistStatus || snapshotData.monthly || snapshotData.checklists || snapshotData["Monthly Status"]);
+        function getChecklistItems(data) {
+      const sources = [data && data.powerHubSnapshot, data].filter(Boolean);
+      const allRows = [];
+
+      sources.forEach(source => {
+        const rows = normalizeRows(
+          source.monthlyStatus ||
+          source.monthlyItems ||
+          source.checklistStatus ||
+          source.monthly ||
+          source.checklists ||
+          source.monthlyOverdue ||
+          source.overdueChecklists ||
+          source.checklistItems ||
+          source["Monthly Status"]
+        );
+        rows.forEach(row => allRows.push(row));
+      });
+
+      const seen = new Set();
       const items = [];
-      rows.forEach(row => {
+
+      allRows.forEach(row => {
         const employee = cell(row, ["employee", "Employee"], 0);
         const eq = cell(row, ["eq", "eqNumber", "EQ #", "vehicle", "Vehicle", "Vehicle #"], 1);
-        const status = Array.isArray(row) ? cell(row, ["status", "Status"], 2) : cell(row, ["dashboardStatus", "Dashboard Status", "status", "Status"], 4);
+
+        const status = Array.isArray(row)
+          ? cell(row, ["status", "Status"], 4) || cell(row, ["status", "Status"], 2)
+          : cell(row, ["dashboardStatus", "Dashboard Status", "monthlyStatus", "Monthly Status", "checklistStatus", "Checklist Status", "status", "Status"], 4);
+
         const completed = cell(row, ["completionDate", "Completion Date", "Completed Date", "completedAt"], 3);
-        const days = cell(row, ["daysOverdue", "Days Overdue"], 5);
-        const notes = Array.isArray(row) ? cell(row, ["notes", "Notes"], 4) : cell(row, ["notes", "Notes"], 6);
+
+        const daysOverdueRaw = cell(row, ["daysOverdue", "Days Overdue", "daysPastDue", "Days Past Due", "daysLate", "Days Late"], 5);
+        const daysUntilDueRaw = cell(row, ["daysUntilDue", "Days Until Due"], 5);
+        const overdueDays = num(daysOverdueRaw) > 0
+          ? Math.abs(num(daysOverdueRaw))
+          : (num(daysUntilDueRaw) < 0 ? Math.abs(num(daysUntilDueRaw)) : 0);
+
+        const notes = Array.isArray(row) ? cell(row, ["notes", "Notes"], 6) || cell(row, ["notes", "Notes"], 4) : cell(row, ["notes", "Notes"], 6);
+
         if (!employee || employee === "Employee" || !eq || !includeOnSite(row, 7)) return;
+
         const lower = (status + " " + completed).toLowerCase();
         if (lower.includes("complete") || completed) return;
-        if (!lower.includes("overdue") && num(days) <= 0) return;
+        if (!lower.includes("overdue") && overdueDays <= 0) return;
+
+        const dedupeKey = `${key(employee)}-${key(eq)}`;
+        if (seen.has(dedupeKey)) return;
+        seen.add(dedupeKey);
+
         const missedInspections12mo = missedInspectionMonths(row);
-        items.push({ employee, eq, requirementName: "Monthly Safety Equipment Checklist", status: "Overdue", daysOverdue: days, notes, hideDetail: true, overdueText: "Overdue", missedInspections12mo });
+        items.push({
+          employee,
+          eq,
+          requirementName: "Monthly Safety Equipment Checklist",
+          status: "Overdue",
+          daysOverdue: overdueDays,
+          notes,
+          hideDetail: true,
+          overdueText: "Overdue",
+          missedInspections12mo
+        });
       });
+
       items.sort((a, b) => (num(b.daysOverdue) - num(a.daysOverdue)) || a.employee.localeCompare(b.employee));
       return items;
     }
