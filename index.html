@@ -68,12 +68,13 @@
     .site-subtitle { margin:.7rem 0 0; font-size:clamp(.86rem, 1.14vw, 1.05rem); font-weight:750; letter-spacing:.08em; color:rgba(255,255,255,.88); }
 
     .announcement-row { display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:12px; align-items:center; margin:4px 0 18px; overflow:visible; position:relative; z-index:80; }
-    .announcement-main { display:grid; grid-template-columns:auto minmax(0, 1fr); gap:12px; align-items:center; padding:10px 0; border-top:1px solid rgba(216,224,234,.92); border-bottom:1px solid rgba(216,224,234,.92); min-width:0; cursor:pointer; border-radius:18px; transition:background .18s ease, box-shadow .18s ease; }
+    .announcement-main { display:grid; grid-template-columns:auto minmax(0, 1fr) auto; gap:12px; align-items:center; padding:10px 0; border-top:1px solid rgba(216,224,234,.92); border-bottom:1px solid rgba(216,224,234,.92); min-width:0; cursor:pointer; border-radius:18px; transition:background .18s ease, box-shadow .18s ease; }
     .announcement-main:hover { background:rgba(255,255,255,.36); box-shadow:0 8px 18px rgba(15,23,42,.06); }
     .announcement-main:focus-visible { outline:2px solid rgba(0,157,255,.72); outline-offset:4px; }
+    .announcement-main::after { content:"›"; color:var(--muted); font-size:1.22rem; font-weight:900; line-height:1; padding:0 4px 0 2px; opacity:.78; }
+    .announcement-main:hover::after, .announcement-main:focus-visible::after { color:var(--blue-dark); opacity:.95; }
     .announcement-title h2 { margin:0; font-size:1.18rem; color:var(--blue-dark); white-space:nowrap; }
     .announcement-text { color:var(--blue-dark); font-size:.92rem; font-weight:750; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; min-width:0; }
-    .announcement-text::after { content:"Tap to open"; display:inline-block; margin-left:10px; color:var(--muted); font-size:.68rem; font-weight:950; letter-spacing:.06em; text-transform:uppercase; }
 
     .hero-quicklinks { justify-self:end; align-self:center; width:64px; min-width:64px; position:relative; z-index:140; margin-right:0; }
     .hero-quicklinks summary { list-style:none; cursor:pointer; }
@@ -211,11 +212,11 @@
       .site-subtitle { font-size:.54rem; letter-spacing:.045em; margin-top:.38rem; white-space:nowrap; }
 
       .announcement-row { grid-template-columns:minmax(0, 1fr) auto; gap:8px; margin-bottom:12px; }
-      .announcement-main { grid-template-columns:1fr; gap:8px; padding:10px 0; }
+      .announcement-main { grid-template-columns:minmax(0, 1fr) auto; gap:8px; padding:10px 0; }
       .announcement-title { grid-column:1 / -1; }
+      .announcement-main::after { grid-column:2; grid-row:2; align-self:center; }
       .announcement-title h2 { font-size:.95rem; }
-      .announcement-text { white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.8rem; line-height:1.28; }
-      .announcement-text::after { display:block; margin:4px 0 0; font-size:.62rem; }
+      .announcement-text { grid-column:1; white-space:normal; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; font-size:.8rem; line-height:1.28; }
 
       .hero-quicklinks { justify-self:end; align-self:center; width:60px; min-width:60px; margin-left:auto; }
       .quicklinks-trigger, .quicklinks-trigger > img { width:60px; height:60px; }
@@ -246,7 +247,7 @@
   <main class="page-shell">
     <header class="hero">
       <picture class="hero-media" aria-hidden="true">
-        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png?v=3.0.16">
+        <source media="(max-width: 700px)" srcset="assets/banner_the_hub_mobile_v1.png?v=3.0.27">
         <img class="hero-bg" src="assets/banner_the_hub_v3.png" alt="">
       </picture>
       <div class="hero-inner">
@@ -344,7 +345,7 @@
     <footer class="footer">
       <p class="footer-brand">Coastal Bend Power Services, LLC — PowerHub</p>
       <p class="footer-disclaimer">Internal use only. This site is intended for Coastal Bend Power Services, LLC employees and authorized personnel. Do not share links, documents, screenshots, or site content with external parties unless approved by company management.</p>
-      <p class="site-version">Version: PowerHub v3.0.26</p>
+      <p class="site-version">Version: PowerHub v3.0.27</p>
     </footer>
   </main>
 
@@ -371,7 +372,7 @@
     const SAFETYHQ_FEED_URL = "https://script.google.com/macros/s/AKfycbyuz_gyOtJFDThQguUgC1nIRzyPYRRf50bWRXDf6UD33fytBwG_KbEDLcaLxaKiSrkFiQ/exec";
     const UC_ANNOUNCEMENT_FEED_URL = "https://script.google.com/macros/s/AKfycbw3Y1YrNwwmGQE7OWVizNoxLI_OpMZ2CxbHJO5sm-NUd1r6a5vOSvzg8rb_PKjODcEy_g/exec?action=feed";
     const POWER_LOADER_SRC = "assets/loading_spinner_electric_ring.svg";
-    const POWERHUB_VERSION = "PowerHub v3.0.26";
+    const POWERHUB_VERSION = "PowerHub v3.0.27";
 
     const els = {
       announcementText: document.getElementById("powerhubAnnouncementText"),
